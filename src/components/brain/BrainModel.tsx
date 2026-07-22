@@ -71,6 +71,22 @@ export const BrainModel: React.FC<BrainModelProps> = ({
   const { scene, nodes, materials, animations } = useGLTF(modelPath);
   const { actions, names: animationNames } = useAnimations(animations, groupRef);
 
+  // Task 2 Requirement: Traverse every mesh and print every mesh name into the browser console
+  useEffect(() => {
+    if (scene) {
+      console.log('🧠 [NeuroVerse GLB Inspection] Traversing model meshes...');
+      const meshList: string[] = [];
+      scene.traverse((child) => {
+        if ((child as THREE.Mesh).isMesh) {
+          const meshName = child.name || child.userData?.name || `Mesh_${child.id}`;
+          meshList.push(meshName);
+          console.log(`  ├─ 📦 Mesh Node: "${meshName}"`);
+        }
+      });
+      console.log(`🧠 [NeuroVerse GLB Inspection] Total Meshes Discovered (${meshList.length}):`, meshList);
+    }
+  }, [scene]);
+
   // 2. Clone and process scene graph: center (0,0,0), compute bounding box, enable shadows, preserve mesh names
   const { processedScene, meshNames, bounds, center, size, autoScale } = useMemo(() => {
     // Deep clone scene graph to allow independent component instances without mutating cache

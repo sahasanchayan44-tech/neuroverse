@@ -1,0 +1,72 @@
+[
+  {
+    "name": "amygdala",
+    "type": "Mesh",
+    "children": []
+  },
+  {
+    "name": "angular_gyrus",
+    "type": "Mesh",
+    "children": []
+  },
+  {
+    "name": "cerebellum",
+    "type": "Mesh",
+    "children": []
+  },
+  {
+    "name": "corpus_callosum",
+    "type": "Mesh",
+    "children": []
+  },
+  {
+    "name": "hippocampus",
+    "type": "Mesh",
+    "children": []
+  },
+  {
+    "name": "hypothalamus",
+    "type": "Mesh",
+    "children": []
+  },
+  {
+    "name": "frontal_lobe",
+    "type": "Mesh",
+    "children": []
+  },
+  {
+    "name": "temporal_lobe",
+    "type": "Mesh",
+    "children": []
+  },
+  {
+    "name": "parietal_lobe",
+    "type": "Mesh",
+    "children": []
+  },
+  {
+    "name": "occipital_lobe",
+    "type": "Mesh",
+    "children": []
+  },
+  {
+    "name": "medulla",
+    "type": "Mesh",
+    "children": []
+  },
+  {
+    "name": "brain_stem",
+    "type": "Mesh",
+    "children": []
+  },
+  {
+    "name": "pons",
+    "type": "Mesh",
+    "children": []
+  },
+  {
+    "name": "thalamus",
+    "type": "Mesh",
+    "children": []
+  }
+]
