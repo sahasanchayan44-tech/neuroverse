@@ -13,7 +13,7 @@ export const InfoPanel: React.FC<InfoPanelProps> = ({ structure, onClose }) => {
   if (!structure) return null;
 
   return (
-    <div className="fixed top-28 right-6 z-40 w-96 max-h-[calc(100vh-140px)] overflow-y-auto bg-neuro-panel backdrop-blur-xl border border-neuro-cyan/40 rounded-2xl shadow-hologram p-5 flex flex-col gap-4 text-white animate-float">
+    <div className="fixed top-24 right-6 z-40 w-96 max-h-[calc(100vh-7rem)] overflow-y-auto bg-neuro-panel backdrop-blur-xl border border-neuro-cyan/40 rounded-2xl shadow-hologram p-5 flex flex-col gap-4 text-white pr-2 font-sans">
       
       {/* Header */}
       <div className="flex items-center justify-between border-b border-neuro-border pb-3">

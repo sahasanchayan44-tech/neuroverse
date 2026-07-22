@@ -46,10 +46,10 @@ export const LayerPanel: React.FC<LayerPanelProps> = ({
   }
 
   return (
-    <aside className="absolute top-28 left-4 bottom-28 z-20 w-80 bg-neuro-panel backdrop-blur-xl border border-neuro-cyan/30 rounded-2xl shadow-hologram p-4 flex flex-col gap-3 overflow-y-auto text-white transition-all font-mono">
+    <aside className="absolute top-24 left-4 bottom-6 z-20 w-80 max-h-[calc(100vh-7rem)] bg-neuro-panel backdrop-blur-xl border border-neuro-cyan/30 rounded-2xl shadow-hologram p-4 flex flex-col gap-3 overflow-hidden text-white transition-all font-mono">
       
       {/* Header with Minimize Button & Sci-Fi Tabs */}
-      <div className="flex items-center justify-between border-b border-neuro-border pb-2">
+      <div className="flex items-center justify-between border-b border-neuro-border pb-2 flex-shrink-0">
         <div className="flex gap-1 text-xs flex-1">
           <button
             onClick={() => setActiveTab('anatomy')}
@@ -90,10 +90,10 @@ export const LayerPanel: React.FC<LayerPanelProps> = ({
 
       {/* Tab 1: Anatomy Layers & Catalog */}
       {activeTab === 'anatomy' && (
-        <div className="flex flex-col gap-3 flex-1 overflow-y-auto">
+        <div className="flex flex-col gap-3 flex-1 min-h-0 overflow-y-auto pr-1">
           
           {/* Layer Toggles */}
-          <div className="flex flex-col gap-2 bg-black/50 p-3 rounded-xl border border-white/10 text-xs font-sans">
+          <div className="flex flex-col gap-2 bg-black/50 p-3 rounded-xl border border-white/10 text-xs font-sans flex-shrink-0">
             <span className="text-[10px] font-mono text-neuro-cyan font-bold tracking-wider">BIOPHYSICAL TISSUE LAYERS</span>
             
             <label className="flex items-center justify-between cursor-pointer">
@@ -138,8 +138,8 @@ export const LayerPanel: React.FC<LayerPanelProps> = ({
           </div>
 
           {/* Structure Catalog */}
-          <div className="flex flex-col gap-1.5 flex-1 overflow-y-auto font-sans">
-            <span className="text-[10px] font-mono text-neuro-cyan font-bold tracking-wider">
+          <div className="flex flex-col gap-1.5 font-sans">
+            <span className="text-[10px] font-mono text-neuro-cyan font-bold tracking-wider flex-shrink-0">
               TARGET STRUCTURES CATALOG
             </span>
             {structures.map(s => {
@@ -166,49 +166,51 @@ export const LayerPanel: React.FC<LayerPanelProps> = ({
 
       {/* Tab 2: Graphics Shaders & Sliders */}
       {activeTab === 'graphics' && (
-        <div className="flex flex-col gap-3 bg-black/50 p-3 rounded-xl border border-white/10 text-xs">
-          <span className="text-[10px] font-mono text-neuro-purple font-bold tracking-wider flex items-center gap-1.5">
-            <Sliders className="w-3.5 h-3.5" /> HOLOGRAM SHADER CONTROLS
-          </span>
+        <div className="flex flex-col gap-3 flex-1 min-h-0 overflow-y-auto pr-1">
+          <div className="flex flex-col gap-3 bg-black/50 p-3 rounded-xl border border-white/10 text-xs">
+            <span className="text-[10px] font-mono text-neuro-purple font-bold tracking-wider flex items-center gap-1.5">
+              <Sliders className="w-3.5 h-3.5" /> HOLOGRAM SHADER CONTROLS
+            </span>
 
-          <div className="flex flex-col gap-1">
-            <div className="flex justify-between text-[11px] font-mono text-gray-400">
-              <span>Tissue Opacity</span>
-              <span>{Math.round(transparency * 100)}%</span>
+            <div className="flex flex-col gap-1">
+              <div className="flex justify-between text-[11px] font-mono text-gray-400">
+                <span>Tissue Opacity</span>
+                <span>{Math.round(transparency * 100)}%</span>
+              </div>
+              <input
+                type="range"
+                min="0.1"
+                max="1.0"
+                step="0.05"
+                value={transparency}
+                onChange={(e) => onChangeTransparency(parseFloat(e.target.value))}
+                className="accent-neuro-cyan cursor-pointer h-1 bg-white/20 rounded"
+              />
             </div>
-            <input
-              type="range"
-              min="0.1"
-              max="1.0"
-              step="0.05"
-              value={transparency}
-              onChange={(e) => onChangeTransparency(parseFloat(e.target.value))}
-              className="accent-neuro-cyan cursor-pointer h-1 bg-white/20 rounded"
-            />
-          </div>
 
-          <div className="flex flex-col gap-1">
-            <div className="flex justify-between text-[11px] font-mono text-gray-400">
-              <span>Action Potential Speed</span>
-              <span>{timeScale.toFixed(1)}x</span>
+            <div className="flex flex-col gap-1">
+              <div className="flex justify-between text-[11px] font-mono text-gray-400">
+                <span>Action Potential Speed</span>
+                <span>{timeScale.toFixed(1)}x</span>
+              </div>
+              <input
+                type="range"
+                min="0.2"
+                max="3.0"
+                step="0.1"
+                value={timeScale}
+                onChange={(e) => onChangeTimeScale(parseFloat(e.target.value))}
+                className="accent-neuro-cyan cursor-pointer h-1 bg-white/20 rounded"
+              />
             </div>
-            <input
-              type="range"
-              min="0.2"
-              max="3.0"
-              step="0.1"
-              value={timeScale}
-              onChange={(e) => onChangeTimeScale(parseFloat(e.target.value))}
-              className="accent-neuro-cyan cursor-pointer h-1 bg-white/20 rounded"
-            />
           </div>
         </div>
       )}
 
       {/* Tab 3: Computed Parameters */}
       {activeTab === 'parameters' && (
-        <div className="flex flex-col gap-2 font-mono text-xs">
-          <span className="text-[10px] font-mono text-neuro-green font-bold tracking-wider flex items-center gap-1.5">
+        <div className="flex flex-col gap-2 flex-1 min-h-0 overflow-y-auto pr-1 font-mono text-xs">
+          <span className="text-[10px] font-mono text-neuro-green font-bold tracking-wider flex items-center gap-1.5 flex-shrink-0">
             <Cpu className="w-3.5 h-3.5" /> COMPUTED NEURO METRICS
           </span>
 

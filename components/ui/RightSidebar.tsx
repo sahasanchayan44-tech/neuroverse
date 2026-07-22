@@ -63,10 +63,10 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
   }
 
   return (
-    <aside className="absolute top-28 right-4 bottom-28 z-20 w-80 bg-neuro-panel backdrop-blur-xl border border-neuro-cyan/30 rounded-2xl shadow-hologram p-4 flex flex-col gap-3 overflow-y-auto text-white transition-all font-mono">
+    <aside className="absolute top-24 right-4 bottom-6 z-20 w-80 max-h-[calc(100vh-7rem)] bg-neuro-panel backdrop-blur-xl border border-neuro-cyan/30 rounded-2xl shadow-hologram p-4 flex flex-col gap-3 overflow-hidden text-white transition-all font-mono">
       
       {/* Sci-Fi HUD Tabs Header */}
-      <div className="flex items-center justify-between border-b border-neuro-border pb-2">
+      <div className="flex items-center justify-between border-b border-neuro-border pb-2 flex-shrink-0">
         <div className="flex gap-1 text-[11px] flex-1">
           <button
             onClick={() => setActiveTab('cognition')}
@@ -118,7 +118,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
       {(activeSimulation || selectedDisease) && (
         <button
           onClick={onReset}
-          className="py-1.5 px-3 text-xs font-mono rounded-xl bg-white/10 border border-white/20 hover:bg-white/20 text-white transition-all flex items-center justify-center gap-2"
+          className="py-1.5 px-3 text-xs font-mono rounded-xl bg-white/10 border border-white/20 hover:bg-white/20 text-white transition-all flex items-center justify-center gap-2 flex-shrink-0"
         >
           <RefreshCw className="w-3.5 h-3.5 animate-spin" /> Reset Active Simulation / Pathology
         </button>
@@ -126,8 +126,8 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
 
       {/* Tab 1: Cognition Functional Modes */}
       {activeTab === 'cognition' && (
-        <div className="flex flex-col gap-2 flex-1 overflow-y-auto">
-          <span className="text-[10px] font-mono text-neuro-cyan font-bold tracking-wider">
+        <div className="flex flex-col gap-2 flex-1 min-h-0 overflow-y-auto pr-1">
+          <span className="text-[10px] font-mono text-neuro-cyan font-bold tracking-wider flex-shrink-0">
             FUNCTIONAL NEURAL PATHWAYS (11 MODES)
           </span>
           {COGNITION_MODES.map(mode => {
@@ -160,8 +160,8 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
 
       {/* Tab 2: Medical Pathology Diseases */}
       {activeTab === 'pathology' && (
-        <div className="flex flex-col gap-2 flex-1 overflow-y-auto">
-          <span className="text-[10px] font-mono text-neuro-red font-bold tracking-wider">
+        <div className="flex flex-col gap-2 flex-1 min-h-0 overflow-y-auto pr-1">
+          <span className="text-[10px] font-mono text-neuro-red font-bold tracking-wider flex-shrink-0">
             CLINICAL PATHOLOGY & DISEASE MODES
           </span>
           {DISEASE_MODES.map(d => {
@@ -192,8 +192,8 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
 
       {/* Tab 3: Timeline & Embryology */}
       {activeTab === 'timeline' && (
-        <div className="flex flex-col gap-3 flex-1 overflow-y-auto font-sans">
-          <span className="text-[10px] font-mono text-neuro-purple font-bold tracking-wider">
+        <div className="flex flex-col gap-3 flex-1 min-h-0 overflow-y-auto pr-1 font-sans">
+          <span className="text-[10px] font-mono text-neuro-purple font-bold tracking-wider flex-shrink-0">
             EVOLUTIONARY & EMBRYONIC MILESTONES
           </span>
 
@@ -216,8 +216,8 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
 
       {/* Tab 4: EEG Power Spectrum Telemetry */}
       {activeTab === 'spectrum' && (
-        <div className="flex flex-col gap-3 flex-1 overflow-y-auto font-mono text-xs">
-          <span className="text-[10px] text-neuro-green font-bold tracking-wider">
+        <div className="flex flex-col gap-3 flex-1 min-h-0 overflow-y-auto pr-1 font-mono text-xs">
+          <span className="text-[10px] text-neuro-green font-bold tracking-wider flex-shrink-0">
             EEG POWER SPECTRAL DENSITY
           </span>
 
