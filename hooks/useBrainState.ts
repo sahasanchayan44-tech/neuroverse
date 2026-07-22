@@ -1,7 +1,17 @@
 import { useState } from 'react';
 import { BRAIN_STRUCTURES_DATABASE, BrainStructureDetail } from '../data/brainData';
 
-export type ViewMode = 'default' | 'exploded' | 'cross_section' | 'xray' | 'wireframe';
+export type ViewMode = 
+  | 'default' 
+  | 'solid' 
+  | 'wireframe' 
+  | 'exploded' 
+  | 'xray' 
+  | 'synaptic_network' 
+  | 'vascular_tree' 
+  | 'functional_mri' 
+  | 'thermal_heat' 
+  | 'eeg_density';
 
 export interface LayerState {
   greyMatter: boolean;

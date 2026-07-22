@@ -189,13 +189,19 @@ export const HeaderHUD: React.FC<HeaderHUDProps> = ({
           <select
             value={viewMode}
             onChange={(e) => onChangeViewMode(e.target.value as ViewMode)}
-            className="px-3 py-2 bg-black/60 border border-neuro-border rounded-xl text-xs font-mono text-white outline-none cursor-pointer focus:border-neuro-cyan"
+            className="px-3 py-2 bg-black/60 border border-neuro-cyan/50 rounded-xl text-xs font-mono text-white outline-none cursor-pointer focus:border-neuro-cyan focus:shadow-cyan-glow transition-all"
+            title="Switch 3D Brain Render Mode"
           >
-            <option value="default">Default Hologram 3D</option>
-            <option value="exploded">Exploded Anatomy View</option>
-            <option value="cross_section">Cross-Section Clip</option>
-            <option value="xray">X-Ray Mode</option>
-            <option value="wireframe">Wireframe Mode</option>
+            <option value="default">🌐 Default 3D Hologram</option>
+            <option value="solid">🧠 3D Bio-Solid Cortical Mode</option>
+            <option value="wireframe">🕸️ High-Density Wireframe Mesh</option>
+            <option value="exploded">💥 Exploded Anatomy View</option>
+            <option value="xray">🦴 X-Ray Translucent Hologram</option>
+            <option value="synaptic_network">⚡ Synaptic Neuronal Fiber Mode</option>
+            <option value="vascular_tree">🩸 Angiography Vascular Mode</option>
+            <option value="functional_mri">🔥 fMRI BOLD Activation Mode</option>
+            <option value="thermal_heat">🌡️ Infrared Thermal Telemetry</option>
+            <option value="eeg_density">📊 EEG Spectral Density Mode</option>
           </select>
 
           <button

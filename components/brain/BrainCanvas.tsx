@@ -469,12 +469,50 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
           mesh.scale.setScalar(1.0);
         }
 
-        if (viewMode === 'wireframe') {
+        // Render styling for all 9 3D ViewModes
+        if (viewMode === 'solid') {
+          mat.wireframe = false;
+          mat.opacity = 0.95;
+          mat.roughness = 0.35;
+          mat.metalness = 0.25;
+        } else if (viewMode === 'wireframe') {
           mat.wireframe = true;
           mat.opacity = 0.55;
         } else if (viewMode === 'xray') {
           mat.wireframe = true;
-          mat.opacity = 0.2;
+          mat.opacity = 0.12;
+          mat.color.setHex(0x00d0ff);
+          mat.emissive.setHex(0x0088ff);
+          mat.emissiveIntensity = 1.2;
+        } else if (viewMode === 'synaptic_network') {
+          mat.wireframe = false;
+          mat.opacity = def.category === 'outer_cortex' ? 0.05 : 0.18;
+        } else if (viewMode === 'vascular_tree') {
+          mat.wireframe = false;
+          mat.opacity = 0.04; // Fade brain tissue to isolate blood vessels
+        } else if (viewMode === 'functional_mri') {
+          mat.wireframe = false;
+          mat.color.setHex(isSimActive ? 0xff3300 : 0x0044aa);
+          mat.emissive.setHex(isSimActive ? 0xff2200 : 0x002266);
+          mat.emissiveIntensity = 1.8 + Math.sin(elapsedTime * 6.0) * 0.6;
+        } else if (viewMode === 'thermal_heat') {
+          mat.wireframe = false;
+          const thermalHex = 
+            def.category === 'outer_cortex' ? 0xffaa00 :
+            def.category === 'cerebellum' ? 0xaa00ff :
+            def.category === 'embedded_stem' ? 0x0088ff : 0xff00aa;
+          mat.color.setHex(thermalHex);
+          mat.emissive.setHex(thermalHex);
+          mat.emissiveIntensity = 1.2 + Math.sin(elapsedTime * 3.0) * 0.4;
+        } else if (viewMode === 'eeg_density') {
+          mat.wireframe = false;
+          const eegHex = 
+            id.includes('frontal') ? 0xff007f :
+            id.includes('parietal') ? 0x00f0ff :
+            id.includes('occipital') ? 0x00ff88 : 0xffdd00;
+          mat.color.setHex(eegHex);
+          mat.emissive.setHex(eegHex);
+          mat.emissiveIntensity = 1.4 + Math.sin(elapsedTime * 10.0) * 0.6;
         } else {
           mat.wireframe = false;
         }
