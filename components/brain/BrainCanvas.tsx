@@ -6,6 +6,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { BrainStructureDetail } from '@/data/brainData';
 import { LayerState, ViewMode } from '@/hooks/useBrainState';
 import { MeshHighlightManager } from './MeshHighlightManager';
+import { CinematicCameraController } from './CinematicCameraController';
 
 interface BrainCanvasProps {
   structures: BrainStructureDetail[];
@@ -90,10 +91,9 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
   const activeImpulsesRef = useRef<THREE.Points | null>(null);
   const neuralNetworkGroupRef = useRef<THREE.Group | null>(null);
   const highlightManagerRef = useRef<MeshHighlightManager | null>(null);
+  const camControllerRef = useRef<CinematicCameraController | null>(null);
 
   const mousePosRef = useRef<THREE.Vector2>(new THREE.Vector2(0, 0));
-  const targetCamPosRef = useRef<THREE.Vector3 | null>(null);
-  const targetCamLookRef = useRef<THREE.Vector3>(new THREE.Vector3(0, 0, 0));
   const impulsesDataRef = useRef<Array<{ start: THREE.Vector3; end: THREE.Vector3; t: number; speed: number }>>([]);
 
   // Initialize modular mesh highlighter instance
@@ -110,22 +110,39 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
     };
   }, []);
 
-  // Synchronize active mesh selection with MeshHighlightManager
+  // Synchronize active mesh selection with MeshHighlightManager & CinematicCameraController
   useEffect(() => {
-    if (!highlightManagerRef.current) return;
-    if (selectedStructure && partMeshesRef.current[selectedStructure.id]) {
-      const mesh = partMeshesRef.current[selectedStructure.id];
-      const def = EMBEDDED_BRAIN_PARTS[selectedStructure.id];
-      const highlightHex = def ? def.colorHex : 0x00f0ff;
-      highlightManagerRef.current.selectMesh(mesh, {
-        color: highlightHex,
-        emissiveColor: highlightHex,
-        emissiveIntensity: 1.8,
-        pulse: true,
-        enableOutline: true,
-      });
-    } else {
-      highlightManagerRef.current.deselect();
+    if (highlightManagerRef.current) {
+      if (selectedStructure && partMeshesRef.current[selectedStructure.id]) {
+        const mesh = partMeshesRef.current[selectedStructure.id];
+        const def = EMBEDDED_BRAIN_PARTS[selectedStructure.id];
+        const highlightHex = def ? def.colorHex : 0x00f0ff;
+        highlightManagerRef.current.selectMesh(mesh, {
+          color: highlightHex,
+          emissiveColor: highlightHex,
+          emissiveIntensity: 1.8,
+          pulse: true,
+          enableOutline: true,
+        });
+      } else {
+        highlightManagerRef.current.deselect();
+      }
+    }
+
+    if (camControllerRef.current) {
+      if (selectedStructure && partMeshesRef.current[selectedStructure.id]) {
+        const mesh = partMeshesRef.current[selectedStructure.id];
+        camControllerRef.current.focusOnMesh(mesh, {
+          duration: 1.5,
+          ease: 'power2.inOut',
+          marginFactor: 2.0,
+        });
+      } else {
+        camControllerRef.current.reset({
+          duration: 1.5,
+          ease: 'power2.inOut',
+        });
+      }
     }
   }, [selectedStructure]);
 
@@ -162,6 +179,12 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
     controls.autoRotate = true;
     controls.autoRotateSpeed = 0.6;
     controlsRef.current = controls;
+
+    // Initialize CinematicCameraController
+    camControllerRef.current = new CinematicCameraController(camera, controls, {
+      defaultPosition: new THREE.Vector3(0, 6, 32),
+      defaultTarget: new THREE.Vector3(0, 0, 0),
+    });
 
     // 5. Lighting
     const ambientLight = new THREE.AmbientLight(0x004466, 1.2);
@@ -246,16 +269,6 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
       const elapsedTime = clock.getElapsedTime() * timeScale;
 
       controls.update();
-
-      // Camera lerp targeting selected region
-      if (targetCamPosRef.current) {
-        camera.position.lerp(targetCamPosRef.current, 0.05);
-        controls.target.lerp(targetCamLookRef.current, 0.05);
-
-        if (camera.position.distanceTo(targetCamPosRef.current) < 0.2) {
-          targetCamPosRef.current = null;
-        }
-      }
 
       // Update modular mesh highlighting, color transition lerps, and outline pulsing
       if (highlightManagerRef.current) {
@@ -404,22 +417,12 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
       domEl.removeEventListener('mousemove', handlePointerMove);
       domEl.removeEventListener('click', handleClick);
       window.removeEventListener('resize', handleResize);
+      camControllerRef.current?.dispose();
       if (mountRef.current && rendererRef.current) {
         mountRef.current.removeChild(rendererRef.current.domElement);
       }
     };
   }, [structures]);
-
-  // Camera targeting
-  useEffect(() => {
-    if (selectedStructure && cameraRef.current && controlsRef.current) {
-      const def = EMBEDDED_BRAIN_PARTS[selectedStructure.id];
-      if (def) {
-        targetCamLookRef.current.copy(def.center);
-        targetCamPosRef.current = def.center.clone().add(new THREE.Vector3(0, 2, 14));
-      }
-    }
-  }, [selectedStructure]);
 
   // Build Real Human Brain with Embedded Subcortical Organs
   function buildEmbeddedHumanBrain(scene: THREE.Scene) {

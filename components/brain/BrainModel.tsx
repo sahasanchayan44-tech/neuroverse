@@ -3,8 +3,9 @@
 import React, { useMemo, useEffect, useRef, Component, ErrorInfo, ReactNode, Suspense } from 'react';
 import * as THREE from 'three';
 import { useGLTF, useAnimations } from '@react-three/drei';
-import { useFrame, ThreeEvent } from '@react-three/fiber';
+import { useFrame, useThree, ThreeEvent } from '@react-three/fiber';
 import { MeshHighlightManager } from './MeshHighlightManager';
+import { CinematicCameraController } from './CinematicCameraController';
 
 // Default model asset path as per requirement
 export const DEFAULT_BRAIN_MODEL_PATH = '/models/brain/brain.glb';
@@ -68,6 +69,22 @@ export const BrainModel: React.FC<BrainModelProps> = ({
 }) => {
   const groupRef = useRef<THREE.Group>(null);
   const highlightManagerRef = useRef<MeshHighlightManager | null>(null);
+  const camControllerRef = useRef<CinematicCameraController | null>(null);
+
+  const { camera, controls } = useThree();
+
+  // Initialize CinematicCameraController with R3F camera & controls
+  useEffect(() => {
+    if (camera && controls) {
+      camControllerRef.current = new CinematicCameraController(
+        camera as THREE.PerspectiveCamera,
+        controls as any
+      );
+    }
+    return () => {
+      camControllerRef.current?.dispose();
+    };
+  }, [camera, controls]);
 
   // 1. Load GLB Asset via Drei useGLTF
   const { scene, nodes, materials, animations } = useGLTF(modelPath);
@@ -177,24 +194,33 @@ export const BrainModel: React.FC<BrainModelProps> = ({
     }
   }, [processedScene, nodes, meshNames, bounds, center, size, onModelLoaded]);
 
-  // Synchronize mesh selection with MeshHighlightManager
+  // Synchronize mesh selection with MeshHighlightManager & CinematicCameraController
   useEffect(() => {
-    if (!processedScene || !highlightManagerRef.current) return;
+    if (!processedScene) return;
 
+    let targetMesh: THREE.Mesh | null = null;
     if (selectedMeshName) {
-      let targetMesh: THREE.Mesh | null = null;
       processedScene.traverse((child) => {
         if ((child as THREE.Mesh).isMesh && (child.name === selectedMeshName || child.userData?.name === selectedMeshName)) {
           targetMesh = child as THREE.Mesh;
         }
       });
+    }
+
+    if (highlightManagerRef.current) {
       if (targetMesh) {
         highlightManagerRef.current.selectMesh(targetMesh, { color: highlightColor });
       } else {
         highlightManagerRef.current.deselect();
       }
-    } else {
-      highlightManagerRef.current.deselect();
+    }
+
+    if (camControllerRef.current) {
+      if (targetMesh) {
+        camControllerRef.current.focusOnMesh(targetMesh, { duration: 1.5, ease: 'power2.inOut' });
+      } else {
+        camControllerRef.current.reset({ duration: 1.5, ease: 'power2.inOut' });
+      }
     }
   }, [processedScene, selectedMeshName, highlightColor]);
 
