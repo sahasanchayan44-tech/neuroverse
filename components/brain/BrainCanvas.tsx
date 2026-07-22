@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { BrainStructureDetail } from '@/data/brainData';
 import { LayerState, ViewMode } from '@/hooks/useBrainState';
+import { MeshHighlightManager } from './MeshHighlightManager';
 
 interface BrainCanvasProps {
   structures: BrainStructureDetail[];
@@ -14,7 +15,7 @@ interface BrainCanvasProps {
   layers: LayerState;
   transparency: number;
   timeScale: number;
-  onSelectStructure: (s: BrainStructureDetail) => void;
+  onSelectStructure: (s: BrainStructureDetail | null) => void;
   onHoverStructure: (name: string | null) => void;
 }
 
@@ -88,11 +89,45 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
   const nanoParticlesRef = useRef<THREE.Points | null>(null);
   const activeImpulsesRef = useRef<THREE.Points | null>(null);
   const neuralNetworkGroupRef = useRef<THREE.Group | null>(null);
+  const highlightManagerRef = useRef<MeshHighlightManager | null>(null);
 
   const mousePosRef = useRef<THREE.Vector2>(new THREE.Vector2(0, 0));
   const targetCamPosRef = useRef<THREE.Vector3 | null>(null);
   const targetCamLookRef = useRef<THREE.Vector3>(new THREE.Vector3(0, 0, 0));
   const impulsesDataRef = useRef<Array<{ start: THREE.Vector3; end: THREE.Vector3; t: number; speed: number }>>([]);
+
+  // Initialize modular mesh highlighter instance
+  useEffect(() => {
+    highlightManagerRef.current = new MeshHighlightManager({
+      color: 0x00f0ff,
+      emissiveIntensity: 1.8,
+      pulse: true,
+      enableOutline: true,
+      transitionSpeed: 0.12,
+    });
+    return () => {
+      highlightManagerRef.current?.dispose();
+    };
+  }, []);
+
+  // Synchronize active mesh selection with MeshHighlightManager
+  useEffect(() => {
+    if (!highlightManagerRef.current) return;
+    if (selectedStructure && partMeshesRef.current[selectedStructure.id]) {
+      const mesh = partMeshesRef.current[selectedStructure.id];
+      const def = EMBEDDED_BRAIN_PARTS[selectedStructure.id];
+      const highlightHex = def ? def.colorHex : 0x00f0ff;
+      highlightManagerRef.current.selectMesh(mesh, {
+        color: highlightHex,
+        emissiveColor: highlightHex,
+        emissiveIntensity: 1.8,
+        pulse: true,
+        enableOutline: true,
+      });
+    } else {
+      highlightManagerRef.current.deselect();
+    }
+  }, [selectedStructure]);
 
   useEffect(() => {
     if (!mountRef.current) return;
@@ -191,6 +226,9 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
         if (structObj) {
           onSelectStructure(structObj);
         }
+      } else {
+        // Deselect when clicking empty background space
+        onSelectStructure(null);
       }
     };
 
@@ -217,6 +255,11 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
         if (camera.position.distanceTo(targetCamPosRef.current) < 0.2) {
           targetCamPosRef.current = null;
         }
+      }
+
+      // Update modular mesh highlighting, color transition lerps, and outline pulsing
+      if (highlightManagerRef.current) {
+        highlightManagerRef.current.update(delta, elapsedTime);
       }
 
       // 1. Swirl Nano Particle Cloud
@@ -262,15 +305,15 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
           mat.opacity = transparency * (def.category === 'outer_cortex' ? 0.75 : 0.95);
         }
 
-        if (isSimActive || isSelected) {
+        if (isSimActive) {
           mat.color.setHex(def.colorHex);
           mat.emissive.setHex(def.colorHex);
           mat.emissiveIntensity = 1.5 + Math.sin(elapsedTime * 6) * 0.5;
           mesh.scale.setScalar(1.05 + Math.sin(elapsedTime * 4) * 0.04);
+        } else if (isSelected) {
+          mesh.scale.setScalar(1.05 + Math.sin(elapsedTime * 4) * 0.04);
         } else {
-          mat.color.setHex(def.colorHex);
-          mat.emissive.setHex(0x0066ff);
-          mat.emissiveIntensity = def.category === 'outer_cortex' ? 0.25 : 0.6;
+          // Leave all non-selected meshes unchanged in their base state!
           mesh.scale.setScalar(1.0);
         }
 

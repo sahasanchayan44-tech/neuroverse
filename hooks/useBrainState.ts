@@ -39,11 +39,28 @@ export function useBrainState() {
     setLayers(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
+  const handleSetSelectedStructure = (structure: BrainStructureDetail | null) => {
+    if (!structure) {
+      setSelectedStructure(null);
+      return;
+    }
+    if (selectedStructure && selectedStructure.id === structure.id) {
+      setSelectedStructure(null);
+    } else {
+      setSelectedStructure(structure);
+      setActiveSimulation(null);
+    }
+  };
+
   const selectStructureById = (id: string) => {
     const found = BRAIN_STRUCTURES_DATABASE.find(s => s.id === id);
     if (found) {
-      setSelectedStructure(found);
-      setActiveSimulation(null);
+      if (selectedStructure && selectedStructure.id === id) {
+        setSelectedStructure(null);
+      } else {
+        setSelectedStructure(found);
+        setActiveSimulation(null);
+      }
     }
   };
 
@@ -71,7 +88,7 @@ export function useBrainState() {
     isAudioActive,
     timeScale,
     transparency,
-    setSelectedStructure,
+    setSelectedStructure: handleSetSelectedStructure,
     selectStructureById,
     selectSimulation,
     resetSelection,

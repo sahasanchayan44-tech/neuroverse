@@ -3,7 +3,8 @@
 import React, { useMemo, useEffect, useRef, Component, ErrorInfo, ReactNode, Suspense } from 'react';
 import * as THREE from 'three';
 import { useGLTF, useAnimations } from '@react-three/drei';
-import { ThreeEvent } from '@react-three/fiber';
+import { useFrame, ThreeEvent } from '@react-three/fiber';
+import { MeshHighlightManager } from './MeshHighlightManager';
 
 // Default model asset path as per requirement
 export const DEFAULT_BRAIN_MODEL_PATH = '/models/brain/brain.glb';
@@ -66,10 +67,25 @@ export const BrainModel: React.FC<BrainModelProps> = ({
   onMeshPointerOut,
 }) => {
   const groupRef = useRef<THREE.Group>(null);
+  const highlightManagerRef = useRef<MeshHighlightManager | null>(null);
 
   // 1. Load GLB Asset via Drei useGLTF
   const { scene, nodes, materials, animations } = useGLTF(modelPath);
   const { actions, names: animationNames } = useAnimations(animations, groupRef);
+
+  // Initialize modular mesh highlighter instance
+  useEffect(() => {
+    highlightManagerRef.current = new MeshHighlightManager({
+      color: highlightColor,
+      emissiveIntensity: 1.8,
+      pulse: true,
+      enableOutline: true,
+      transitionSpeed: 0.12,
+    });
+    return () => {
+      highlightManagerRef.current?.dispose();
+    };
+  }, []);
 
   // Task 2 Requirement: Traverse every mesh and print every mesh name into the browser console
   useEffect(() => {
@@ -161,11 +177,30 @@ export const BrainModel: React.FC<BrainModelProps> = ({
     }
   }, [processedScene, nodes, meshNames, bounds, center, size, onModelLoaded]);
 
-  // 4. Reactive updates for selection, highlighting, wireframe, and opacity
+  // Synchronize mesh selection with MeshHighlightManager
+  useEffect(() => {
+    if (!processedScene || !highlightManagerRef.current) return;
+
+    if (selectedMeshName) {
+      let targetMesh: THREE.Mesh | null = null;
+      processedScene.traverse((child) => {
+        if ((child as THREE.Mesh).isMesh && (child.name === selectedMeshName || child.userData?.name === selectedMeshName)) {
+          targetMesh = child as THREE.Mesh;
+        }
+      });
+      if (targetMesh) {
+        highlightManagerRef.current.selectMesh(targetMesh, { color: highlightColor });
+      } else {
+        highlightManagerRef.current.deselect();
+      }
+    } else {
+      highlightManagerRef.current.deselect();
+    }
+  }, [processedScene, selectedMeshName, highlightColor]);
+
+  // 4. Reactive updates for wireframe and opacity
   useEffect(() => {
     if (!processedScene) return;
-
-    const highlightThreeColor = new THREE.Color(highlightColor);
 
     processedScene.traverse((child) => {
       if ((child as THREE.Mesh).isMesh) {
@@ -174,37 +209,37 @@ export const BrainModel: React.FC<BrainModelProps> = ({
 
         if (!mat) return;
 
-        const isSelected = selectedMeshName && mesh.name === selectedMeshName;
-        const isHovered = hoveredMeshName && mesh.name === hoveredMeshName;
-
         // Apply wireframe and transparency
         mat.wireframe = wireframe;
         if (opacity < 1.0) {
           mat.transparent = true;
           mat.opacity = opacity;
         }
-
-        // Apply dynamic highlighting for selection / hover
-        if (isSelected || isHovered) {
-          mat.emissive = highlightThreeColor;
-          mat.emissiveIntensity = isSelected ? 0.8 : 0.4;
-        } else {
-          // Reset emissive intensity if not highlighted
-          if (mat.emissive) {
-            mat.emissiveIntensity = 0.1;
-          }
-        }
       }
     });
-  }, [processedScene, selectedMeshName, hoveredMeshName, highlightColor, wireframe, opacity]);
+  }, [processedScene, wireframe, opacity]);
 
-  // Event handlers for future interactivity
+  // Render loop update via R3F useFrame
+  useFrame((state, delta) => {
+    if (highlightManagerRef.current) {
+      highlightManagerRef.current.update(delta, state.clock.getElapsedTime());
+    }
+  });
+
+  // Event handlers for interactivity with deselect support
   const handleClick = (e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation();
     if (e.object && (e.object as THREE.Mesh).isMesh) {
       const meshName = e.object.name;
-      if (onMeshClick) {
-        onMeshClick(meshName, e);
+      if (meshName === selectedMeshName) {
+        // Deselect if already selected
+        if (onMeshClick) {
+          onMeshClick('', e);
+        }
+      } else {
+        if (onMeshClick) {
+          onMeshClick(meshName, e);
+        }
       }
     }
   };
