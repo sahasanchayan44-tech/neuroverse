@@ -3,9 +3,11 @@
 import React, { useState } from 'react';
 import { 
   Zap, Stethoscope, Clock, Activity, Flame, ChevronRight, ChevronLeft, RefreshCw, Radio,
-  Search, Pill, AlertTriangle, CheckCircle2, ArrowLeft, Crosshair, ShieldAlert, Sparkles, Info
+  Search, Pill, AlertTriangle, CheckCircle2, ArrowLeft, Crosshair, ShieldAlert, Sparkles, Info,
+  Dna, Baby, Binary, Layers, Brain
 } from 'lucide-react';
 import { BRAIN_DISEASES_DATABASE, BrainDiseaseDetail } from '@/data/diseaseData';
+import { EVOLUTIONARY_EPOCHS_DATABASE, EvolutionaryEpoch } from '@/data/timelineData';
 
 interface RightSidebarProps {
   activeSimulation: string | null;
@@ -62,11 +64,17 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
   const [internalIsCollapsed, setInternalIsCollapsed] = useState(false);
   const [diseaseSearch, setDiseaseSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  
+  // Timeline State
+  const [timelineTrack, setTimelineTrack] = useState<'Evolutionary History' | 'Human Lifespan Age Group'>('Evolutionary History');
+  const [selectedEpochId, setSelectedEpochId] = useState<string | null>(null);
+  const [timelineSearch, setTimelineSearch] = useState('');
 
   const collapsed = controlledIsCollapsed !== undefined ? controlledIsCollapsed : internalIsCollapsed;
   const toggleCollapse = onToggleCollapse ? onToggleCollapse : () => setInternalIsCollapsed(!internalIsCollapsed);
 
   const activeDiseaseDetail = BRAIN_DISEASES_DATABASE.find(d => d.id === selectedDisease);
+  const activeEpochDetail = EVOLUTIONARY_EPOCHS_DATABASE.find(e => e.id === selectedEpochId);
 
   const filteredDiseases = BRAIN_DISEASES_DATABASE.filter(d => {
     const matchesCategory = selectedCategory === 'All' || d.category.toLowerCase().includes(selectedCategory.toLowerCase());
@@ -78,6 +86,18 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
       d.affectedRegions.some(r => r.toLowerCase().includes(query)) ||
       d.medicines.some(m => m.toLowerCase().includes(query));
     return matchesCategory && matchesQuery;
+  });
+
+  const filteredEpochs = EVOLUTIONARY_EPOCHS_DATABASE.filter(e => {
+    const matchesTrack = e.category === timelineTrack;
+    const query = timelineSearch.toLowerCase();
+    const matchesQuery = !query ||
+      e.title.toLowerCase().includes(query) ||
+      e.era.toLowerCase().includes(query) ||
+      e.timeframe.toLowerCase().includes(query) ||
+      (e.ageGroupRange && e.ageGroupRange.toLowerCase().includes(query)) ||
+      e.targetRegions.some(r => r.toLowerCase().includes(query));
+    return matchesTrack && matchesQuery;
   });
 
   if (collapsed) {
@@ -124,7 +144,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
               activeTab === 'timeline' ? 'bg-neuro-purple/20 border-neuro-purple text-white shadow-purple-glow' : 'bg-white/5 border-white/10 text-neuro-muted'
             }`}
           >
-            <Clock className="w-3 h-3" /> TIME
+            <Clock className="w-3 h-3" /> TIME ({EVOLUTIONARY_EPOCHS_DATABASE.length})
           </button>
 
           <button
@@ -147,12 +167,15 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
       </div>
 
       {/* Reset Active Mode */}
-      {(activeSimulation || selectedDisease) && (
+      {(activeSimulation || selectedDisease || selectedEpochId) && (
         <button
-          onClick={onReset}
+          onClick={() => {
+            onReset();
+            setSelectedEpochId(null);
+          }}
           className="py-1.5 px-3 text-xs font-mono rounded-xl bg-white/10 border border-white/20 hover:bg-white/20 text-white transition-all flex items-center justify-center gap-2 flex-shrink-0"
         >
-          <RefreshCw className="w-3.5 h-3.5 animate-spin" /> Clear Active Simulation / Pathology
+          <RefreshCw className="w-3.5 h-3.5 animate-spin" /> Clear Active Mode / Selection
         </button>
       )}
 
@@ -424,27 +447,172 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
         </div>
       )}
 
-      {/* Tab 3: Timeline & Embryology */}
+      {/* Tab 3: Evolutionary History & Lifespan Age Groups Timeline */}
       {activeTab === 'timeline' && (
-        <div className="flex flex-col gap-3 flex-1 min-h-0 overflow-y-auto pr-1 font-sans">
-          <span className="text-[10px] font-mono text-neuro-purple font-bold tracking-wider flex-shrink-0">
-            EVOLUTIONARY & EMBRYONIC MILESTONES
-          </span>
+        <div className="flex flex-col gap-2.5 flex-1 min-h-0 overflow-y-auto pr-1">
+          
+          {/* Detailed View when a stage is selected */}
+          {activeEpochDetail ? (
+            <div className="flex flex-col gap-3 font-sans animate-fade-in pr-1">
+              
+              {/* Back button */}
+              <button
+                onClick={() => setSelectedEpochId(null)}
+                className="flex items-center gap-1.5 py-1 px-2.5 rounded-lg bg-white/10 border border-white/20 text-xs font-mono text-neuro-purple hover:bg-white/20 transition-all w-fit"
+              >
+                <ArrowLeft className="w-3.5 h-3.5" /> Back to Timeline Index
+              </button>
 
-          <div className="p-3 bg-white/5 border border-white/10 rounded-xl text-xs flex flex-col gap-1">
-            <span className="font-bold text-neuro-purple font-mono">1. EVOLUTIONARY TREE (500M YRS)</span>
-            <p className="text-gray-300 text-[11px] leading-snug">Primitive nerve nets in cnidarians evolved into triune brain encephalization in primates.</p>
-          </div>
+              {/* Title & Era Header */}
+              <div className="p-3 bg-neuro-purple/15 border border-neuro-purple/40 rounded-xl flex flex-col gap-1">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-mono text-neuro-purple font-bold">
+                    {activeEpochDetail.era}
+                  </span>
+                  <span className="text-[9px] font-mono px-2 py-0.5 bg-neuro-purple/20 text-purple-200 border border-neuro-purple/40 rounded">
+                    {activeEpochDetail.timeframe}
+                  </span>
+                </div>
+                <h3 className="text-sm font-bold text-white font-sans mt-0.5">{activeEpochDetail.title}</h3>
+                {activeEpochDetail.ageGroupRange && (
+                  <span className="text-[10px] font-mono text-neuro-cyan font-bold">{activeEpochDetail.ageGroupRange}</span>
+                )}
+              </div>
 
-          <div className="p-3 bg-white/5 border border-white/10 rounded-xl text-xs flex flex-col gap-1">
-            <span className="font-bold text-neuro-cyan font-mono">2. EMBRYONIC NEURAL TUBE (WEEKS 3-8)</span>
-            <p className="text-gray-300 text-[11px] leading-snug">Ectodermal neural tube differentiates into Prosencephalon, Mesencephalon, and Rhombencephalon.</p>
-          </div>
+              {/* Neuron / Volume Callout */}
+              <div className="p-2.5 bg-black/60 border border-neuro-cyan/40 rounded-xl flex items-center justify-between text-xs font-mono">
+                <span className="text-neuro-muted text-[10px]">BRAIN MASS / NEURON SCALE:</span>
+                <span className="text-neuro-cyan font-bold text-xs">{activeEpochDetail.brainVolumeOrNeurons}</span>
+              </div>
 
-          <div className="p-3 bg-white/5 border border-white/10 rounded-xl text-xs flex flex-col gap-1">
-            <span className="font-bold text-neuro-green font-mono">3. ADOLESCENT PRUNING (AGE 12-25)</span>
-            <p className="text-gray-300 text-[11px] leading-snug">High-speed myelination of prefrontal executive control networks and synaptic pruning.</p>
-          </div>
+              {/* Description */}
+              <div className="p-3 bg-white/5 border border-white/10 rounded-xl flex flex-col gap-1.5 text-xs">
+                <span className="font-mono text-[10px] font-bold text-neuro-cyan flex items-center gap-1">
+                  <Info className="w-3.5 h-3.5 text-neuro-cyan" /> OVERVIEW & PROCESS
+                </span>
+                <p className="text-gray-300 leading-snug">{activeEpochDetail.description}</p>
+              </div>
+
+              {/* Key Milestones */}
+              <div className="p-3 bg-white/5 border border-white/10 rounded-xl flex flex-col gap-1.5 text-xs">
+                <span className="font-mono text-[10px] font-bold text-neuro-green flex items-center gap-1">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-neuro-green" /> KEY NEUROLOGICAL MILESTONES
+                </span>
+                <ul className="space-y-1 text-gray-200 text-[11px] font-sans">
+                  {activeEpochDetail.keyMilestones.map((m, i) => (
+                    <li key={i} className="flex items-start gap-1.5">
+                      <span className="text-neuro-green mt-0.5">•</span>
+                      <span className="leading-snug">{m}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Target Regions */}
+              <div className="p-3 bg-white/5 border border-white/10 rounded-xl flex flex-col gap-1.5 text-xs">
+                <span className="font-mono text-[10px] font-bold text-neuro-purple flex items-center gap-1">
+                  <Crosshair className="w-3.5 h-3.5 text-neuro-purple" /> PRIMARY EVOLVED / DEVELOPING REGIONS
+                </span>
+                <div className="flex flex-wrap gap-1">
+                  {activeEpochDetail.targetRegions.map((r, i) => (
+                    <span key={i} className="px-2 py-0.5 text-[10px] font-mono bg-neuro-purple/15 text-purple-200 rounded border border-neuro-purple/30">
+                      {r}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Scientific Impact */}
+              <div className="p-3 bg-neuro-purple/10 border border-neuro-purple/30 rounded-xl text-xs text-purple-200 font-sans">
+                <span className="font-bold text-neuro-purple font-mono block mb-1 flex items-center gap-1">
+                  <Sparkles className="w-3.5 h-3.5 text-neuro-gold" /> SCIENTIFIC & CLINICAL SIGNIFICANCE:
+                </span>
+                <p className="leading-snug text-[11px]">{activeEpochDetail.scientificImpact}</p>
+              </div>
+
+            </div>
+          ) : (
+            /* Timeline Track Catalog */
+            <div className="flex flex-col gap-2.5 flex-1 min-h-0">
+              
+              {/* Dual Track Switcher */}
+              <div className="flex gap-1 text-[10px] font-mono">
+                <button
+                  onClick={() => setTimelineTrack('Evolutionary History')}
+                  className={`flex-1 py-1.5 px-2 rounded-xl border transition-all flex items-center justify-center gap-1 font-bold ${
+                    timelineTrack === 'Evolutionary History'
+                      ? 'bg-neuro-purple/25 border-neuro-purple text-white shadow-purple-glow'
+                      : 'bg-white/5 border-white/10 text-neuro-muted hover:text-white'
+                  }`}
+                >
+                  <Dna className="w-3.5 h-3.5 text-neuro-purple" /> 500M YR EVOLUTION (9 PHASES)
+                </button>
+
+                <button
+                  onClick={() => setTimelineTrack('Human Lifespan Age Group')}
+                  className={`flex-1 py-1.5 px-2 rounded-xl border transition-all flex items-center justify-center gap-1 font-bold ${
+                    timelineTrack === 'Human Lifespan Age Group'
+                      ? 'bg-neuro-cyan/25 border-neuro-cyan text-white shadow-cyan-glow'
+                      : 'bg-white/5 border-white/10 text-neuro-muted hover:text-white'
+                  }`}
+                >
+                  <Baby className="w-3.5 h-3.5 text-neuro-cyan" /> LIFESPAN AGE GROUPS (9 STAGES)
+                </button>
+              </div>
+
+              {/* Search Input */}
+              <div className="relative">
+                <Search className="absolute left-2.5 top-2.5 w-3.5 h-3.5 text-neuro-purple" />
+                <input
+                  type="text"
+                  value={timelineSearch}
+                  onChange={(e) => setTimelineSearch(e.target.value)}
+                  placeholder={timelineTrack === 'Evolutionary History' ? "Search eras, species, or regions..." : "Search age groups, infant, adolescent..."}
+                  className="w-full pl-8 pr-3 py-1.5 bg-black/60 border border-neuro-border rounded-xl text-xs font-mono text-white placeholder-gray-500 outline-none focus:border-neuro-purple"
+                />
+              </div>
+
+              <span className="text-[10px] font-mono text-neuro-purple font-bold tracking-wider flex-shrink-0 flex items-center justify-between">
+                <span>{timelineTrack.toUpperCase()} ({filteredEpochs.length} STAGES)</span>
+                <span className="text-gray-400 text-[9px]">CLICK FOR DEEP MILESTONES</span>
+              </span>
+
+              {/* Stages List */}
+              <div className="flex flex-col gap-2 overflow-y-auto pr-1 flex-1 font-sans">
+                {filteredEpochs.map(e => (
+                  <button
+                    key={e.id}
+                    onClick={() => setSelectedEpochId(e.id)}
+                    className="p-3 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-left transition-all flex flex-col gap-1.5 group"
+                  >
+                    <div className="flex items-center justify-between font-mono">
+                      <span className="text-[10px] text-neuro-purple font-bold flex items-center gap-1">
+                        {e.category === 'Evolutionary History' ? <Dna className="w-3 h-3 text-neuro-purple" /> : <Baby className="w-3 h-3 text-neuro-cyan" />}
+                        {e.era}
+                      </span>
+                      <span className="text-[9px] text-gray-400 px-1.5 py-0.5 rounded bg-black/40 border border-white/10">
+                        {e.timeframe}
+                      </span>
+                    </div>
+
+                    <h4 className="text-xs font-bold text-white group-hover:text-neuro-cyan transition-colors">
+                      {e.title}
+                    </h4>
+
+                    <div className="text-[10px] font-mono text-neuro-cyan">
+                      Scale: {e.brainVolumeOrNeurons}
+                    </div>
+
+                    <p className="text-[11px] text-gray-300 leading-snug line-clamp-2">
+                      {e.keyMilestones[0]}
+                    </p>
+                  </button>
+                ))}
+              </div>
+
+            </div>
+          )}
+
         </div>
       )}
 
@@ -500,4 +668,5 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
     </aside>
   );
 };
+
 
