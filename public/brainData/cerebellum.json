@@ -1,0 +1,20 @@
+{
+  "id": "cerebellum",
+  "name": "Cerebellum",
+  "latinName": "Cerebellum (Little Brain)",
+  "category": "cerebellum",
+  "location": "Posterior cranial fossa inferior to occipital lobes and dorsal to brainstem",
+  "description": "Contains over 50% of all brain neurons packed into high-density Purkinje cell circuits, coordinating smooth motor timing and balance.",
+  "functions": [
+    "Motor coordination, error correction, and movement smoothing",
+    "Postural balance and vestibulo-ocular reflex (VOR)",
+    "Motor skill learning via climbing fiber long-term depression (LTD)",
+    "Cognitive timing and linguistic rhythm prediction"
+  ],
+  "bloodSupply": "SCA, AICA, and PICA (Superior, Anterior Inferior, and Posterior Inferior Cerebellar Arteries)",
+  "neurotransmitters": ["GABA (Purkinje cells)", "Glutamate (Granule cells)"],
+  "diseases": ["Cerebellar Ataxia", "Intention Tremor", "Dysmetria", "Medulloblastoma"],
+  "clinicalImportance": "Lesions cause ipsilateral limb ataxia, dysdiadochokinesia, and scanning staccato speech.",
+  "researchNotes": "Contains ~80 billion cerebellar granule cells, making it the highest neuronal density structure in the human body.",
+  "interestingFacts": ["Account for only 10% of total brain volume, but holds over 50% of the entire brain's neurons."]
+}

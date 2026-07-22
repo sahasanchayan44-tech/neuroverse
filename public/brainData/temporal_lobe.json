@@ -1,0 +1,20 @@
+{
+  "id": "temporal_lobe",
+  "name": "Temporal Lobe",
+  "latinName": "Lobus Temporalis",
+  "category": "outer_cortex",
+  "location": "Inferior lateral cerebral cortex situated beneath the Sylvian fissure",
+  "description": "Houses primary auditory cortex, language comprehension centers, and deep limbic structures critical for long-term memory encoding and emotional processing.",
+  "functions": [
+    "Auditory perception and pitch processing (Heschl's Gyrus A1)",
+    "Auditory language comprehension (Wernicke's Area)",
+    "Declarative memory consolidation via Hippocampus",
+    "Visual object recognition along ventral STREAM ('What' pathway)"
+  ],
+  "bloodSupply": "Middle Cerebral Artery (MCA) & Posterior Cerebral Artery (PCA)",
+  "neurotransmitters": ["Glutamate", "GABA", "Acetylcholine"],
+  "diseases": ["Temporal Lobe Epilepsy", "Wernicke's Aphasia", "Semantic Dementia", "Alzheimer's"],
+  "clinicalImportance": "Seizure foci in mesial temporal lobe cause complex partial seizures; left Wernicke's lesions cause fluent aphasia.",
+  "researchNotes": "Single-unit recordings in human medial temporal lobe reveal concept cells ('neuro-concept units').",
+  "interestingFacts": ["Contains the fusiform face area (FFA), specialized for human facial recognition."]
+}

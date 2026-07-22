@@ -1,0 +1,20 @@
+{
+  "id": "occipital_lobe",
+  "name": "Occipital Lobe",
+  "latinName": "Lobus Occipitalis",
+  "category": "outer_cortex",
+  "location": "Posterior-most region of cerebral cortex situated above the tentorium cerebelli",
+  "description": "The primary visual processing hub of the mammalian brain, transforming retinotopic signals from the LGN into detailed visual perception.",
+  "functions": [
+    "Primary visual feature extraction (Striate Cortex V1)",
+    "Motion and direction detection (Area V5/MT)",
+    "Color processing (Area V4)",
+    "Dorsal spatial stream and ventral object recognition stream splitting"
+  ],
+  "bloodSupply": "Posterior Cerebral Artery (PCA)",
+  "neurotransmitters": ["Glutamate", "GABA"],
+  "diseases": ["Cortical Blindness", "Visual Agnosia", "Anton-Babinski Syndrome", "Visual Migraine"],
+  "clinicalImportance": "Bilateral PCA occlusion leads to cortical blindness with preservation of pupillary light reflexes.",
+  "researchNotes": "Retinotopic mapping shows point-to-point topographical projection of retinal receptive fields on V1.",
+  "interestingFacts": ["V1 contains nearly 140 million neurons in an area no larger than a credit card."]
+}

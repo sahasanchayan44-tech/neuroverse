@@ -1,0 +1,20 @@
+{
+  "id": "amygdala",
+  "name": "Amygdala",
+  "latinName": "Corpus Amygdaloideum (Almond)",
+  "category": "embedded_limbic",
+  "location": "Deep within anterior temporal lobe, rostral to hippocampus",
+  "description": "Almond-shaped nuclear complex that serves as the brain's emotional threat sentinel and fear-conditioning hub.",
+  "functions": [
+    "Fear conditioning and threat detection (Basolateral complex)",
+    "Autonomic fight-or-flight initiation via Central Nucleus output to Hypothalamus",
+    "Emotional memory valence tagging and facial expression evaluation",
+    "Social hierarchy and danger assessment"
+  ],
+  "bloodSupply": "Anterior Choroidal Artery (branch of Internal Carotid)",
+  "neurotransmitters": ["Glutamate", "GABA", "CRH", "Neuropeptide Y"],
+  "diseases": ["Urbach-Wiethe Disease", "PTSD", "Panic Disorder", "Generalized Anxiety"],
+  "clinicalImportance": "Hyperactive in PTSD and panic disorders; bilateral calcification leads to complete absence of fear recognition (Patient S.M.).",
+  "researchNotes": "Low-road subcortical pathway (Thalamus -> Amygdala) processes threat cues in under 20 milliseconds.",
+  "interestingFacts": ["In response to a threat, the amygdala fires faster than conscious visual awareness."]
+}

@@ -1,0 +1,20 @@
+{
+  "id": "brain_stem",
+  "name": "Brain Stem",
+  "latinName": "Truncus Encephali",
+  "category": "embedded_stem",
+  "location": "Base of brain connecting cerebrum and diencephalon to the spinal cord",
+  "description": "Vital life-support stalk comprising Midbrain, Pons, and Medulla Oblongata, housing autonomic cardiac/respiratory centers and cranial nerve nuclei.",
+  "functions": [
+    "Autonomic vital cardiovascular & respiratory rhythm control",
+    "Ascending Reticular Activating System (ARAS) consciousness maintenance",
+    "Cranial nerve III through XII nuclei origin and reflex integration",
+    "Ascending sensory and descending motor tract conduits"
+  ],
+  "bloodSupply": "Vertebrobasilar arterial system (Basilar Artery & Vertebral Arteries)",
+  "neurotransmitters": ["Serotonin (Raphe)", "Norepinephrine (Locus Coeruleus)", "Dopamine (VTA/SNc)"],
+  "diseases": ["Locked-in Syndrome", "Brainstem Stroke", "Central Hypoventilation", "Coma"],
+  "clinicalImportance": "Herniation or focal lesions cause rapid loss of consciousness, cranial nerve palsies, or respiratory arrest.",
+  "researchNotes": "Locus coeruleus in upper brainstem supplies norepinephrine across the entire cerebral mantle.",
+  "interestingFacts": ["All sensory and motor nerve signals between the brain and body bottleneck through this narrow 3-inch stem."]
+}

@@ -1,0 +1,20 @@
+{
+  "id": "frontal_lobe",
+  "name": "Frontal Lobe",
+  "latinName": "Lobus Frontalis",
+  "category": "outer_cortex",
+  "location": "Anterior portion of cerebral cortex lying behind the forehead",
+  "description": "The frontal lobe is the executive headquarters of the brain, directing working memory, abstract reasoning, decision making, social conduct, and voluntary motor output.",
+  "functions": [
+    "Executive cognitive planning and working memory",
+    "Voluntary motor movement execution (Primary Motor Cortex M1)",
+    "Motor speech planning (Broca's Area)",
+    "Impulse control and emotional regulation"
+  ],
+  "bloodSupply": "Anterior Cerebral Artery (ACA) & Middle Cerebral Artery (MCA)",
+  "neurotransmitters": ["Dopamine", "Glutamate", "Acetylcholine"],
+  "diseases": ["Frontotemporal Dementia", "Executive Dysfunction", "Ischemic Stroke", "ADHD"],
+  "clinicalImportance": "Essential for personality and executive function; lesions result in disinhibition, apathy, and motor deficits.",
+  "researchNotes": "fMRI studies demonstrate frontoparietal central executive network (CEN) co-activation during complex problem solving.",
+  "interestingFacts": ["The prefrontal cortex is the last brain region to fully mature (around age 25)."]
+}

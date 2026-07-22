@@ -1,0 +1,20 @@
+{
+  "id": "hippocampus",
+  "name": "Hippocampus",
+  "latinName": "Hippocampus (Seahorse)",
+  "category": "embedded_limbic",
+  "location": "Medial temporal lobe, forming floor of lateral ventricle's inferior horn",
+  "description": "Seahorse-shaped archicortical structure fundamental for episodic memory consolidation, spatial navigation, and cognitive mapping.",
+  "functions": [
+    "Episodic memory consolidation (Short-to-long term transfer)",
+    "Spatial cognitive mapping via Place Cells and Grid Cells",
+    "Pattern separation and pattern completion in trisynaptic loop (DG-CA3-CA1)",
+    "Adult neurogenesis in dentate gyrus subgranular zone"
+  ],
+  "bloodSupply": "Posterior Cerebral Artery (PCA) & Anterior Choroidal Artery",
+  "neurotransmitters": ["Glutamate", "GABA", "Acetylcholine"],
+  "diseases": ["Alzheimer's Disease", "Mesial Temporal Sclerosis", "Anterograde Amnesia", "Depression"],
+  "clinicalImportance": "First structure affected in Alzheimer's disease; bilateral resection causes total anterograde amnesia (Patient H.M.).",
+  "researchNotes": "Nobel Prize winning discovery of place cells (O'Keefe) and grid cells (Moser) in hippocampal-entorhinal axis.",
+  "interestingFacts": ["London taxi drivers have significantly enlarged posterior hippocampi from learning 'The Knowledge' street map."]
+}

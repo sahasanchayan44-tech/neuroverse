@@ -1,0 +1,20 @@
+{
+  "id": "parietal_lobe",
+  "name": "Parietal Lobe",
+  "latinName": "Lobus Parietalis",
+  "category": "outer_cortex",
+  "location": "Superior-posterior region of cerebral cortex behind the frontal lobe",
+  "description": "Integrates somatosensory inputs including touch, temperature, spatial navigation, coordinate transformation, and numerical processing.",
+  "functions": [
+    "Primary somatosensory perception (Postcentral Gyrus S1)",
+    "Spatial orientation and coordinate transformation",
+    "Visuospatial attention and body schema mapping",
+    "Mathematical calculation and symbolic representation"
+  ],
+  "bloodSupply": "Middle Cerebral Artery (MCA) & Anterior Cerebral Artery (ACA)",
+  "neurotransmitters": ["Glutamate", "GABA"],
+  "diseases": ["Gerstmann Syndrome", "Spatial Hemineglect", "Astereognosis", "Alzheimer's Disease"],
+  "clinicalImportance": "Damage to right parietal lobe leads to contralateral spatial neglect; left damage causes agraphia and acalculia.",
+  "researchNotes": "Intraparietal sulcus (IPS) activity correlates directly with spatial working memory load.",
+  "interestingFacts": ["Albert Einstein's parietal lobes were 15% wider than average brains."]
+}

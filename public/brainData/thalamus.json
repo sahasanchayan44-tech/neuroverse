@@ -1,0 +1,20 @@
+{
+  "id": "thalamus",
+  "name": "Thalamus",
+  "latinName": "Thalamus (Inner Chamber)",
+  "category": "embedded_core",
+  "location": "Diencephalon core surrounding the third ventricle",
+  "description": "The grand relay station of the brain, gating almost all sensory modalities (except olfaction) en route to cerebral cortex and regulating consciousness.",
+  "functions": [
+    "Sensory relay (LGN for vision, MGN for audition, VPL/VPM for somatosensory)",
+    "Thalamocortical rhythm generation and sleep spindle gating",
+    "Motor feedback routing from basal ganglia and cerebellum to motor cortex",
+    "Attention and arousal regulation via intralaminar nuclei"
+  ],
+  "bloodSupply": "Thalamoperforating & Thalamogeniculate branches of PCA",
+  "neurotransmitters": ["Glutamate", "GABA"],
+  "diseases": ["Thalamic Pain Syndrome (Dejerine-Roussy)", "Fatal Familial Insomnia", "Thalamic Stroke"],
+  "clinicalImportance": "Thalamic lesions cause severe contralateral sensory loss, intractable pain syndromes, or coma if bilateral.",
+  "researchNotes": "Thalamic reticular nucleus (TRN) acts as a attentional searchlight, selectively suppressing non-relevant sensory streams.",
+  "interestingFacts": ["Acts as the brain's central router, processing 99% of all incoming sensory data before cortex sees it."]
+}
