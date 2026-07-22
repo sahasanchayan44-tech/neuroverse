@@ -36,18 +36,20 @@ const COGNITION_MODES = [
 
 const DISEASE_CATEGORIES = [
   'All',
-  'Neurodegenerative',
-  'Cerebrovascular',
-  'Neuro-Oncology',
-  'Autoimmune & Inflammatory',
-  'Epilepsy & Seizures',
-  'Infectious',
-  'Traumatic & Injury',
-  'Psychiatric & Affective',
-  'Neurodevelopmental & Genetic',
-  'Movement & Neuromuscular',
-  'Sleep & Circadian',
-  'Toxic & Metabolic'
+  'Neurodegenerative & Dementias',
+  'Cerebrovascular & Stroke Disorders',
+  'Neuro-Oncology & Brain Tumors',
+  'Autoimmune & Inflammatory Encephalopathies',
+  'Epilepsy & Seizure Disorders',
+  'Infectious & Parasitic CNS Diseases',
+  'Traumatic & Structural Brain Injuries',
+  'Psychiatric, Affective & Behavioral Disorders',
+  'Movement & Extrapyramidal Disorders',
+  'Sleep & Circadian Rhythms',
+  'Toxic, Metabolic & Nutritional Encephalopathies',
+  'Cranial Nerves & Headache / Facial Pain',
+  'Pediatric, Neurodevelopmental & Genetic',
+  'Rare, Orphan & Miscellaneous Neurological Disorders'
 ];
 
 export const RightSidebar: React.FC<RightSidebarProps> = ({
@@ -77,7 +79,9 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
   const activeEpochDetail = EVOLUTIONARY_EPOCHS_DATABASE.find(e => e.id === selectedEpochId);
 
   const filteredDiseases = BRAIN_DISEASES_DATABASE.filter(d => {
-    const matchesCategory = selectedCategory === 'All' || d.category.toLowerCase().includes(selectedCategory.toLowerCase());
+    const matchesCategory = selectedCategory === 'All' || 
+      d.category.toLowerCase().includes(selectedCategory.toLowerCase()) || 
+      selectedCategory.toLowerCase().includes(d.category.toLowerCase());
     const query = diseaseSearch.toLowerCase();
     const matchesQuery = !query || 
       d.name.toLowerCase().includes(query) ||
