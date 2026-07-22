@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Zap, Stethoscope, Clock, Activity, Flame, ChevronRight, ChevronLeft, RefreshCw } from 'lucide-react';
+import { Zap, Stethoscope, Clock, Activity, Flame, ChevronRight, ChevronLeft, RefreshCw, Radio } from 'lucide-react';
 
 interface RightSidebarProps {
   activeSimulation: string | null;
@@ -45,7 +45,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
   onSelectDisease,
   onReset
 }) => {
-  const [activeTab, setActiveTab] = useState<'cognition' | 'pathology' | 'timeline'>('cognition');
+  const [activeTab, setActiveTab] = useState<'cognition' | 'pathology' | 'timeline' | 'spectrum'>('cognition');
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   if (isCollapsed) {
@@ -63,18 +63,18 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
   }
 
   return (
-    <aside className="absolute top-28 right-4 bottom-28 z-20 w-80 bg-neuro-panel backdrop-blur-xl border border-neuro-cyan/30 rounded-2xl shadow-hologram p-4 flex flex-col gap-3 overflow-y-auto text-white transition-all">
+    <aside className="absolute top-28 right-4 bottom-28 z-20 w-80 bg-neuro-panel backdrop-blur-xl border border-neuro-cyan/30 rounded-2xl shadow-hologram p-4 flex flex-col gap-3 overflow-y-auto text-white transition-all font-mono">
       
-      {/* Header with Minimize Button */}
+      {/* Sci-Fi HUD Tabs Header */}
       <div className="flex items-center justify-between border-b border-neuro-border pb-2">
-        <div className="flex gap-1 font-mono text-xs flex-1">
+        <div className="flex gap-1 text-[11px] flex-1">
           <button
             onClick={() => setActiveTab('cognition')}
             className={`flex-1 py-1 rounded-lg border transition-all flex items-center justify-center gap-1 font-bold ${
               activeTab === 'cognition' ? 'bg-neuro-cyan/20 border-neuro-cyan text-white shadow-cyan-glow' : 'bg-white/5 border-white/10 text-neuro-muted'
             }`}
           >
-            <Zap className="w-3.5 h-3.5" /> COGNITION
+            <Zap className="w-3 h-3" /> COG
           </button>
 
           <button
@@ -83,7 +83,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
               activeTab === 'pathology' ? 'bg-neuro-red/20 border-neuro-red text-white shadow-red-glow' : 'bg-white/5 border-white/10 text-neuro-muted'
             }`}
           >
-            <Stethoscope className="w-3.5 h-3.5" /> PATHOLOGY
+            <Stethoscope className="w-3 h-3" /> PATH
           </button>
 
           <button
@@ -92,7 +92,16 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
               activeTab === 'timeline' ? 'bg-neuro-purple/20 border-neuro-purple text-white shadow-purple-glow' : 'bg-white/5 border-white/10 text-neuro-muted'
             }`}
           >
-            <Clock className="w-3.5 h-3.5" /> TIMELINE
+            <Clock className="w-3 h-3" /> TIME
+          </button>
+
+          <button
+            onClick={() => setActiveTab('spectrum')}
+            className={`flex-1 py-1 rounded-lg border transition-all flex items-center justify-center gap-1 font-bold ${
+              activeTab === 'spectrum' ? 'bg-neuro-green/20 border-neuro-green text-white shadow-green-glow' : 'bg-white/5 border-white/10 text-neuro-muted'
+            }`}
+          >
+            <Radio className="w-3 h-3" /> SPEC
           </button>
         </div>
 
@@ -111,7 +120,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
           onClick={onReset}
           className="py-1.5 px-3 text-xs font-mono rounded-xl bg-white/10 border border-white/20 hover:bg-white/20 text-white transition-all flex items-center justify-center gap-2"
         >
-          <RefreshCw className="w-3.5 h-3.5 animate-spin" /> Reset Simulation / Pathology Mode
+          <RefreshCw className="w-3.5 h-3.5 animate-spin" /> Reset Active Simulation / Pathology
         </button>
       )}
 
@@ -201,6 +210,55 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
           <div className="p-3 bg-white/5 border border-white/10 rounded-xl text-xs flex flex-col gap-1">
             <span className="font-bold text-neuro-green font-mono">3. ADOLESCENT PRUNING (AGE 12-25)</span>
             <p className="text-gray-300 text-[11px] leading-snug">High-speed myelination of prefrontal executive control networks and synaptic pruning.</p>
+          </div>
+        </div>
+      )}
+
+      {/* Tab 4: EEG Power Spectrum Telemetry */}
+      {activeTab === 'spectrum' && (
+        <div className="flex flex-col gap-3 flex-1 overflow-y-auto font-mono text-xs">
+          <span className="text-[10px] text-neuro-green font-bold tracking-wider">
+            EEG POWER SPECTRAL DENSITY
+          </span>
+
+          <div className="p-3 bg-black/60 border border-white/10 rounded-xl flex flex-col gap-2">
+            <div className="flex justify-between">
+              <span className="text-neuro-pink font-bold">Gamma Band (30-100Hz)</span>
+              <span className="font-bold text-white">42 μV²</span>
+            </div>
+            <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
+              <div className="bg-neuro-pink h-full w-[78%]" />
+            </div>
+          </div>
+
+          <div className="p-3 bg-black/60 border border-white/10 rounded-xl flex flex-col gap-2">
+            <div className="flex justify-between">
+              <span className="text-neuro-cyan font-bold">Beta Band (13-30Hz)</span>
+              <span className="font-bold text-white">28 μV²</span>
+            </div>
+            <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
+              <div className="bg-neuro-cyan h-full w-[62%]" />
+            </div>
+          </div>
+
+          <div className="p-3 bg-black/60 border border-white/10 rounded-xl flex flex-col gap-2">
+            <div className="flex justify-between">
+              <span className="text-neuro-green font-bold">Alpha Band (8-12Hz)</span>
+              <span className="font-bold text-white">18 μV²</span>
+            </div>
+            <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
+              <div className="bg-neuro-green h-full w-[45%]" />
+            </div>
+          </div>
+
+          <div className="p-3 bg-black/60 border border-white/10 rounded-xl flex flex-col gap-2">
+            <div className="flex justify-between">
+              <span className="text-neuro-yellow font-bold">Theta / Delta Band (&lt;8Hz)</span>
+              <span className="font-bold text-white">12 μV²</span>
+            </div>
+            <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
+              <div className="bg-neuro-yellow h-full w-[30%]" />
+            </div>
           </div>
         </div>
       )}

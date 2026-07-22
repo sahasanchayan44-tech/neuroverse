@@ -2,7 +2,7 @@
 
 import React, { useState, useRef } from 'react';
 import dynamic from 'next/dynamic';
-import { ChevronDown, ChevronUp, Activity, Radio, Eye } from 'lucide-react';
+import { ChevronDown, ChevronUp, Activity, Radio, Eye, Cpu } from 'lucide-react';
 import { useBrainState } from '@/hooks/useBrainState';
 import { HeaderHUD } from '@/components/ui/HeaderHUD';
 import { LayerPanel } from '@/components/ui/LayerPanel';
@@ -11,6 +11,7 @@ import { InfoPanel } from '@/components/ui/InfoPanel';
 import { EEGWaveform } from '@/components/ui/EEGWaveform';
 import { AnatomyViewPanel } from '@/components/ui/AnatomyViewPanel';
 import { BrainSignalsPanel } from '@/components/ui/BrainSignalsPanel';
+import { ParametersPanel } from '@/components/ui/ParametersPanel';
 import { NeuronModal } from '@/components/ui/NeuronModal';
 import { ServerMetricsModal } from '@/components/ui/ServerMetricsModal';
 
@@ -137,16 +138,16 @@ export default function Home() {
       />
 
       {/* Bottom Telemetry & Anatomy Controls Dock */}
-      <div className="absolute bottom-3 left-4 right-4 z-20 max-w-5xl mx-auto flex flex-col gap-2 pointer-events-auto transition-all">
+      <div className="absolute bottom-3 left-4 right-4 z-20 max-w-6xl mx-auto flex flex-col gap-2 pointer-events-auto transition-all">
         
         {/* Toggle Bar */}
         <div className="flex items-center justify-between px-4 py-1.5 bg-neuro-panel/90 backdrop-blur-md border border-neuro-cyan/40 rounded-xl text-xs font-mono">
           <div className="flex items-center gap-3">
             <span className="font-bold text-neuro-cyan flex items-center gap-1.5">
-              <Activity className="w-4 h-4 text-neuro-green animate-pulse" /> TELEMETRY & SIGNAL DOCK
+              <Activity className="w-4 h-4 text-neuro-green animate-pulse" /> SCI-FI TELEMETRY & SIGNAL DOCK
             </span>
             <span className="text-[10px] text-neuro-muted hidden sm:inline">
-              [EEG Oscilloscope • 10-20 Signal Channels • Anatomy Explorer]
+              [Computed Biophysics • 10-20 Signals • EEG Waveforms]
             </span>
           </div>
 
@@ -170,6 +171,10 @@ export default function Home() {
         {/* Collapsible Content */}
         {!isDockCollapsed && (
           <div className="flex flex-col gap-2 animate-fade-in">
+            
+            {/* Computed Biophysical Parameters */}
+            <ParametersPanel structure={selectedStructure} />
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               <AnatomyViewPanel
                 structures={structures}
