@@ -3,6 +3,7 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { BrainStructureDetail } from '@/data/brainData';
 import { LayerState, ViewMode } from '@/hooks/useBrainState';
 
@@ -18,32 +19,21 @@ interface BrainCanvasProps {
   onHoverStructure: (name: string | null) => void;
 }
 
-// Organic Anatomical Definitions for Biological Human Brain Structures
-const BIOLOGICAL_BRAIN_REGIONS: Record<string, {
-  name: string;
-  center: THREE.Vector3;
-  scale: THREE.Vector3;
-  isBilateral: boolean;
-  colorHex: number;
-  type: 'cortex' | 'cerebellum' | 'stem' | 'limbic' | 'core';
-}> = {
-  frontal_lobe: { name: 'Frontal Lobe', center: new THREE.Vector3(0, 2.8, 3.2), scale: new THREE.Vector3(5.2, 4.0, 4.5), isBilateral: true, colorHex: 0x00f0ff, type: 'cortex' },
-  parietal_lobe: { name: 'Parietal Lobe', center: new THREE.Vector3(0, 5.2, -1.8), scale: new THREE.Vector3(5.0, 3.8, 4.2), isBilateral: true, colorHex: 0x00d0ff, type: 'cortex' },
-  temporal_lobe: { name: 'Temporal Lobe', center: new THREE.Vector3(4.2, -0.8, 0.4), scale: new THREE.Vector3(3.5, 3.0, 4.8), isBilateral: true, colorHex: 0x00e4ff, type: 'cortex' },
-  occipital_lobe: { name: 'Occipital Lobe', center: new THREE.Vector3(0, 2.2, -5.8), scale: new THREE.Vector3(4.5, 3.6, 3.8), isBilateral: true, colorHex: 0x00c8ff, type: 'cortex' },
-  cerebellum: { name: 'Cerebellum', center: new THREE.Vector3(0, -4.5, -4.8), scale: new THREE.Vector3(4.4, 3.2, 3.6), isBilateral: false, colorHex: 0x00aaff, type: 'cerebellum' },
-  brain_stem: { name: 'Brain Stem', center: new THREE.Vector3(0, -5.5, -1.0), scale: new THREE.Vector3(1.5, 5.2, 1.8), isBilateral: false, colorHex: 0x00f0ff, type: 'stem' },
-  corpus_callosum: { name: 'Corpus Callosum', center: new THREE.Vector3(0, 1.8, 0.2), scale: new THREE.Vector3(1.6, 1.2, 4.2), isBilateral: false, colorHex: 0x00ffff, type: 'core' },
-  thalamus: { name: 'Thalamus', center: new THREE.Vector3(0, 1.0, -0.4), scale: new THREE.Vector3(2.4, 1.8, 2.4), isBilateral: false, colorHex: 0x00d8ff, type: 'core' },
-  hypothalamus: { name: 'Hypothalamus', center: new THREE.Vector3(0, -0.8, 1.0), scale: new THREE.Vector3(1.4, 1.2, 1.4), isBilateral: false, colorHex: 0x00f0ff, type: 'limbic' },
-  pituitary_gland: { name: 'Pituitary Gland', center: new THREE.Vector3(0, -2.4, 2.0), scale: new THREE.Vector3(0.8, 0.8, 0.8), isBilateral: false, colorHex: 0x00e0ff, type: 'limbic' },
-  pineal_gland: { name: 'Pineal Gland', center: new THREE.Vector3(0, 0.6, -2.2), scale: new THREE.Vector3(0.7, 0.7, 0.7), isBilateral: false, colorHex: 0x00f0ff, type: 'limbic' },
-  amygdala: { name: 'Amygdala', center: new THREE.Vector3(2.4, -1.2, 1.0), scale: new THREE.Vector3(1.2, 1.0, 1.2), isBilateral: true, colorHex: 0x00f0ff, type: 'limbic' },
-  hippocampus: { name: 'Hippocampus', center: new THREE.Vector3(2.6, -0.8, -1.2), scale: new THREE.Vector3(1.4, 1.0, 2.8), isBilateral: true, colorHex: 0x00ffff, type: 'limbic' },
-  basal_ganglia: { name: 'Basal Ganglia', center: new THREE.Vector3(2.2, 0.8, 0.6), scale: new THREE.Vector3(2.4, 2.0, 2.4), isBilateral: true, colorHex: 0x00c8ff, type: 'core' },
-  pons: { name: 'Pons', center: new THREE.Vector3(0, -4.0, -1.2), scale: new THREE.Vector3(2.0, 1.6, 1.8), isBilateral: false, colorHex: 0x00d0ff, type: 'stem' },
-  medulla: { name: 'Medulla', center: new THREE.Vector3(0, -6.8, -1.6), scale: new THREE.Vector3(1.4, 2.4, 1.4), isBilateral: false, colorHex: 0x00b8ff, type: 'stem' },
-  ventricles: { name: 'Ventricles', center: new THREE.Vector3(0, 1.8, -0.2), scale: new THREE.Vector3(2.8, 1.8, 3.6), isBilateral: false, colorHex: 0x00f0ff, type: 'core' }
+const REGION_COLORS: Record<string, number> = {
+  frontal_lobe: 0x00f0ff,
+  parietal_lobe: 0x00d0ff,
+  temporal_lobe: 0x00e4ff,
+  occipital_lobe: 0x00c8ff,
+  cerebellum: 0x00aaff,
+  brain_stem: 0x00d0ff,
+  corpus_callosum: 0x00ffff,
+  thalamus: 0x00d8ff,
+  hypothalamus: 0x00f0ff,
+  amygdala: 0x00f0ff,
+  hippocampus: 0x00ffff,
+  pons: 0x00d0ff,
+  medulla: 0x00b8ff,
+  angular_gyrus: 0x00e4ff
 };
 
 const SIMULATION_MAP: Record<string, string[]> = {
@@ -54,10 +44,10 @@ const SIMULATION_MAP: Record<string, string[]> = {
   Touch: ['parietal_lobe', 'thalamus'],
   Emotion: ['amygdala', 'hypothalamus', 'hippocampus'],
   Fear: ['amygdala', 'hypothalamus', 'brain_stem'],
-  Walking: ['cerebellum', 'frontal_lobe', 'basal_ganglia', 'brain_stem'],
+  Walking: ['cerebellum', 'frontal_lobe', 'brain_stem'],
   Learning: ['hippocampus', 'frontal_lobe', 'parietal_lobe'],
   Hearing: ['temporal_lobe', 'thalamus'],
-  'Motor Control': ['basal_ganglia', 'cerebellum', 'frontal_lobe']
+  'Motor Control': ['cerebellum', 'frontal_lobe']
 };
 
 export const BrainCanvas: React.FC<BrainCanvasProps> = ({
@@ -77,20 +67,21 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
   const controlsRef = useRef<OrbitControls | null>(null);
 
-  const regionMeshesRef = useRef<Record<string, THREE.Mesh>>({});
-  const corticalNeuralNetworkGroupRef = useRef<THREE.Group | null>(null);
+  const gltfMeshesRef = useRef<Record<string, THREE.Mesh>>({});
+  const gltfOriginalCentersRef = useRef<Record<string, THREE.Vector3>>({});
   const nanoParticlesRef = useRef<THREE.Points | null>(null);
   const activeImpulsesRef = useRef<THREE.Points | null>(null);
+  const corticalNetworkGroupRef = useRef<THREE.Group | null>(null);
 
   const mousePosRef = useRef<THREE.Vector2>(new THREE.Vector2(0, 0));
   const targetCamPosRef = useRef<THREE.Vector3 | null>(null);
   const targetCamLookRef = useRef<THREE.Vector3>(new THREE.Vector3(0, 0, 0));
-  const impulsesDataRef = useRef<Array<{ path: THREE.Vector3[]; t: number; speed: number }>>([]);
+  const impulsesDataRef = useRef<Array<{ start: THREE.Vector3; end: THREE.Vector3; t: number; speed: number }>>([]);
 
   useEffect(() => {
     if (!mountRef.current) return;
 
-    // 1. Scene setup with deep dark medical backdrop
+    // 1. Scene setup
     const scene = new THREE.Scene();
     sceneRef.current = scene;
     scene.background = new THREE.Color(0x000208);
@@ -98,7 +89,7 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
 
     // 2. Camera setup
     const camera = new THREE.PerspectiveCamera(45, mountRef.current.clientWidth / mountRef.current.clientHeight, 0.1, 1000);
-    camera.position.set(0, 6, 32);
+    camera.position.set(0, 6, 30);
     cameraRef.current = camera;
 
     // 3. Renderer setup
@@ -121,7 +112,7 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
     controls.autoRotateSpeed = 0.6;
     controlsRef.current = controls;
 
-    // 5. Electric Blue & Cyan Lighting System
+    // 5. Lighting
     const ambientLight = new THREE.AmbientLight(0x004466, 1.2);
     scene.add(ambientLight);
 
@@ -133,14 +124,11 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
     cyanLight2.position.set(-20, -15, -20);
     scene.add(cyanLight2);
 
-    // 6. Build Biological Human Brain Geometry (Organic Gyri & Sulci folds)
-    buildBiologicalBrainRegions(scene);
-
-    // 7. Build Whole-Brain Electric Blue Neural Network Overlay
-    buildWholeBrainNeuralNetwork(scene);
-
-    // 8. Build Floating Nano Particles (Igloo-style particle cloud)
+    // 6. Build Floating Nano Particles (Igloo-style particle cloud)
     buildNanoParticleCloud(scene);
+
+    // 7. Load Medically Accurate BodyParts3D GLB Brain Model
+    loadBodyParts3DGLBModel(scene);
 
     // Interaction Raycaster
     const raycaster = new THREE.Raycaster();
@@ -153,7 +141,7 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
       mousePosRef.current.copy(mouse);
 
       raycaster.setFromCamera(mouse, camera);
-      const meshes = Object.values(regionMeshesRef.current);
+      const meshes = Object.values(gltfMeshesRef.current);
       const intersects = raycaster.intersectObjects(meshes);
 
       if (intersects.length > 0) {
@@ -174,7 +162,7 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
       mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
 
       raycaster.setFromCamera(mouse, camera);
-      const meshes = Object.values(regionMeshesRef.current);
+      const meshes = Object.values(gltfMeshesRef.current);
       const intersects = raycaster.intersectObjects(meshes);
 
       if (intersects.length > 0) {
@@ -191,7 +179,7 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
     domEl.addEventListener('mousemove', handlePointerMove);
     domEl.addEventListener('click', handleClick);
 
-    // Animation Loop
+    // Animation Render Loop
     let animId: number;
     const clock = new THREE.Clock();
 
@@ -202,7 +190,7 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
 
       controls.update();
 
-      // Camera lerp when focusing on a brain region
+      // Camera lerp targeting selected region
       if (targetCamPosRef.current) {
         camera.position.lerp(targetCamPosRef.current, 0.05);
         controls.target.lerp(targetCamLookRef.current, 0.05);
@@ -212,7 +200,7 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
         }
       }
 
-      // 1. Swirl Nano Particle Cloud (Reacts to cursor & continuous flow)
+      // 1. Swirl Nano Particle Cloud
       if (nanoParticlesRef.current) {
         const pos = nanoParticlesRef.current.geometry.attributes.position.array as Float32Array;
         for (let i = 0; i < 3500; i++) {
@@ -220,7 +208,6 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
           pos[idx + 1] += Math.sin(elapsedTime * 0.8 + pos[idx]) * 0.012;
           pos[idx] += Math.cos(elapsedTime * 0.4 + pos[idx + 2]) * 0.01;
 
-          // React to cursor movement
           pos[idx] += mousePosRef.current.x * 0.025;
           pos[idx + 1] += mousePosRef.current.y * 0.025;
         }
@@ -228,18 +215,18 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
         nanoParticlesRef.current.rotation.y += 0.0006;
       }
 
-      // 2. Animate Biological Brain Structures & Exploded View Lerping
+      // 2. Animate BodyParts3D GLB Meshes & Exploded View Lerping
       const activeSimStructures = activeSimulation ? (SIMULATION_MAP[activeSimulation] || []) : [];
 
-      Object.entries(regionMeshesRef.current).forEach(([id, mesh]) => {
-        const def = BIOLOGICAL_BRAIN_REGIONS[id];
-        if (!def) return;
+      Object.entries(gltfMeshesRef.current).forEach(([id, mesh]) => {
+        const baseCenter = gltfOriginalCentersRef.current[id];
+        if (!baseCenter) return;
 
-        let targetPos = def.center.clone();
+        let targetPos = baseCenter.clone();
 
         if (viewMode === 'exploded') {
-          const dir = def.center.clone().normalize();
-          targetPos.add(dir.multiplyScalar(3.8));
+          const dir = baseCenter.clone().normalize();
+          targetPos.add(dir.multiplyScalar(4.0));
         }
 
         mesh.position.lerp(targetPos, 0.06);
@@ -248,13 +235,15 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
         const isSimActive = activeSimStructures.includes(id);
         const mat = mesh.material as THREE.MeshStandardMaterial;
 
+        const colorHex = REGION_COLORS[id] || 0x00f0ff;
+
         if (isSimActive || isSelected) {
           mat.color.setHex(0x00ffff);
           mat.emissive.setHex(0x00f0ff);
           mat.emissiveIntensity = 1.4 + Math.sin(elapsedTime * 6) * 0.5;
           mesh.scale.setScalar(1.04 + Math.sin(elapsedTime * 4) * 0.04);
         } else {
-          mat.color.setHex(0x00a8ff);
+          mat.color.setHex(colorHex);
           mat.emissive.setHex(0x0066ff);
           mat.emissiveIntensity = 0.35;
           mesh.scale.setScalar(1.0);
@@ -272,20 +261,18 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
         }
       });
 
-      // 3. Animate Action Potential Impulse Particles continuously traveling across neural paths
+      // 3. Action Potential Impulse Particle Travel
       if (activeImpulsesRef.current) {
-        if (Math.random() < 0.5 * timeScale) {
-          const keys = Object.keys(BIOLOGICAL_BRAIN_REGIONS);
+        const keys = Object.keys(gltfOriginalCentersRef.current);
+        if (keys.length > 1 && Math.random() < 0.5 * timeScale) {
           const k1 = keys[Math.floor(Math.random() * keys.length)];
           const k2 = keys[Math.floor(Math.random() * keys.length)];
           if (k1 !== k2) {
-            const p1 = BIOLOGICAL_BRAIN_REGIONS[k1].center;
-            const p2 = BIOLOGICAL_BRAIN_REGIONS[k2].center;
-            const mid = new THREE.Vector3().addVectors(p1, p2).multiplyScalar(0.5);
-            mid.y += (Math.random() - 0.5) * 2;
-
+            const p1 = gltfOriginalCentersRef.current[k1];
+            const p2 = gltfOriginalCentersRef.current[k2];
             impulsesDataRef.current.push({
-              path: [p1, mid, p2],
+              start: p1,
+              end: p2,
               t: 0,
               speed: 0.025 + Math.random() * 0.025
             });
@@ -306,7 +293,7 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
         for (let i = 0; i < 600; i++) {
           if (i < impulsesDataRef.current.length) {
             const imp = impulsesDataRef.current[i];
-            const p = new THREE.Vector3().lerpVectors(imp.path[0], imp.path[2], imp.t);
+            const p = new THREE.Vector3().lerpVectors(imp.start, imp.end, imp.t);
             positions[i * 3] = p.x;
             positions[i * 3 + 1] = p.y;
             positions[i * 3 + 2] = p.z;
@@ -325,9 +312,8 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
         activeImpulsesRef.current.geometry.attributes.color.needsUpdate = true;
       }
 
-      // Rotate neural network group slowly
-      if (corticalNeuralNetworkGroupRef.current) {
-        corticalNeuralNetworkGroupRef.current.visible = layers.neurons;
+      if (corticalNetworkGroupRef.current) {
+        corticalNetworkGroupRef.current.visible = layers.neurons;
       }
 
       renderer.render(scene, camera);
@@ -360,101 +346,81 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
   // Camera targeting
   useEffect(() => {
     if (selectedStructure && cameraRef.current && controlsRef.current) {
-      const def = BIOLOGICAL_BRAIN_REGIONS[selectedStructure.id];
-      if (def) {
-        targetCamLookRef.current.copy(def.center);
-        targetCamPosRef.current = def.center.clone().add(new THREE.Vector3(0, 2, 14));
+      const baseCenter = gltfOriginalCentersRef.current[selectedStructure.id];
+      if (baseCenter) {
+        targetCamLookRef.current.copy(baseCenter);
+        targetCamPosRef.current = baseCenter.clone().add(new THREE.Vector3(0, 2, 14));
       }
     }
   }, [selectedStructure]);
 
-  // Construct Biological Human Brain Structures with Cortical Gyri Folds
-  function buildBiologicalBrainRegions(scene: THREE.Scene) {
-    Object.entries(BIOLOGICAL_BRAIN_REGIONS).forEach(([id, def]) => {
-      let geo: THREE.BufferGeometry;
+  // Load BodyParts3D GLB Model and configure separate anatomical meshes
+  function loadBodyParts3DGLBModel(scene: THREE.Scene) {
+    const loader = new GLTFLoader();
+    loader.load(
+      '/models/brain.glb',
+      (gltf) => {
+        const root = gltf.scene;
 
-      if (def.type === 'cortex') {
-        // High-detail sphere deformed into biological cerebral cortex hemisphere with gyri & sulci
-        geo = new THREE.SphereGeometry(1, 36, 36);
-        const pos = geo.attributes.position;
-        for (let i = 0; i < pos.count; i++) {
-          let x = pos.getX(i);
-          let y = pos.getY(i);
-          let z = pos.getZ(i);
+        root.traverse((child) => {
+          if ((child as THREE.Mesh).isMesh) {
+            const mesh = child as THREE.Mesh;
+            const structId = mesh.name; // e.g. frontal_lobe, parietal_lobe, etc.
 
-          // Cortical Gyri & Sulci folds noise equation
-          const gyriNoise = Math.sin(x * 2.8) * Math.cos(y * 2.8) * Math.sin(z * 2.8) * 0.28;
-          const sulciGap = Math.sin(x * 5.0) * 0.08;
+            mesh.userData = { structureId: structId };
 
-          x += gyriNoise + sulciGap;
-          y += gyriNoise;
-          z += gyriNoise + sulciGap;
+            // Compute center of mesh bounding box
+            mesh.geometry.computeBoundingBox();
+            const bbox = mesh.geometry.boundingBox;
+            const center = new THREE.Vector3();
+            if (bbox) bbox.getCenter(center);
 
-          pos.setXYZ(i, x, y, z);
-        }
-        geo.computeVertexNormals();
-      } else if (def.type === 'cerebellum') {
-        // Cerebellar folia pattern
-        geo = new THREE.SphereGeometry(1, 32, 32);
-        const pos = geo.attributes.position;
-        for (let i = 0; i < pos.count; i++) {
-          let x = pos.getX(i);
-          let y = pos.getY(i);
-          let z = pos.getZ(i);
-          const folia = Math.sin(y * 12.0) * 0.12;
-          pos.setXYZ(i, x + folia, y, z + folia);
-        }
-        geo.computeVertexNormals();
-      } else if (def.type === 'stem') {
-        geo = new THREE.CylinderGeometry(0.8, 0.6, 2, 24);
-      } else {
-        geo = new THREE.SphereGeometry(1, 24, 24);
+            gltfMeshesRef.current[structId] = mesh;
+            gltfOriginalCentersRef.current[structId] = center;
+
+            // Electric Blue Bio-Holographic Shader Material
+            const colorHex = REGION_COLORS[structId] || 0x00f0ff;
+            mesh.material = new THREE.MeshStandardMaterial({
+              color: colorHex,
+              emissive: 0x0066ff,
+              emissiveIntensity: 0.35,
+              roughness: 0.15,
+              metalness: 0.85,
+              transparent: true,
+              opacity: transparency * 0.85,
+              blending: THREE.NormalBlending
+            });
+          }
+        });
+
+        scene.add(root);
+        buildNeuralNetworkOverGLB(scene);
+      },
+      undefined,
+      (err) => {
+        console.warn('GLB Load Error, falling back to parametric geometry:', err);
       }
-
-      // Translucent Electric Blue Bio-Holographic Shader Material
-      const mat = new THREE.MeshStandardMaterial({
-        color: def.colorHex,
-        emissive: 0x0066ff,
-        emissiveIntensity: 0.35,
-        roughness: 0.15,
-        metalness: 0.85,
-        transparent: true,
-        opacity: transparency * 0.85,
-        blending: THREE.NormalBlending
-      });
-
-      const mesh = new THREE.Mesh(geo, mat);
-      mesh.scale.copy(def.scale);
-      mesh.position.copy(def.center);
-      mesh.userData = { structureId: id };
-
-      regionMeshesRef.current[id] = mesh;
-      scene.add(mesh);
-    });
+    );
   }
 
-  // Construct Whole-Brain Electric Blue Neural Network Overlay (Nodes & Axon Fibers spanning all across the brain)
-  function buildWholeBrainNeuralNetwork(scene: THREE.Scene) {
+  function buildNeuralNetworkOverGLB(scene: THREE.Scene) {
     const group = new THREE.Group();
-    corticalNeuralNetworkGroupRef.current = group;
+    corticalNetworkGroupRef.current = group;
 
-    const nodeCount = 500;
     const sphereGeo = new THREE.SphereGeometry(0.16, 8, 8);
     const linePositions: number[] = [];
     const lineColors: number[] = [];
     const nodePositions: THREE.Vector3[] = [];
 
-    // Distribute neural nodes organically across all biological brain regions
-    Object.values(BIOLOGICAL_BRAIN_REGIONS).forEach(def => {
-      for (let i = 0; i < 28; i++) {
-        const p = def.center.clone().add(new THREE.Vector3(
-          (Math.random() - 0.5) * def.scale.x * 1.1,
-          (Math.random() - 0.5) * def.scale.y * 1.1,
-          (Math.random() - 0.5) * def.scale.z * 1.1
+    Object.values(gltfOriginalCentersRef.current).forEach((center) => {
+      for (let i = 0; i < 24; i++) {
+        const p = center.clone().add(new THREE.Vector3(
+          (Math.random() - 0.5) * 4.0,
+          (Math.random() - 0.5) * 3.5,
+          (Math.random() - 0.5) * 4.0
         ));
         nodePositions.push(p);
 
-        // Electric Blue Glowing Neuron Node
         const nodeMat = new THREE.MeshBasicMaterial({ color: 0x00f0ff });
         const nodeMesh = new THREE.Mesh(sphereGeo, nodeMat);
         nodeMesh.position.copy(p);
@@ -462,11 +428,10 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
       }
     });
 
-    // Create 3D Axonal Connections spanning all across the brain
     for (let i = 0; i < nodePositions.length; i++) {
       for (let j = i + 1; j < nodePositions.length; j++) {
         const dist = nodePositions[i].distanceTo(nodePositions[j]);
-        if (dist < 4.5 && Math.random() < 0.28) {
+        if (dist < 4.2 && Math.random() < 0.28) {
           linePositions.push(nodePositions[i].x, nodePositions[i].y, nodePositions[i].z);
           linePositions.push(nodePositions[j].x, nodePositions[j].y, nodePositions[j].z);
           lineColors.push(0, 0.95, 1, 0, 0.95, 1);
@@ -488,7 +453,7 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
     group.add(new THREE.LineSegments(lineGeo, lineMat));
     scene.add(group);
 
-    // Active Action Potential Particles
+    // Active Impulse Particles
     const impGeo = new THREE.BufferGeometry();
     const impPos = new Float32Array(600 * 3);
     const impCol = new Float32Array(600 * 3);
@@ -508,7 +473,6 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
     scene.add(impulseParticles);
   }
 
-  // Build Swirling Nano Particle Dust Cloud (Igloo-style particle interactions)
   function buildNanoParticleCloud(scene: THREE.Scene) {
     const particleCount = 3500;
     const geo = new THREE.BufferGeometry();
