@@ -39,7 +39,8 @@ export default function Home() {
     toggleLayer,
     setIsAudioActive,
     setTimeScale,
-    setTransparency
+    setTransparency,
+    setSearchQuery
   } = useBrainState();
 
   const [selectedDisease, setSelectedDisease] = useState<string | null>(null);
@@ -103,6 +104,8 @@ export default function Home() {
         activeSimulation={activeSimulation}
         viewMode={viewMode}
         isAudioActive={isAudioActive}
+        searchQuery={searchQuery}
+        onSearchQueryChange={setSearchQuery}
         onSelectStructure={setSelectedStructure}
         onSelectSimulation={selectSimulation}
         onChangeViewMode={setViewMode}

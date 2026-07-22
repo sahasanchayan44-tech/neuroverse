@@ -4,12 +4,15 @@ import React, { useState } from 'react';
 import { Search, Brain, Volume2, VolumeX, Camera, Zap, ShieldCheck } from 'lucide-react';
 import { BrainStructureDetail } from '@/data/brainData';
 import { ViewMode } from '@/hooks/useBrainState';
+import { fuzzySearchStructures } from '@/utils/fuzzySearch';
 
 interface HeaderHUDProps {
   structures: BrainStructureDetail[];
   activeSimulation: string | null;
   viewMode: ViewMode;
   isAudioActive: boolean;
+  searchQuery?: string;
+  onSearchQueryChange?: (q: string) => void;
   onSelectStructure: (s: BrainStructureDetail) => void;
   onSelectSimulation: (sim: string) => void;
   onChangeViewMode: (mode: ViewMode) => void;
@@ -28,6 +31,8 @@ export const HeaderHUD: React.FC<HeaderHUDProps> = ({
   activeSimulation,
   viewMode,
   isAudioActive,
+  searchQuery: externalSearchQuery,
+  onSearchQueryChange,
   onSelectStructure,
   onSelectSimulation,
   onChangeViewMode,
@@ -36,14 +41,32 @@ export const HeaderHUD: React.FC<HeaderHUDProps> = ({
   onOpenNeuronModal,
   onOpenMetricsModal
 }) => {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [internalQuery, setInternalQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
 
-  const filteredStructures = searchQuery.trim() === '' ? [] : structures.filter(s =>
-    s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    s.latinName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    s.functions.some(f => f.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
+  const query = externalSearchQuery !== undefined ? externalSearchQuery : internalQuery;
+
+  const handleQueryChange = (val: string) => {
+    setInternalQuery(val);
+    if (onSearchQueryChange) {
+      onSearchQueryChange(val);
+    }
+    setIsSearching(true);
+  };
+
+  const fuzzyResults = fuzzySearchStructures(structures, query);
+
+  const handleSelect = (structure: BrainStructureDetail) => {
+    onSelectStructure(structure);
+    setIsSearching(false);
+    handleQueryChange('');
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && fuzzyResults.length > 0) {
+      handleSelect(fuzzyResults[0].item);
+    }
+  };
 
   return (
     <header className="absolute top-4 left-4 right-4 z-30 flex flex-col gap-3 p-3.5 bg-neuro-panel backdrop-blur-xl border border-neuro-cyan/40 rounded-2xl shadow-hologram">
@@ -64,38 +87,51 @@ export const HeaderHUD: React.FC<HeaderHUDProps> = ({
           </div>
         </div>
 
-        {/* Search Bar */}
+        {/* Global Fuzzy Search Bar */}
         <div className="relative flex-1 max-w-md">
           <div className="relative flex items-center">
             <Search className="absolute left-3 w-4 h-4 text-neuro-cyan" />
             <input
               type="text"
-              value={searchQuery}
-              onChange={(e) => {
-                setSearchQuery(e.target.value);
-                setIsSearching(true);
-              }}
+              value={query}
+              onChange={(e) => handleQueryChange(e.target.value)}
+              onKeyDown={handleKeyDown}
               onFocus={() => setIsSearching(true)}
-              placeholder="Search structure (e.g. Hippocampus, Amygdala, Thalamus)..."
+              onBlur={() => setTimeout(() => setIsSearching(false), 200)}
+              placeholder="Fuzzy search (e.g. Hippocampus, Amygdala, Thalamus)..."
               className="w-full pl-9 pr-4 py-2 bg-black/60 border border-neuro-border rounded-xl text-xs font-mono text-white placeholder-gray-500 outline-none focus:border-neuro-cyan focus:shadow-cyan-glow transition-all"
             />
           </div>
 
-          {/* Autocomplete Dropdown */}
-          {isSearching && filteredStructures.length > 0 && (
-            <div className="absolute top-11 left-0 right-0 max-h-60 overflow-y-auto bg-neuro-dark border border-neuro-cyan/50 rounded-xl shadow-hologram p-2 flex flex-col gap-1 text-xs z-50">
-              {filteredStructures.map(s => (
+          {/* Fuzzy Autocomplete Dropdown */}
+          {isSearching && fuzzyResults.length > 0 && (
+            <div className="absolute top-11 left-0 right-0 max-h-64 overflow-y-auto bg-neuro-dark border border-neuro-cyan/50 rounded-xl shadow-hologram p-2 flex flex-col gap-1 text-xs z-50">
+              {fuzzyResults.map(({ item: s, score, matchType }) => (
                 <button
                   key={s.id}
-                  onClick={() => {
-                    onSelectStructure(s);
-                    setIsSearching(false);
-                    setSearchQuery('');
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    handleSelect(s);
                   }}
-                  className="flex items-center justify-between p-2 rounded-lg hover:bg-neuro-cyan/20 text-left transition-all"
+                  className="flex items-center justify-between p-2 rounded-lg hover:bg-neuro-cyan/20 text-left transition-all group"
                 >
-                  <span className="font-bold text-white font-sans">{s.name}</span>
-                  <span className="text-[10px] font-mono text-neuro-cyan">{s.latinName}</span>
+                  <div className="flex flex-col">
+                    <span className="font-bold text-white font-sans group-hover:text-neuro-cyan transition-colors">{s.name}</span>
+                    {s.latinName && (
+                      <span className="text-[9px] font-mono text-gray-400">{s.latinName}</span>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <span className={`text-[9px] font-mono px-1.5 py-0.5 rounded border uppercase ${
+                      matchType === 'exact'
+                        ? 'bg-neuro-green/20 border-neuro-green text-neuro-green'
+                        : matchType === 'fuzzy'
+                        ? 'bg-neuro-yellow/20 border-neuro-yellow text-neuro-yellow'
+                        : 'bg-neuro-cyan/20 border-neuro-cyan text-neuro-cyan'
+                    }`}>
+                      {matchType} ({score}%)
+                    </span>
+                  </div>
                 </button>
               ))}
             </div>
