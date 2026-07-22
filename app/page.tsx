@@ -90,6 +90,7 @@ export default function Home() {
         structures={structures}
         selectedStructure={selectedStructure}
         activeSimulation={activeSimulation}
+        selectedDisease={selectedDisease}
         viewMode={viewMode}
         layers={layers}
         transparency={transparency}

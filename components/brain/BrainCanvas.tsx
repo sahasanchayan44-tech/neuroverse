@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { BrainStructureDetail } from '@/data/brainData';
 import { LayerState, ViewMode } from '@/hooks/useBrainState';
 import { MeshHighlightManager } from './MeshHighlightManager';
@@ -15,6 +16,7 @@ interface BrainCanvasProps {
   structures: BrainStructureDetail[];
   selectedStructure: BrainStructureDetail | null;
   activeSimulation: string | null;
+  selectedDisease?: string | null;
   viewMode: ViewMode;
   layers: LayerState;
   transparency: number;
@@ -24,6 +26,32 @@ interface BrainCanvasProps {
   onSelectStructure: (s: BrainStructureDetail | null) => void;
   onHoverStructure: (name: string | null) => void;
 }
+
+const DISEASE_3D_TARGETS: Record<string, string[]> = {
+  alzheimers: ['hippocampus', 'temporal_lobe', 'parietal_lobe', 'frontal_lobe'],
+  parkinsons: ['basal_ganglia', 'brain_stem', 'pons'],
+  glioblastoma: ['temporal_lobe', 'frontal_lobe', 'parietal_lobe'],
+  ischemic_stroke: ['parietal_lobe', 'frontal_lobe', 'basal_ganglia'],
+  hemorrhagic_stroke: ['basal_ganglia', 'ventricles', 'thalamus'],
+  temporal_lobe_epilepsy: ['hippocampus', 'amygdala', 'temporal_lobe'],
+  multiple_sclerosis: ['corpus_callosum', 'brain_stem'],
+  meningitis: ['frontal_lobe', 'parietal_lobe', 'temporal_lobe', 'occipital_lobe'],
+  encephalitis: ['temporal_lobe', 'hippocampus', 'amygdala'],
+  brain_abscess: ['frontal_lobe', 'parietal_lobe'],
+  tbi: ['frontal_lobe', 'temporal_lobe'],
+  concussion: ['frontal_lobe', 'parietal_lobe'],
+  major_depression: ['frontal_lobe', 'amygdala', 'hippocampus'],
+  schizophrenia: ['frontal_lobe', 'temporal_lobe', 'thalamus', 'ventricles'],
+  bipolar_disorder: ['amygdala', 'hippocampus', 'frontal_lobe'],
+  als: ['frontal_lobe', 'brain_stem', 'medulla'],
+  huntingtons: ['basal_ganglia', 'ventricles'],
+  hydrocephalus: ['ventricles'],
+  myasthenia_gravis: ['brain_stem'],
+  insomnia: ['hypothalamus', 'thalamus', 'pineal_gland'],
+  wernicke_korsakoff: ['thalamus', 'hypothalamus'],
+  adhd: ['frontal_lobe', 'basal_ganglia'],
+  autism_spectrum: ['amygdala', 'cerebellum', 'frontal_lobe']
+};
 
 // Embedded Anatomical Definitions for Real Human Brain Structures
 interface EmbeddedPartDef {
@@ -78,6 +106,7 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
   structures,
   selectedStructure,
   activeSimulation,
+  selectedDisease,
   viewMode,
   layers,
   transparency,
@@ -98,6 +127,7 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
   const activeImpulsesRef = useRef<THREE.Points | null>(null);
   const neuralNetworkGroupRef = useRef<THREE.Group | null>(null);
   const outerBrainShellGroupRef = useRef<THREE.Group | null>(null);
+  const loadedBrainGroupRef = useRef<THREE.Group | null>(null);
   const highlightManagerRef = useRef<MeshHighlightManager | null>(null);
   const camControllerRef = useRef<CinematicCameraController | null>(null);
   const neuralPathwaySystemRef = useRef<NeuralPathwaySystem | null>(null);
@@ -213,10 +243,13 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
     // 6. Build Floating Nano Particles (Igloo-style particle cloud)
     buildNanoParticleCloud(scene);
 
-    // 7. Build Main Translucent Bio-Holographic Outer Brain Shell
+    // 7. Load Real Human Brain 3D Model File (.GLB)
+    loadHumanBrainGLBModel(scene);
+
+    // 8. Build Main Translucent Bio-Holographic Outer Brain Shell
     buildMainBrainOuterShell(scene);
 
-    // 8. Build Real Human Brain Geometry with Embedded Internal Organs
+    // 9. Build Real Human Brain Geometry with Embedded Internal Organs
     buildEmbeddedHumanBrain(scene);
 
     // 9. Build Whole-Brain Neural Network (Axon fibers linking embedded parts)
@@ -335,6 +368,19 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
         }
       }
 
+      // Update loaded 3D Human Brain GLB Model Asset Animation & Layer Control
+      if (loadedBrainGroupRef.current) {
+        loadedBrainGroupRef.current.visible = layers.greyMatter;
+
+        loadedBrainGroupRef.current.traverse((child) => {
+          if (child instanceof THREE.Mesh && child.material instanceof THREE.MeshStandardMaterial) {
+            child.material.emissiveIntensity = 0.35 + Math.sin(elapsedTime * 2.0) * 0.15;
+            child.material.opacity = transparency * (viewMode === 'exploded' ? 0.12 : viewMode === 'xray' ? 0.08 : 0.32);
+            child.material.wireframe = (viewMode === 'wireframe' || viewMode === 'xray');
+          }
+        });
+      }
+
       // Update modular mesh highlighting, color transition lerps, and outline pulsing
       if (highlightManagerRef.current) {
         highlightManagerRef.current.update(delta, elapsedTime);
@@ -378,6 +424,7 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
 
       // 2. Animate Embedded Brain Structures & Exploded View Lerping
       const activeSimStructures = activeSimulation ? (SIMULATION_MAP[activeSimulation] || []) : [];
+      const activeDiseaseTargets = selectedDisease ? (DISEASE_3D_TARGETS[selectedDisease] || []) : [];
       const hasEmbeddedSelection = selectedStructure && EMBEDDED_BRAIN_PARTS[selectedStructure.id]?.category !== 'outer_cortex';
 
       Object.entries(partMeshesRef.current).forEach(([id, mesh]) => {
@@ -395,16 +442,22 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
 
         const isSelected = selectedStructure && selectedStructure.id === id;
         const isSimActive = activeSimStructures.includes(id);
+        const isDiseaseTarget = activeDiseaseTargets.includes(id);
         const mat = mesh.material as THREE.MeshStandardMaterial;
 
         // When an embedded internal organ is selected, fade outer cortex so the inner organ shines through!
-        if (hasEmbeddedSelection && def.category === 'outer_cortex' && !isSelected && !isSimActive) {
+        if (hasEmbeddedSelection && def.category === 'outer_cortex' && !isSelected && !isSimActive && !isDiseaseTarget) {
           mat.opacity = 0.12;
         } else {
           mat.opacity = transparency * (def.category === 'outer_cortex' ? 0.75 : 0.95);
         }
 
-        if (isSimActive) {
+        if (isDiseaseTarget) {
+          mat.color.setHex(0xff0044);
+          mat.emissive.setHex(0xff0022);
+          mat.emissiveIntensity = 2.2 + Math.sin(elapsedTime * 8) * 0.8;
+          mesh.scale.setScalar(1.08 + Math.sin(elapsedTime * 6) * 0.05);
+        } else if (isSimActive) {
           mat.color.setHex(def.colorHex);
           mat.emissive.setHex(def.colorHex);
           mat.emissiveIntensity = 1.5 + Math.sin(elapsedTime * 6) * 0.5;
@@ -510,6 +563,54 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
       }
     };
   }, [structures]);
+
+  // Load Real 3D Human Brain GLB Model Asset
+  function loadHumanBrainGLBModel(scene: THREE.Scene) {
+    const gltfLoader = new GLTFLoader();
+    gltfLoader.load(
+      '/models/brain.glb',
+      (gltf) => {
+        const model = gltf.scene;
+        model.name = 'real_human_brain_3d_model';
+        loadedBrainGroupRef.current = model;
+
+        // Compute Bounding Box to scale and position model around internal circuits
+        const box = new THREE.Box3().setFromObject(model);
+        const center = box.getCenter(new THREE.Vector3());
+        const size = box.getSize(new THREE.Vector3());
+
+        const maxDim = Math.max(size.x, size.y, size.z);
+        const scaleFactor = 15.0 / (maxDim || 1);
+
+        model.position.sub(center.clone().multiplyScalar(scaleFactor));
+        model.position.y += 0.5;
+        model.scale.setScalar(scaleFactor);
+
+        // Apply Translucent Bio-Holographic Shader Materials to all GLB sub-meshes
+        model.traverse((child) => {
+          if (child instanceof THREE.Mesh) {
+            child.material = new THREE.MeshStandardMaterial({
+              color: 0x00f0ff,
+              emissive: 0x0055ff,
+              emissiveIntensity: 0.4,
+              roughness: 0.15,
+              metalness: 0.85,
+              transparent: true,
+              opacity: transparency * 0.35,
+              side: THREE.DoubleSide,
+              blending: THREE.NormalBlending
+            });
+          }
+        });
+
+        scene.add(model);
+      },
+      undefined,
+      (err) => {
+        console.warn('Notice: Real Human Brain GLB model asset notice:', err);
+      }
+    );
+  }
 
   // Build Main Translucent Bio-Holographic Outer Brain Shell Enclosure
   function buildMainBrainOuterShell(scene: THREE.Scene) {
