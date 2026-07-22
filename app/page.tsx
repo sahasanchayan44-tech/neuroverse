@@ -5,7 +5,11 @@ import dynamic from 'next/dynamic';
 import { useBrainState } from '@/hooks/useBrainState';
 import { HeaderHUD } from '@/components/ui/HeaderHUD';
 import { LayerPanel } from '@/components/ui/LayerPanel';
+import { RightSidebar } from '@/components/ui/RightSidebar';
 import { InfoPanel } from '@/components/ui/InfoPanel';
+import { EEGWaveform } from '@/components/ui/EEGWaveform';
+import { NeuronModal } from '@/components/ui/NeuronModal';
+import { ServerMetricsModal } from '@/components/ui/ServerMetricsModal';
 
 // Dynamically import 3D Three.js WebGL Canvas to disable SSR for WebGL context
 const BrainCanvas = dynamic(
@@ -33,7 +37,11 @@ export default function Home() {
     setTransparency
   } = useBrainState();
 
+  const [selectedDisease, setSelectedDisease] = useState<string | null>(null);
   const [hoveredName, setHoveredName] = useState<string | null>(null);
+  const [isNeuronModalOpen, setIsNeuronModalOpen] = useState(false);
+  const [isMetricsModalOpen, setIsMetricsModalOpen] = useState(false);
+
   const audioCtxRef = useRef<AudioContext | null>(null);
 
   const handleToggleAudio = () => {
@@ -57,6 +65,11 @@ export default function Home() {
       link.href = canvas.toDataURL('image/png');
       link.click();
     }
+  };
+
+  const handleResetAll = () => {
+    resetSelection();
+    setSelectedDisease(null);
   };
 
   return (
@@ -86,6 +99,8 @@ export default function Home() {
         onChangeViewMode={setViewMode}
         onToggleAudio={handleToggleAudio}
         onExportScreenshot={handleExportScreenshot}
+        onOpenNeuronModal={() => setIsNeuronModalOpen(true)}
+        onOpenMetricsModal={() => setIsMetricsModalOpen(true)}
       />
 
       {/* Left Layer Panel & Catalog */}
@@ -101,18 +116,47 @@ export default function Home() {
         onChangeTimeScale={setTimeScale}
       />
 
+      {/* Right Sidebar with Cognition, Pathology & Timeline Tabs */}
+      <RightSidebar
+        activeSimulation={activeSimulation}
+        selectedDisease={selectedDisease}
+        onSelectSimulation={selectSimulation}
+        onSelectDisease={setSelectedDisease}
+        onReset={handleResetAll}
+      />
+
       {/* Floating Holographic Structure Information Card */}
       <InfoPanel
         structure={selectedStructure}
         onClose={resetSelection}
       />
 
+      {/* Embedded Real-Time Human Brain Signal EEG Waveform Dock at the bottom */}
+      <div className="absolute bottom-3 left-4 right-4 z-20 max-w-4xl mx-auto">
+        <EEGWaveform
+          activeSimulation={activeSimulation}
+          selectedDisease={selectedDisease}
+        />
+      </div>
+
       {/* Hover Tooltip Bar */}
       {hoveredName && (
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 pointer-events-none px-4 py-1.5 bg-neuro-dark/90 backdrop-blur-md border border-neuro-cyan rounded-full shadow-hologram text-xs font-mono text-neuro-cyan tracking-wider">
+        <div className="absolute bottom-20 left-1/2 -translate-x-1/2 z-30 pointer-events-none px-4 py-1.5 bg-neuro-dark/90 backdrop-blur-md border border-neuro-cyan rounded-full shadow-hologram text-xs font-mono text-neuro-cyan tracking-wider">
           TARGET: {hoveredName.toUpperCase()}
         </div>
       )}
+
+      {/* Microscopic Single Neuron Viewer Modal */}
+      <NeuronModal
+        isOpen={isNeuronModalOpen}
+        onClose={() => setIsNeuronModalOpen(false)}
+      />
+
+      {/* Server Telemetry Metrics Modal */}
+      <ServerMetricsModal
+        isOpen={isMetricsModalOpen}
+        onClose={() => setIsMetricsModalOpen(false)}
+      />
 
     </main>
   );

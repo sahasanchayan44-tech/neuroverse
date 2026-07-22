@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Search, Brain, Volume2, VolumeX, Camera, Zap, Layers, Sparkles } from 'lucide-react';
+import { Search, Brain, Volume2, VolumeX, Camera, Zap, ShieldCheck } from 'lucide-react';
 import { BrainStructureDetail } from '@/data/brainData';
 import { ViewMode } from '@/hooks/useBrainState';
 
@@ -15,6 +15,8 @@ interface HeaderHUDProps {
   onChangeViewMode: (mode: ViewMode) => void;
   onToggleAudio: () => void;
   onExportScreenshot: () => void;
+  onOpenNeuronModal: () => void;
+  onOpenMetricsModal: () => void;
 }
 
 const SIMULATION_BUTTONS = [
@@ -30,7 +32,9 @@ export const HeaderHUD: React.FC<HeaderHUDProps> = ({
   onSelectSimulation,
   onChangeViewMode,
   onToggleAudio,
-  onExportScreenshot
+  onExportScreenshot,
+  onOpenNeuronModal,
+  onOpenMetricsModal
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
@@ -111,6 +115,22 @@ export const HeaderHUD: React.FC<HeaderHUDProps> = ({
             <option value="xray">X-Ray Mode</option>
             <option value="wireframe">Wireframe Mode</option>
           </select>
+
+          <button
+            onClick={onOpenNeuronModal}
+            className="px-2.5 py-2 rounded-xl bg-neuro-purple/20 border border-neuro-purple text-neuro-purple hover:bg-neuro-purple/30 text-xs font-mono font-bold transition-all flex items-center gap-1.5"
+            title="Single Neuron & Synapse Micro Viewer"
+          >
+            <Zap className="w-3.5 h-3.5" /> Neuron Specs
+          </button>
+
+          <button
+            onClick={onOpenMetricsModal}
+            className="px-2.5 py-2 rounded-xl bg-neuro-cyan/20 border border-neuro-cyan text-neuro-cyan hover:bg-neuro-cyan/30 text-xs font-mono font-bold transition-all flex items-center gap-1.5"
+            title="Server Telemetry Metrics"
+          >
+            <ShieldCheck className="w-3.5 h-3.5" /> Server HUD
+          </button>
 
           <button
             onClick={onToggleAudio}
