@@ -1,24 +1,46 @@
 'use client';
 
-import React from 'react';
-import { X, Brain, Activity, Stethoscope, Sparkles, BookOpen, Database, RefreshCw, CheckCircle2 } from 'lucide-react';
+import React, { useState } from 'react';
+import { X, Brain, Activity, Stethoscope, Sparkles, BookOpen, Database, RefreshCw, CheckCircle2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { BrainStructureDetail } from '@/data/brainData';
 import { useMeshMetadata } from '@/hooks/useMeshMetadata';
 
 interface InfoPanelProps {
   structure: BrainStructureDetail | null;
+  topOffset?: string;
+  isRightSidebarOpen?: boolean;
   onClose: () => void;
 }
 
-export const InfoPanel: React.FC<InfoPanelProps> = ({ structure, onClose }) => {
+export const InfoPanel: React.FC<InfoPanelProps> = ({
+  structure,
+  topOffset = 'top-36',
+  isRightSidebarOpen = true,
+  onClose
+}) => {
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const { metadata, isLoading, error } = useMeshMetadata(structure?.id || null);
 
   if (!structure) return null;
 
   const activeData = metadata || structure;
 
+  if (isCollapsed) {
+    return (
+      <button
+        onClick={() => setIsCollapsed(false)}
+        className={`fixed ${topOffset} ${isRightSidebarOpen ? 'right-4 xl:right-[340px]' : 'right-4'} z-40 p-3 bg-neuro-panel backdrop-blur-xl border border-neuro-cyan/40 rounded-2xl shadow-hologram text-neuro-cyan hover:text-white hover:bg-neuro-cyan/20 transition-all flex items-center gap-2 font-mono text-xs`}
+        title="Expand Structure Info Panel"
+      >
+        <Brain className="w-4 h-4 text-neuro-cyan animate-pulse" />
+        <span className="font-bold text-white max-w-[130px] truncate">{activeData.name}</span>
+        <ChevronLeft className="w-4 h-4 text-neuro-cyan" />
+      </button>
+    );
+  }
+
   return (
-    <div className="fixed top-24 right-6 z-40 w-96 max-h-[calc(100vh-7rem)] overflow-y-auto bg-neuro-panel backdrop-blur-xl border border-neuro-cyan/40 rounded-2xl shadow-hologram p-5 flex flex-col gap-4 text-white pr-2 font-sans">
+    <div className={`fixed ${topOffset} ${isRightSidebarOpen ? 'right-4 xl:right-[340px]' : 'right-4'} z-40 w-96 max-h-[calc(100vh-10rem)] overflow-y-auto bg-neuro-panel backdrop-blur-xl border border-neuro-cyan/40 rounded-2xl shadow-hologram p-5 flex flex-col gap-4 text-white pr-2 font-sans transition-all`}>
       
       {/* Header */}
       <div className="flex items-center justify-between border-b border-neuro-border pb-3">
@@ -33,12 +55,22 @@ export const InfoPanel: React.FC<InfoPanelProps> = ({ structure, onClose }) => {
             )}
           </div>
         </div>
-        <button
-          onClick={onClose}
-          className="p-1.5 rounded-lg bg-white/5 border border-white/10 hover:bg-white/20 text-white transition-all"
-        >
-          <X className="w-4 h-4" />
-        </button>
+        <div className="flex items-center gap-1.5">
+          <button
+            onClick={() => setIsCollapsed(true)}
+            className="p-1.5 rounded-lg bg-white/5 border border-white/10 hover:bg-white/20 text-gray-400 hover:text-white transition-all"
+            title="Minimize Info Panel"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </button>
+          <button
+            onClick={onClose}
+            className="p-1.5 rounded-lg bg-white/5 border border-white/10 hover:bg-white/20 text-white transition-all"
+            title="Close Info Panel"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
       </div>
 
       {/* Async Lazy Loading & Cache Status Banner */}

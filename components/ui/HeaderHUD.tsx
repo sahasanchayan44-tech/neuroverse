@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Search, Brain, Volume2, VolumeX, Camera, Zap, ShieldCheck } from 'lucide-react';
+import { Search, Brain, Volume2, VolumeX, Camera, Zap, ShieldCheck, ChevronDown, ChevronUp } from 'lucide-react';
 import { BrainStructureDetail } from '@/data/brainData';
 import { ViewMode } from '@/hooks/useBrainState';
 import { fuzzySearchStructures } from '@/utils/fuzzySearch';
@@ -12,6 +12,8 @@ interface HeaderHUDProps {
   viewMode: ViewMode;
   isAudioActive: boolean;
   searchQuery?: string;
+  isHeaderCollapsed?: boolean;
+  onToggleHeaderCollapse?: () => void;
   onSearchQueryChange?: (q: string) => void;
   onSelectStructure: (s: BrainStructureDetail) => void;
   onSelectSimulation: (sim: string) => void;
@@ -32,6 +34,8 @@ export const HeaderHUD: React.FC<HeaderHUDProps> = ({
   viewMode,
   isAudioActive,
   searchQuery: externalSearchQuery,
+  isHeaderCollapsed = false,
+  onToggleHeaderCollapse,
   onSearchQueryChange,
   onSelectStructure,
   onSelectSimulation,
@@ -68,8 +72,50 @@ export const HeaderHUD: React.FC<HeaderHUDProps> = ({
     }
   };
 
+  if (isHeaderCollapsed) {
+    return (
+      <header className="absolute top-3 left-4 right-4 z-30 flex items-center justify-between px-4 py-2 bg-neuro-panel/90 backdrop-blur-xl border border-neuro-cyan/40 rounded-xl shadow-hologram font-mono text-xs transition-all">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-neuro-cyan/30 via-neuro-purple/40 to-neuro-pink/30 border border-neuro-cyan flex items-center justify-center text-neuro-cyan shadow-cyan-glow">
+            <Brain className="w-4 h-4 animate-pulse text-white" />
+          </div>
+          <span className="font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-white via-neuro-cyan to-neuro-purple text-sm sm:text-base">
+            NEUROVERSE 3D
+          </span>
+          <span className="px-2 py-0.5 text-[9px] text-neuro-cyan bg-neuro-cyan/20 border border-neuro-cyan/40 rounded hidden md:inline">
+            HUD MINIMIZED
+          </span>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <select
+            value={viewMode}
+            onChange={(e) => onChangeViewMode(e.target.value as ViewMode)}
+            className="px-2 py-1 bg-black/60 border border-neuro-border rounded-lg text-xs font-mono text-white outline-none cursor-pointer focus:border-neuro-cyan"
+          >
+            <option value="default">Default Hologram 3D</option>
+            <option value="exploded">Exploded Anatomy View</option>
+            <option value="cross_section">Cross-Section Clip</option>
+            <option value="xray">X-Ray Mode</option>
+            <option value="wireframe">Wireframe Mode</option>
+          </select>
+
+          {onToggleHeaderCollapse && (
+            <button
+              onClick={onToggleHeaderCollapse}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-neuro-cyan/20 border border-neuro-cyan/50 text-neuro-cyan hover:text-white hover:bg-neuro-cyan/30 transition-all font-bold text-xs"
+              title="Expand Header HUD & Controls"
+            >
+              <ChevronDown className="w-4 h-4" /> EXPAND HUD
+            </button>
+          )}
+        </div>
+      </header>
+    );
+  }
+
   return (
-    <header className="absolute top-4 left-4 right-4 z-30 flex flex-col gap-3 p-3.5 bg-neuro-panel backdrop-blur-xl border border-neuro-cyan/40 rounded-2xl shadow-hologram">
+    <header className="absolute top-3 left-4 right-4 z-30 flex flex-col gap-3 p-3.5 bg-neuro-panel backdrop-blur-xl border border-neuro-cyan/40 rounded-2xl shadow-hologram transition-all">
       
       {/* Top Row: Brand, Search, Controls */}
       <div className="flex items-center justify-between gap-4">
@@ -185,6 +231,16 @@ export const HeaderHUD: React.FC<HeaderHUDProps> = ({
           >
             <Camera className="w-4 h-4" />
           </button>
+
+          {onToggleHeaderCollapse && (
+            <button
+              onClick={onToggleHeaderCollapse}
+              className="p-2 rounded-xl bg-neuro-cyan/20 border border-neuro-cyan/50 text-neuro-cyan hover:bg-neuro-cyan/30 hover:text-white transition-all flex items-center gap-1 text-xs font-mono font-bold ml-1"
+              title="Minimize Top HUD Bar"
+            >
+              <ChevronUp className="w-4 h-4" />
+            </button>
+          )}
         </div>
 
       </div>
@@ -215,3 +271,4 @@ export const HeaderHUD: React.FC<HeaderHUDProps> = ({
     </header>
   );
 };
+

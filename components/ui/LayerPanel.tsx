@@ -11,6 +11,7 @@ interface LayerPanelProps {
   layers: LayerState;
   transparency: number;
   timeScale: number;
+  topOffset?: string;
   onSelectStructure: (s: BrainStructureDetail) => void;
   onToggleLayer: (key: keyof LayerState) => void;
   onChangeTransparency: (val: number) => void;
@@ -23,6 +24,7 @@ export const LayerPanel: React.FC<LayerPanelProps> = ({
   layers,
   transparency,
   timeScale,
+  topOffset = 'top-36',
   onSelectStructure,
   onToggleLayer,
   onChangeTransparency,
@@ -35,7 +37,7 @@ export const LayerPanel: React.FC<LayerPanelProps> = ({
     return (
       <button
         onClick={() => setIsCollapsed(false)}
-        className="absolute top-28 left-4 z-30 p-3 bg-neuro-panel backdrop-blur-xl border border-neuro-cyan/40 rounded-2xl shadow-hologram text-neuro-cyan hover:text-white hover:bg-neuro-cyan/20 transition-all flex items-center gap-2 font-mono text-xs"
+        className={`absolute ${topOffset} left-4 z-30 p-3 bg-neuro-panel backdrop-blur-xl border border-neuro-cyan/40 rounded-2xl shadow-hologram text-neuro-cyan hover:text-white hover:bg-neuro-cyan/20 transition-all flex items-center gap-2 font-mono text-xs`}
         title="Expand Anatomical Layers Panel"
       >
         <Layers className="w-4 h-4 text-neuro-cyan animate-pulse" />
@@ -46,7 +48,7 @@ export const LayerPanel: React.FC<LayerPanelProps> = ({
   }
 
   return (
-    <aside className="absolute top-24 left-4 bottom-6 z-20 w-80 max-h-[calc(100vh-7rem)] bg-neuro-panel backdrop-blur-xl border border-neuro-cyan/30 rounded-2xl shadow-hologram p-4 flex flex-col gap-3 overflow-hidden text-white transition-all font-mono">
+    <aside className={`absolute ${topOffset} left-4 bottom-16 z-20 w-80 max-h-[calc(100vh-10rem)] bg-neuro-panel backdrop-blur-xl border border-neuro-cyan/30 rounded-2xl shadow-hologram p-4 flex flex-col gap-3 overflow-hidden text-white transition-all font-mono`}>
       
       {/* Header with Minimize Button & Sci-Fi Tabs */}
       <div className="flex items-center justify-between border-b border-neuro-border pb-2 flex-shrink-0">

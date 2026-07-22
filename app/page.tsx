@@ -49,8 +49,12 @@ export default function Home() {
   const [isMetricsModalOpen, setIsMetricsModalOpen] = useState(false);
   const [activeAnatomyFilter, setActiveAnatomyFilter] = useState('all');
   const [isDockCollapsed, setIsDockCollapsed] = useState(false);
+  const [isHeaderCollapsed, setIsHeaderCollapsed] = useState(false);
+  const [isRightSidebarCollapsed, setIsRightSidebarCollapsed] = useState(false);
 
   const audioCtxRef = useRef<AudioContext | null>(null);
+
+  const topOffset = isHeaderCollapsed ? 'top-14' : 'top-36';
 
   const handleToggleAudio = () => {
     if (!audioCtxRef.current) {
@@ -105,6 +109,8 @@ export default function Home() {
         viewMode={viewMode}
         isAudioActive={isAudioActive}
         searchQuery={searchQuery}
+        isHeaderCollapsed={isHeaderCollapsed}
+        onToggleHeaderCollapse={() => setIsHeaderCollapsed(!isHeaderCollapsed)}
         onSearchQueryChange={setSearchQuery}
         onSelectStructure={setSelectedStructure}
         onSelectSimulation={selectSimulation}
@@ -122,6 +128,7 @@ export default function Home() {
         layers={layers}
         transparency={transparency}
         timeScale={timeScale}
+        topOffset={topOffset}
         onSelectStructure={setSelectedStructure}
         onToggleLayer={toggleLayer}
         onChangeTransparency={setTransparency}
@@ -132,6 +139,9 @@ export default function Home() {
       <RightSidebar
         activeSimulation={activeSimulation}
         selectedDisease={selectedDisease}
+        topOffset={topOffset}
+        isCollapsed={isRightSidebarCollapsed}
+        onToggleCollapse={() => setIsRightSidebarCollapsed(!isRightSidebarCollapsed)}
         onSelectSimulation={selectSimulation}
         onSelectDisease={setSelectedDisease}
         onReset={handleResetAll}
@@ -140,11 +150,13 @@ export default function Home() {
       {/* Floating Holographic Structure Information Card */}
       <InfoPanel
         structure={selectedStructure}
+        topOffset={topOffset}
+        isRightSidebarOpen={!isRightSidebarCollapsed}
         onClose={resetSelection}
       />
 
       {/* Bottom Telemetry & Anatomy Controls Dock */}
-      <div className="absolute bottom-3 left-4 right-4 md:left-[340px] md:right-[340px] max-w-4xl mx-auto z-30 flex flex-col gap-2 pointer-events-auto transition-all">
+      <div className="absolute bottom-3 left-4 right-4 xl:left-[340px] xl:right-[340px] max-w-4xl mx-auto z-30 flex flex-col gap-2 pointer-events-auto transition-all">
         
         {/* Toggle Bar */}
         <div className="flex items-center justify-between px-4 py-1.5 bg-neuro-panel/90 backdrop-blur-md border border-neuro-cyan/40 rounded-xl text-xs font-mono shadow-hologram">
@@ -176,7 +188,7 @@ export default function Home() {
 
         {/* Collapsible Content */}
         {!isDockCollapsed && (
-          <div className="flex flex-col gap-2 animate-fade-in max-h-[55vh] overflow-y-auto pr-1">
+          <div className="flex flex-col gap-2 animate-fade-in max-h-[50vh] overflow-y-auto pr-1">
             
             {/* Computed Biophysical Parameters */}
             <ParametersPanel structure={selectedStructure} />
@@ -203,7 +215,7 @@ export default function Home() {
 
       {/* Hover Tooltip Bar */}
       {hoveredName && (
-        <div className="absolute top-24 left-1/2 -translate-x-1/2 z-30 pointer-events-none px-4 py-1.5 bg-neuro-dark/90 backdrop-blur-md border border-neuro-cyan rounded-full shadow-hologram text-xs font-mono text-neuro-cyan tracking-wider">
+        <div className={`absolute ${topOffset} left-1/2 -translate-x-1/2 z-30 pointer-events-none px-4 py-1.5 bg-neuro-dark/90 backdrop-blur-md border border-neuro-cyan rounded-full shadow-hologram text-xs font-mono text-neuro-cyan tracking-wider transition-all`}>
           TARGET: {hoveredName.toUpperCase()}
         </div>
       )}
