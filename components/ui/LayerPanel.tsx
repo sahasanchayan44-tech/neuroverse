@@ -1,7 +1,7 @@
 'use client';
 
-import React from 'react';
-import { Layers, Cpu, Heart, Activity, Sliders, Eye } from 'lucide-react';
+import React, { useState } from 'react';
+import { Layers, Sliders, Eye, ChevronLeft, ChevronRight } from 'lucide-react';
 import { BrainStructureDetail } from '@/data/brainData';
 import { LayerState } from '@/hooks/useBrainState';
 
@@ -28,14 +28,37 @@ export const LayerPanel: React.FC<LayerPanelProps> = ({
   onChangeTransparency,
   onChangeTimeScale
 }) => {
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
+  if (isCollapsed) {
+    return (
+      <button
+        onClick={() => setIsCollapsed(false)}
+        className="absolute top-28 left-4 z-30 p-3 bg-neuro-panel backdrop-blur-xl border border-neuro-cyan/40 rounded-2xl shadow-hologram text-neuro-cyan hover:text-white hover:bg-neuro-cyan/20 transition-all flex items-center gap-2 font-mono text-xs"
+        title="Expand Anatomical Layers Panel"
+      >
+        <Layers className="w-4 h-4 text-neuro-cyan animate-pulse" />
+        <span className="font-bold">LAYERS</span>
+        <ChevronRight className="w-4 h-4 text-neuro-cyan" />
+      </button>
+    );
+  }
+
   return (
-    <aside className="absolute top-28 left-4 bottom-6 z-20 w-72 bg-neuro-panel backdrop-blur-xl border border-neuro-cyan/30 rounded-2xl shadow-hologram p-4 flex flex-col gap-4 overflow-y-auto text-white">
+    <aside className="absolute top-28 left-4 bottom-28 z-20 w-72 bg-neuro-panel backdrop-blur-xl border border-neuro-cyan/30 rounded-2xl shadow-hologram p-4 flex flex-col gap-4 overflow-y-auto text-white transition-all">
       
-      {/* Header */}
+      {/* Header with Collapse Button */}
       <div className="flex items-center justify-between border-b border-neuro-border pb-2">
         <h2 className="text-xs font-mono font-bold text-neuro-cyan tracking-wider flex items-center gap-2">
-          <Layers className="w-4 h-4" /> ANATOMICAL LAYER TOGGLES
+          <Layers className="w-4 h-4" /> ANATOMICAL LAYERS
         </h2>
+        <button
+          onClick={() => setIsCollapsed(true)}
+          className="p-1 rounded-lg bg-white/5 hover:bg-white/15 text-gray-400 hover:text-white transition-all"
+          title="Minimize Left Panel for Full Brain View"
+        >
+          <ChevronLeft className="w-4 h-4" />
+        </button>
       </div>
 
       {/* Layer Toggles */}

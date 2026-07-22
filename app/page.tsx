@@ -2,6 +2,7 @@
 
 import React, { useState, useRef } from 'react';
 import dynamic from 'next/dynamic';
+import { ChevronDown, ChevronUp, Activity, Radio, Eye } from 'lucide-react';
 import { useBrainState } from '@/hooks/useBrainState';
 import { HeaderHUD } from '@/components/ui/HeaderHUD';
 import { LayerPanel } from '@/components/ui/LayerPanel';
@@ -44,6 +45,7 @@ export default function Home() {
   const [isNeuronModalOpen, setIsNeuronModalOpen] = useState(false);
   const [isMetricsModalOpen, setIsMetricsModalOpen] = useState(false);
   const [activeAnatomyFilter, setActiveAnatomyFilter] = useState('all');
+  const [isDockCollapsed, setIsDockCollapsed] = useState(false);
 
   const audioCtxRef = useRef<AudioContext | null>(null);
 
@@ -135,26 +137,56 @@ export default function Home() {
       />
 
       {/* Bottom Telemetry & Anatomy Controls Dock */}
-      <div className="absolute bottom-3 left-4 right-4 z-20 max-w-5xl mx-auto flex flex-col gap-2 pointer-events-auto">
+      <div className="absolute bottom-3 left-4 right-4 z-20 max-w-5xl mx-auto flex flex-col gap-2 pointer-events-auto transition-all">
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-          {/* Dynamic Anatomy View Explorer Panel */}
-          <AnatomyViewPanel
-            structures={structures}
-            selectedStructure={selectedStructure}
-            onSelectStructure={setSelectedStructure}
-            onChangeViewFilter={setActiveAnatomyFilter}
-          />
+        {/* Toggle Bar */}
+        <div className="flex items-center justify-between px-4 py-1.5 bg-neuro-panel/90 backdrop-blur-md border border-neuro-cyan/40 rounded-xl text-xs font-mono">
+          <div className="flex items-center gap-3">
+            <span className="font-bold text-neuro-cyan flex items-center gap-1.5">
+              <Activity className="w-4 h-4 text-neuro-green animate-pulse" /> TELEMETRY & SIGNAL DOCK
+            </span>
+            <span className="text-[10px] text-neuro-muted hidden sm:inline">
+              [EEG Oscilloscope • 10-20 Signal Channels • Anatomy Explorer]
+            </span>
+          </div>
 
-          {/* 10-20 EEG Electrode Brain Signals Channel Monitor */}
-          <BrainSignalsPanel />
+          <button
+            onClick={() => setIsDockCollapsed(!isDockCollapsed)}
+            className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-neuro-cyan/20 border border-neuro-cyan/40 text-neuro-cyan hover:text-white hover:bg-neuro-cyan/30 transition-all font-bold"
+            title={isDockCollapsed ? "Expand Telemetry Dock" : "Minimize Dock for Unobstructed 3D Brain View"}
+          >
+            {isDockCollapsed ? (
+              <>
+                <ChevronUp className="w-4 h-4" /> EXPAND DOCK
+              </>
+            ) : (
+              <>
+                <ChevronDown className="w-4 h-4" /> FULL BRAIN VIEW
+              </>
+            )}
+          </button>
         </div>
 
-        {/* Real-Time Human Brain Waveform Oscilloscope */}
-        <EEGWaveform
-          activeSimulation={activeSimulation}
-          selectedDisease={selectedDisease}
-        />
+        {/* Collapsible Content */}
+        {!isDockCollapsed && (
+          <div className="flex flex-col gap-2 animate-fade-in">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+              <AnatomyViewPanel
+                structures={structures}
+                selectedStructure={selectedStructure}
+                onSelectStructure={setSelectedStructure}
+                onChangeViewFilter={setActiveAnatomyFilter}
+              />
+
+              <BrainSignalsPanel />
+            </div>
+
+            <EEGWaveform
+              activeSimulation={activeSimulation}
+              selectedDisease={selectedDisease}
+            />
+          </div>
+        )}
 
       </div>
 

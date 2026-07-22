@@ -1,8 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Zap, Stethoscope, Clock, Activity, Flame, ChevronRight, RefreshCw } from 'lucide-react';
-import { BrainStructureDetail } from '@/data/brainData';
+import { Zap, Stethoscope, Clock, Activity, Flame, ChevronRight, ChevronLeft, RefreshCw } from 'lucide-react';
 
 interface RightSidebarProps {
   activeSimulation: string | null;
@@ -47,37 +46,62 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
   onReset
 }) => {
   const [activeTab, setActiveTab] = useState<'cognition' | 'pathology' | 'timeline'>('cognition');
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
+  if (isCollapsed) {
+    return (
+      <button
+        onClick={() => setIsCollapsed(false)}
+        className="absolute top-28 right-4 z-30 p-3 bg-neuro-panel backdrop-blur-xl border border-neuro-cyan/40 rounded-2xl shadow-hologram text-neuro-cyan hover:text-white hover:bg-neuro-cyan/20 transition-all flex items-center gap-2 font-mono text-xs"
+        title="Expand Cognition & Pathology Sidebar"
+      >
+        <ChevronLeft className="w-4 h-4 text-neuro-cyan" />
+        <Zap className="w-4 h-4 text-neuro-cyan animate-pulse" />
+        <span className="font-bold">MODES</span>
+      </button>
+    );
+  }
 
   return (
-    <aside className="absolute top-28 right-4 bottom-24 z-20 w-80 bg-neuro-panel backdrop-blur-xl border border-neuro-cyan/30 rounded-2xl shadow-hologram p-4 flex flex-col gap-3 overflow-y-auto text-white">
+    <aside className="absolute top-28 right-4 bottom-28 z-20 w-80 bg-neuro-panel backdrop-blur-xl border border-neuro-cyan/30 rounded-2xl shadow-hologram p-4 flex flex-col gap-3 overflow-y-auto text-white transition-all">
       
-      {/* Tab Selector */}
-      <div className="flex border-b border-neuro-border pb-2 gap-1 font-mono text-xs">
-        <button
-          onClick={() => setActiveTab('cognition')}
-          className={`flex-1 py-1.5 rounded-lg border transition-all flex items-center justify-center gap-1 font-bold ${
-            activeTab === 'cognition' ? 'bg-neuro-cyan/20 border-neuro-cyan text-white shadow-cyan-glow' : 'bg-white/5 border-white/10 text-neuro-muted'
-          }`}
-        >
-          <Zap className="w-3.5 h-3.5" /> COGNITION
-        </button>
+      {/* Header with Minimize Button */}
+      <div className="flex items-center justify-between border-b border-neuro-border pb-2">
+        <div className="flex gap-1 font-mono text-xs flex-1">
+          <button
+            onClick={() => setActiveTab('cognition')}
+            className={`flex-1 py-1 rounded-lg border transition-all flex items-center justify-center gap-1 font-bold ${
+              activeTab === 'cognition' ? 'bg-neuro-cyan/20 border-neuro-cyan text-white shadow-cyan-glow' : 'bg-white/5 border-white/10 text-neuro-muted'
+            }`}
+          >
+            <Zap className="w-3.5 h-3.5" /> COGNITION
+          </button>
+
+          <button
+            onClick={() => setActiveTab('pathology')}
+            className={`flex-1 py-1 rounded-lg border transition-all flex items-center justify-center gap-1 font-bold ${
+              activeTab === 'pathology' ? 'bg-neuro-red/20 border-neuro-red text-white shadow-red-glow' : 'bg-white/5 border-white/10 text-neuro-muted'
+            }`}
+          >
+            <Stethoscope className="w-3.5 h-3.5" /> PATHOLOGY
+          </button>
+
+          <button
+            onClick={() => setActiveTab('timeline')}
+            className={`flex-1 py-1 rounded-lg border transition-all flex items-center justify-center gap-1 font-bold ${
+              activeTab === 'timeline' ? 'bg-neuro-purple/20 border-neuro-purple text-white shadow-purple-glow' : 'bg-white/5 border-white/10 text-neuro-muted'
+            }`}
+          >
+            <Clock className="w-3.5 h-3.5" /> TIMELINE
+          </button>
+        </div>
 
         <button
-          onClick={() => setActiveTab('pathology')}
-          className={`flex-1 py-1.5 rounded-lg border transition-all flex items-center justify-center gap-1 font-bold ${
-            activeTab === 'pathology' ? 'bg-neuro-red/20 border-neuro-red text-white shadow-red-glow' : 'bg-white/5 border-white/10 text-neuro-muted'
-          }`}
+          onClick={() => setIsCollapsed(true)}
+          className="ml-2 p-1 rounded-lg bg-white/5 hover:bg-white/15 text-gray-400 hover:text-white transition-all"
+          title="Minimize Right Sidebar for Full Brain View"
         >
-          <Stethoscope className="w-3.5 h-3.5" /> PATHOLOGY
-        </button>
-
-        <button
-          onClick={() => setActiveTab('timeline')}
-          className={`flex-1 py-1.5 rounded-lg border transition-all flex items-center justify-center gap-1 font-bold ${
-            activeTab === 'timeline' ? 'bg-neuro-purple/20 border-neuro-purple text-white shadow-purple-glow' : 'bg-white/5 border-white/10 text-neuro-muted'
-          }`}
-        >
-          <Clock className="w-3.5 h-3.5" /> TIMELINE
+          <ChevronRight className="w-4 h-4" />
         </button>
       </div>
 
