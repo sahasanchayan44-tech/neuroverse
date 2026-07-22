@@ -1,11 +1,17 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
+import dynamic from 'next/dynamic';
 import { useBrainState } from '@/hooks/useBrainState';
-import { BrainCanvas } from '@/components/brain/BrainCanvas';
 import { HeaderHUD } from '@/components/ui/HeaderHUD';
 import { LayerPanel } from '@/components/ui/LayerPanel';
 import { InfoPanel } from '@/components/ui/InfoPanel';
+
+// Dynamically import 3D Three.js WebGL Canvas to disable SSR for WebGL context
+const BrainCanvas = dynamic(
+  () => import('@/components/brain/BrainCanvas').then((mod) => mod.BrainCanvas),
+  { ssr: false }
+);
 
 export default function Home() {
   const {
@@ -56,7 +62,7 @@ export default function Home() {
   return (
     <main className="relative w-screen h-screen overflow-hidden bg-neuro-dark text-white font-sans">
       
-      {/* 3D WebGL Holographic Brain Engine */}
+      {/* 3D WebGL Holographic Brain Engine (No-SSR) */}
       <BrainCanvas
         structures={structures}
         selectedStructure={selectedStructure}
