@@ -9,7 +9,6 @@ import { LayerPanel } from '@/components/ui/LayerPanel';
 import { RightSidebar } from '@/components/ui/RightSidebar';
 import { InfoPanel } from '@/components/ui/InfoPanel';
 import { EEGWaveform } from '@/components/ui/EEGWaveform';
-import { AnatomyViewPanel } from '@/components/ui/AnatomyViewPanel';
 import { BrainSignalsPanel } from '@/components/ui/BrainSignalsPanel';
 import { ParametersPanel } from '@/components/ui/ParametersPanel';
 import { NeuronModal } from '@/components/ui/NeuronModal';
@@ -47,7 +46,6 @@ export default function Home() {
   const [hoveredName, setHoveredName] = useState<string | null>(null);
   const [isNeuronModalOpen, setIsNeuronModalOpen] = useState(false);
   const [isMetricsModalOpen, setIsMetricsModalOpen] = useState(false);
-  const [activeAnatomyFilter, setActiveAnatomyFilter] = useState('all');
   const [isDockCollapsed, setIsDockCollapsed] = useState(false);
   const [isHeaderCollapsed, setIsHeaderCollapsed] = useState(false);
   const [isRightSidebarCollapsed, setIsRightSidebarCollapsed] = useState(false);
@@ -193,16 +191,8 @@ export default function Home() {
             {/* Computed Biophysical Parameters */}
             <ParametersPanel structure={selectedStructure} />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-              <AnatomyViewPanel
-                structures={structures}
-                selectedStructure={selectedStructure}
-                onSelectStructure={setSelectedStructure}
-                onChangeViewFilter={setActiveAnatomyFilter}
-              />
-
-              <BrainSignalsPanel />
-            </div>
+            {/* Brain Signals Panel */}
+            <BrainSignalsPanel />
 
             <EEGWaveform
               activeSimulation={activeSimulation}
