@@ -8,6 +8,8 @@ import { LayerPanel } from '@/components/ui/LayerPanel';
 import { RightSidebar } from '@/components/ui/RightSidebar';
 import { InfoPanel } from '@/components/ui/InfoPanel';
 import { EEGWaveform } from '@/components/ui/EEGWaveform';
+import { AnatomyViewPanel } from '@/components/ui/AnatomyViewPanel';
+import { BrainSignalsPanel } from '@/components/ui/BrainSignalsPanel';
 import { NeuronModal } from '@/components/ui/NeuronModal';
 import { ServerMetricsModal } from '@/components/ui/ServerMetricsModal';
 
@@ -41,6 +43,7 @@ export default function Home() {
   const [hoveredName, setHoveredName] = useState<string | null>(null);
   const [isNeuronModalOpen, setIsNeuronModalOpen] = useState(false);
   const [isMetricsModalOpen, setIsMetricsModalOpen] = useState(false);
+  const [activeAnatomyFilter, setActiveAnatomyFilter] = useState('all');
 
   const audioCtxRef = useRef<AudioContext | null>(null);
 
@@ -131,17 +134,33 @@ export default function Home() {
         onClose={resetSelection}
       />
 
-      {/* Embedded Real-Time Human Brain Signal EEG Waveform Dock at the bottom */}
-      <div className="absolute bottom-3 left-4 right-4 z-20 max-w-4xl mx-auto">
+      {/* Bottom Telemetry & Anatomy Controls Dock */}
+      <div className="absolute bottom-3 left-4 right-4 z-20 max-w-5xl mx-auto flex flex-col gap-2 pointer-events-auto">
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+          {/* Dynamic Anatomy View Explorer Panel */}
+          <AnatomyViewPanel
+            structures={structures}
+            selectedStructure={selectedStructure}
+            onSelectStructure={setSelectedStructure}
+            onChangeViewFilter={setActiveAnatomyFilter}
+          />
+
+          {/* 10-20 EEG Electrode Brain Signals Channel Monitor */}
+          <BrainSignalsPanel />
+        </div>
+
+        {/* Real-Time Human Brain Waveform Oscilloscope */}
         <EEGWaveform
           activeSimulation={activeSimulation}
           selectedDisease={selectedDisease}
         />
+
       </div>
 
       {/* Hover Tooltip Bar */}
       {hoveredName && (
-        <div className="absolute bottom-20 left-1/2 -translate-x-1/2 z-30 pointer-events-none px-4 py-1.5 bg-neuro-dark/90 backdrop-blur-md border border-neuro-cyan rounded-full shadow-hologram text-xs font-mono text-neuro-cyan tracking-wider">
+        <div className="absolute top-24 left-1/2 -translate-x-1/2 z-30 pointer-events-none px-4 py-1.5 bg-neuro-dark/90 backdrop-blur-md border border-neuro-cyan rounded-full shadow-hologram text-xs font-mono text-neuro-cyan tracking-wider">
           TARGET: {hoveredName.toUpperCase()}
         </div>
       )}
