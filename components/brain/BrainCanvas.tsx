@@ -97,6 +97,7 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
   const nanoParticlesRef = useRef<THREE.Points | null>(null);
   const activeImpulsesRef = useRef<THREE.Points | null>(null);
   const neuralNetworkGroupRef = useRef<THREE.Group | null>(null);
+  const outerBrainShellGroupRef = useRef<THREE.Group | null>(null);
   const highlightManagerRef = useRef<MeshHighlightManager | null>(null);
   const camControllerRef = useRef<CinematicCameraController | null>(null);
   const neuralPathwaySystemRef = useRef<NeuralPathwaySystem | null>(null);
@@ -212,13 +213,16 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
     // 6. Build Floating Nano Particles (Igloo-style particle cloud)
     buildNanoParticleCloud(scene);
 
-    // 7. Build Real Human Brain Geometry with Embedded Internal Organs
+    // 7. Build Main Translucent Bio-Holographic Outer Brain Shell
+    buildMainBrainOuterShell(scene);
+
+    // 8. Build Real Human Brain Geometry with Embedded Internal Organs
     buildEmbeddedHumanBrain(scene);
 
-    // 8. Build Whole-Brain Neural Network (Axon fibers linking embedded parts)
+    // 9. Build Whole-Brain Neural Network (Axon fibers linking embedded parts)
     buildEmbeddedNeuralNetwork(scene);
 
-    // 9. Build 5000+ Catmull-Rom GPU Animated Neural Pathways System
+    // 10. Build 5000+ Catmull-Rom GPU Animated Neural Pathways System
     const pathwaySystem = new NeuralPathwaySystem({
       pathCount: 5000,
       particlesPerPath: 10,
@@ -229,7 +233,7 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
     neuralPathwaySystemRef.current = pathwaySystem;
     scene.add(pathwaySystem.group);
 
-    // 10. Build Modular Vascular Systems (ArterySystem, VeinSystem, CapillarySystem)
+    // 11. Build Modular Vascular Systems (ArterySystem, VeinSystem, CapillarySystem)
     const arteries = new VascularSystem('arteries', { flowSpeed: 0.8, pulseFrequency: 1.2 });
     const veins = new VascularSystem('veins', { flowSpeed: 0.4, pulseFrequency: 0.6 });
     const capillaries = new VascularSystem('capillaries', { flowSpeed: 0.2, pulseFrequency: 0.3 });
@@ -304,6 +308,32 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
       const elapsedTime = clock.getElapsedTime() * timeScale;
 
       controls.update();
+
+      // Update Main Translucent Outer Brain Shell Enclosure Animation
+      if (outerBrainShellGroupRef.current) {
+        outerBrainShellGroupRef.current.visible = layers.greyMatter;
+
+        const children = outerBrainShellGroupRef.current.children;
+        children.forEach(child => {
+          if (child instanceof THREE.Mesh) {
+            if (child.material instanceof THREE.MeshStandardMaterial) {
+              child.material.emissiveIntensity = 0.35 + Math.sin(elapsedTime * 2.0) * 0.15;
+              child.material.opacity = transparency * (viewMode === 'exploded' ? 0.12 : viewMode === 'xray' ? 0.08 : 0.28);
+            }
+          }
+        });
+
+        // Separate outer hemispheres in exploded view mode
+        if (children.length >= 4) {
+          const lPos = viewMode === 'exploded' ? -6.5 : -2.2;
+          const rPos = viewMode === 'exploded' ? 6.5 : 2.2;
+
+          children[0].position.x = THREE.MathUtils.lerp(children[0].position.x, lPos, 0.06);
+          children[1].position.x = THREE.MathUtils.lerp(children[1].position.x, lPos, 0.06);
+          children[2].position.x = THREE.MathUtils.lerp(children[2].position.x, rPos, 0.06);
+          children[3].position.x = THREE.MathUtils.lerp(children[3].position.x, rPos, 0.06);
+        }
+      }
 
       // Update modular mesh highlighting, color transition lerps, and outline pulsing
       if (highlightManagerRef.current) {
@@ -480,6 +510,111 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
       }
     };
   }, [structures]);
+
+  // Build Main Translucent Bio-Holographic Outer Brain Shell Enclosure
+  function buildMainBrainOuterShell(scene: THREE.Scene) {
+    const group = new THREE.Group();
+    group.name = 'main_brain_outer_shell_group';
+    outerBrainShellGroupRef.current = group;
+
+    // Hemisphere Base Sphere Geometry with Cortical Gyri/Sulci Displacement
+    const hemiGeo = new THREE.SphereGeometry(1, 48, 48);
+    const pos = hemiGeo.attributes.position;
+
+    for (let i = 0; i < pos.count; i++) {
+      let x = pos.getX(i);
+      let y = pos.getY(i);
+      let z = pos.getZ(i);
+
+      // Anatomical cortical folds (gyri/sulci)
+      const gyri = Math.sin(x * 3.2) * Math.cos(y * 3.2) * Math.sin(z * 3.2) * 0.22;
+      const sulci = Math.sin(x * 5.5) * Math.cos(z * 5.5) * 0.08;
+
+      if (x > 0) x = Math.pow(x, 0.85); // Flatten medial surface
+      y = y * 1.15;
+      z = z * 1.25;
+
+      pos.setXYZ(i, x + gyri + sulci, y + gyri, z + gyri + sulci);
+    }
+    hemiGeo.computeVertexNormals();
+
+    const shellMaterial = new THREE.MeshStandardMaterial({
+      color: 0x00f0ff,
+      emissive: 0x0066ff,
+      emissiveIntensity: 0.45,
+      roughness: 0.1,
+      metalness: 0.9,
+      transparent: true,
+      opacity: 0.28,
+      side: THREE.DoubleSide,
+      blending: THREE.NormalBlending
+    });
+
+    const wireframeMaterial = new THREE.MeshBasicMaterial({
+      color: 0x00f0ff,
+      wireframe: true,
+      transparent: true,
+      opacity: 0.12,
+      blending: THREE.AdditiveBlending
+    });
+
+    // Left Hemisphere Shell
+    const leftMesh = new THREE.Mesh(hemiGeo.clone(), shellMaterial);
+    leftMesh.scale.set(4.8, 4.4, 5.8);
+    leftMesh.position.set(-2.2, 2.2, -0.4);
+
+    const leftWire = new THREE.Mesh(hemiGeo.clone(), wireframeMaterial);
+    leftWire.scale.set(4.82, 4.42, 5.82);
+    leftWire.position.set(-2.2, 2.2, -0.4);
+
+    // Right Hemisphere Shell (Mirrored)
+    const rightGeo = hemiGeo.clone();
+    const rPos = rightGeo.attributes.position;
+    for (let i = 0; i < rPos.count; i++) {
+      rPos.setX(i, -rPos.getX(i));
+    }
+    rightGeo.computeVertexNormals();
+
+    const rightMesh = new THREE.Mesh(rightGeo, shellMaterial);
+    rightMesh.scale.set(4.8, 4.4, 5.8);
+    rightMesh.position.set(2.2, 2.2, -0.4);
+
+    const rightWire = new THREE.Mesh(rightGeo, wireframeMaterial);
+    rightWire.scale.set(4.82, 4.42, 5.82);
+    rightWire.position.set(2.2, 2.2, -0.4);
+
+    // Cerebellum Shell
+    const cerebGeo = new THREE.SphereGeometry(1, 36, 36);
+    const cPos = cerebGeo.attributes.position;
+    for (let i = 0; i < cPos.count; i++) {
+      let x = cPos.getX(i);
+      let y = cPos.getY(i);
+      let z = cPos.getZ(i);
+      const folia = Math.sin(y * 14.0) * 0.1;
+      cPos.setXYZ(i, x + folia, y, z + folia);
+    }
+    cerebGeo.computeVertexNormals();
+
+    const cerebMesh = new THREE.Mesh(cerebGeo, shellMaterial);
+    cerebMesh.scale.set(5.2, 3.4, 4.0);
+    cerebMesh.position.set(0, -4.5, -4.8);
+
+    const cerebWire = new THREE.Mesh(cerebGeo, wireframeMaterial);
+    cerebWire.scale.set(5.22, 3.42, 4.02);
+    cerebWire.position.set(0, -4.5, -4.8);
+
+    // Brainstem Shell
+    const stemGeo = new THREE.CylinderGeometry(1.2, 0.8, 5.5, 32);
+    const stemMesh = new THREE.Mesh(stemGeo, shellMaterial);
+    stemMesh.position.set(0, -6.0, -1.2);
+
+    const stemWire = new THREE.Mesh(stemGeo, wireframeMaterial);
+    stemWire.scale.set(1.02, 1.02, 1.02);
+    stemWire.position.set(0, -6.0, -1.2);
+
+    group.add(leftMesh, leftWire, rightMesh, rightWire, cerebMesh, cerebWire, stemMesh, stemWire);
+    scene.add(group);
+  }
 
   // Build Real Human Brain with Embedded Subcortical Organs
   function buildEmbeddedHumanBrain(scene: THREE.Scene) {
