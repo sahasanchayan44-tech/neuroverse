@@ -1,0 +1,79 @@
+[
+  {
+    "id": "frontal_lobe",
+    "name": "Frontal Lobe",
+    "functions": ["Executive decision making", "Motor planning", "Broca's speech production", "Working memory"],
+    "location": "Anterior cerebral cortex",
+    "diseases": ["Frontotemporal Dementia", "Prefrontal stroke", "ADHD"],
+    "bloodSupply": "Anterior & Middle Cerebral Arteries",
+    "neuronTypes": ["Pyramidal cells", "Betz cells", "Basket cells"],
+    "researchLinks": ["https://www.ncbi.nlm.nih.gov/books/NBK554483/"],
+    "connections": ["Parietal Lobe", "Temporal Lobe", "Thalamus", "Basal Ganglia"]
+  },
+  {
+    "id": "parietal_lobe",
+    "name": "Parietal Lobe",
+    "functions": ["Somatosensory processing", "Spatial orientation", "Visuomotor reaching"],
+    "location": "Superior-posterior cerebral cortex",
+    "diseases": ["Gerstmann Syndrome", "Hemineglect", "Apraxia"],
+    "bloodSupply": "Middle & Anterior Cerebral Arteries",
+    "neuronTypes": ["Somatosensory pyramidal cells"],
+    "researchLinks": ["https://www.ncbi.nlm.nih.gov/books/NBK535423/"],
+    "connections": ["Frontal Lobe", "Occipital Lobe", "Thalamus"]
+  },
+  {
+    "id": "temporal_lobe",
+    "name": "Temporal Lobe",
+    "functions": ["Auditory processing", "Wernicke's speech comprehension", "Memory encoding"],
+    "location": "Lateral cerebral cortex",
+    "diseases": ["Temporal Lobe Epilepsy", "Wernicke's Aphasia", "Prosopagnosia"],
+    "bloodSupply": "Middle & Posterior Cerebral Arteries",
+    "neuronTypes": ["Fusiform face area cells", "Auditory pyramidal cells"],
+    "researchLinks": ["https://www.ncbi.nlm.nih.gov/books/NBK549783/"],
+    "connections": ["Hippocampus", "Amygdala", "Frontal Lobe"]
+  },
+  {
+    "id": "occipital_lobe",
+    "name": "Occipital Lobe",
+    "functions": ["Primary visual V1 processing", "Color V4 discrimination", "Motion V5/MT detection"],
+    "location": "Posterior-most cerebral cortex",
+    "diseases": ["Cortical Blindness", "Visual Agnosia", "Anton Syndrome"],
+    "bloodSupply": "Posterior Cerebral Artery",
+    "neuronTypes": ["Spiny stellate neurons", "Complex visual cells"],
+    "researchLinks": ["https://www.ncbi.nlm.nih.gov/books/NBK544320/"],
+    "connections": ["Parietal Lobe", "Temporal Lobe", "LGN Thalamus"]
+  },
+  {
+    "id": "cerebellum",
+    "name": "Cerebellum",
+    "functions": ["Motor balance & coordination", "Procedural motor skill learning", "Cognitive timing"],
+    "location": "Posterior cranial fossa",
+    "diseases": ["Cerebellar Ataxia", "Dysmetria", "Intention Tremor"],
+    "bloodSupply": "PICA, AICA, SCA",
+    "neuronTypes": ["Purkinje cells", "Granule cells"],
+    "researchLinks": ["https://www.ncbi.nlm.nih.gov/books/NBK538163/"],
+    "connections": ["Pons", "Thalamus", "Motor Cortex"]
+  },
+  {
+    "id": "hippocampus",
+    "name": "Hippocampus",
+    "functions": ["Declarative memory consolidation", "Spatial navigation", "Place cell mapping"],
+    "location": "Medial temporal lobe",
+    "diseases": ["Alzheimer's Disease", "Anterograde Amnesia", "Epilepsy"],
+    "bloodSupply": "Posterior Cerebral Artery",
+    "neuronTypes": ["CA1/CA3 Pyramidal cells", "Dentate Granule cells", "Place cells"],
+    "researchLinks": ["https://www.ncbi.nlm.nih.gov/books/NBK544259/"],
+    "connections": ["Entorhinal Cortex", "Amygdala", "Prefrontal Cortex"]
+  },
+  {
+    "id": "amygdala",
+    "name": "Amygdala",
+    "functions": ["Fear conditioning", "Threat assessment", "Emotional memory"],
+    "location": "Anterior to hippocampus in medial temporal lobe",
+    "diseases": ["PTSD", "Anxiety Disorder", "Urbach-Wiethe Disease"],
+    "bloodSupply": "Anterior Choroidal Artery",
+    "neuronTypes": ["Basolateral pyramidal cells"],
+    "researchLinks": ["https://www.ncbi.nlm.nih.gov/books/NBK537102/"],
+    "connections": ["Hippocampus", "Prefrontal Cortex", "Hypothalamus"]
+  }
+]
