@@ -7,6 +7,7 @@ import { BrainStructureDetail } from '@/data/brainData';
 import { LayerState, ViewMode } from '@/hooks/useBrainState';
 import { MeshHighlightManager } from './MeshHighlightManager';
 import { CinematicCameraController } from './CinematicCameraController';
+import { NeuralPathwaySystem } from './NeuralPathway';
 
 interface BrainCanvasProps {
   structures: BrainStructureDetail[];
@@ -92,6 +93,7 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
   const neuralNetworkGroupRef = useRef<THREE.Group | null>(null);
   const highlightManagerRef = useRef<MeshHighlightManager | null>(null);
   const camControllerRef = useRef<CinematicCameraController | null>(null);
+  const neuralPathwaySystemRef = useRef<NeuralPathwaySystem | null>(null);
 
   const mousePosRef = useRef<THREE.Vector2>(new THREE.Vector2(0, 0));
   const impulsesDataRef = useRef<Array<{ start: THREE.Vector3; end: THREE.Vector3; t: number; speed: number }>>([]);
@@ -207,6 +209,17 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
     // 8. Build Whole-Brain Neural Network (Axon fibers linking embedded parts)
     buildEmbeddedNeuralNetwork(scene);
 
+    // 9. Build 5000+ Catmull-Rom GPU Animated Neural Pathways System
+    const pathwaySystem = new NeuralPathwaySystem({
+      pathCount: 5000,
+      particlesPerPath: 10,
+      speed: timeScale,
+      glowIntensity: 2.5,
+      renderConduits: true,
+    });
+    neuralPathwaySystemRef.current = pathwaySystem;
+    scene.add(pathwaySystem.group);
+
     // Interaction Raycaster
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
@@ -273,6 +286,12 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
       // Update modular mesh highlighting, color transition lerps, and outline pulsing
       if (highlightManagerRef.current) {
         highlightManagerRef.current.update(delta, elapsedTime);
+      }
+
+      // Update 5000+ Catmull-Rom GPU Animated Neural Pathways System
+      if (neuralPathwaySystemRef.current) {
+        neuralPathwaySystemRef.current.update(elapsedTime, timeScale);
+        neuralPathwaySystemRef.current.group.visible = layers.neurons;
       }
 
       // 1. Swirl Nano Particle Cloud
@@ -418,6 +437,7 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
       domEl.removeEventListener('click', handleClick);
       window.removeEventListener('resize', handleResize);
       camControllerRef.current?.dispose();
+      neuralPathwaySystemRef.current?.dispose();
       if (mountRef.current && rendererRef.current) {
         mountRef.current.removeChild(rendererRef.current.domElement);
       }
