@@ -7,6 +7,9 @@ export interface LayerState {
   greyMatter: boolean;
   whiteMatter: boolean;
   bloodVessels: boolean;
+  arteries: boolean;
+  veins: boolean;
+  capillaries: boolean;
   neurons: boolean;
   nerves: boolean;
   axons: boolean;
@@ -23,6 +26,9 @@ export function useBrainState() {
     greyMatter: true,
     whiteMatter: true,
     bloodVessels: true,
+    arteries: true,
+    veins: true,
+    capillaries: true,
     neurons: true,
     nerves: true,
     axons: true,

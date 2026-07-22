@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { BrainStructureDetail } from '@/data/brainData';
@@ -8,6 +8,8 @@ import { LayerState, ViewMode } from '@/hooks/useBrainState';
 import { MeshHighlightManager } from './MeshHighlightManager';
 import { CinematicCameraController } from './CinematicCameraController';
 import { NeuralPathwaySystem } from './NeuralPathway';
+import { VascularSystem } from './VascularSystem';
+import { HTMLLabelOverlay } from './HTMLLabelOverlay';
 
 interface BrainCanvasProps {
   structures: BrainStructureDetail[];
@@ -17,6 +19,8 @@ interface BrainCanvasProps {
   layers: LayerState;
   transparency: number;
   timeScale: number;
+  searchQuery?: string;
+  hoveredStructureName?: string | null;
   onSelectStructure: (s: BrainStructureDetail | null) => void;
   onHoverStructure: (name: string | null) => void;
 }
@@ -78,6 +82,8 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
   layers,
   transparency,
   timeScale,
+  searchQuery,
+  hoveredStructureName,
   onSelectStructure,
   onHoverStructure
 }) => {
@@ -94,6 +100,9 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
   const highlightManagerRef = useRef<MeshHighlightManager | null>(null);
   const camControllerRef = useRef<CinematicCameraController | null>(null);
   const neuralPathwaySystemRef = useRef<NeuralPathwaySystem | null>(null);
+  const arterySystemRef = useRef<VascularSystem | null>(null);
+  const veinSystemRef = useRef<VascularSystem | null>(null);
+  const capillarySystemRef = useRef<VascularSystem | null>(null);
 
   const mousePosRef = useRef<THREE.Vector2>(new THREE.Vector2(0, 0));
   const impulsesDataRef = useRef<Array<{ start: THREE.Vector3; end: THREE.Vector3; t: number; speed: number }>>([]);
@@ -220,6 +229,19 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
     neuralPathwaySystemRef.current = pathwaySystem;
     scene.add(pathwaySystem.group);
 
+    // 10. Build Modular Vascular Systems (ArterySystem, VeinSystem, CapillarySystem)
+    const arteries = new VascularSystem('arteries', { flowSpeed: 0.8, pulseFrequency: 1.2 });
+    const veins = new VascularSystem('veins', { flowSpeed: 0.4, pulseFrequency: 0.6 });
+    const capillaries = new VascularSystem('capillaries', { flowSpeed: 0.2, pulseFrequency: 0.3 });
+
+    scene.add(arteries.group);
+    scene.add(veins.group);
+    scene.add(capillaries.group);
+
+    arterySystemRef.current = arteries;
+    veinSystemRef.current = veins;
+    capillarySystemRef.current = capillaries;
+
     // Interaction Raycaster
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
@@ -292,6 +314,21 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
       if (neuralPathwaySystemRef.current) {
         neuralPathwaySystemRef.current.update(elapsedTime, timeScale);
         neuralPathwaySystemRef.current.group.visible = layers.neurons;
+      }
+
+      // Update Vascular Systems (ArterySystem, VeinSystem, CapillarySystem)
+      arterySystemRef.current?.update(elapsedTime);
+      veinSystemRef.current?.update(elapsedTime);
+      capillarySystemRef.current?.update(elapsedTime);
+
+      if (arterySystemRef.current) {
+        arterySystemRef.current.setVisible(layers.bloodVessels && (layers.arteries ?? true));
+      }
+      if (veinSystemRef.current) {
+        veinSystemRef.current.setVisible(layers.bloodVessels && (layers.veins ?? true));
+      }
+      if (capillarySystemRef.current) {
+        capillarySystemRef.current.setVisible(layers.bloodVessels && (layers.capillaries ?? true));
       }
 
       // 1. Swirl Nano Particle Cloud
@@ -620,6 +657,16 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
   return (
     <div className="relative w-full h-full">
       <div ref={mountRef} className="w-full h-full" />
+      <HTMLLabelOverlay
+        structures={structures}
+        selectedStructure={selectedStructure}
+        hoveredStructureId={hoveredStructureName || null}
+        searchQuery={searchQuery || ''}
+        camera={cameraRef.current}
+        domElement={mountRef.current}
+        onSelectStructure={onSelectStructure}
+        onHoverStructure={onHoverStructure}
+      />
     </div>
   );
 };

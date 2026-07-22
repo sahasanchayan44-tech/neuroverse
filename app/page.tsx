@@ -28,6 +28,7 @@ export default function Home() {
     activeSimulation,
     viewMode,
     layers,
+    searchQuery,
     isAudioActive,
     timeScale,
     transparency,
@@ -90,6 +91,8 @@ export default function Home() {
         layers={layers}
         transparency={transparency}
         timeScale={timeScale}
+        searchQuery={searchQuery}
+        hoveredStructureName={hoveredName}
         onSelectStructure={setSelectedStructure}
         onHoverStructure={setHoveredName}
       />
