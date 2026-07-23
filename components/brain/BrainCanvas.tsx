@@ -53,6 +53,25 @@ const DISEASE_3D_TARGETS: Record<string, string[]> = {
   autism_spectrum: ['amygdala', 'cerebellum', 'frontal_lobe']
 };
 
+function createCircleTexture(): THREE.Texture {
+  if (typeof document === 'undefined') return new THREE.Texture();
+  const canvas = document.createElement('canvas');
+  canvas.width = 64;
+  canvas.height = 64;
+  const ctx = canvas.getContext('2d');
+  if (ctx) {
+    const gradient = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+    gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
+    gradient.addColorStop(0.4, 'rgba(0, 240, 255, 0.8)');
+    gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    ctx.fillStyle = gradient;
+    ctx.beginPath();
+    ctx.arc(32, 32, 32, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  return new THREE.CanvasTexture(canvas);
+}
+
 // Embedded Anatomical Definitions for Real Human Brain Structures
 interface EmbeddedPartDef {
   name: string;
@@ -240,44 +259,12 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
     cyanLight2.position.set(-20, -15, -20);
     scene.add(cyanLight2);
 
-    // 6. Build Floating Nano Particles (Igloo-style particle cloud)
-    buildNanoParticleCloud(scene);
-
-    // 7. Load Real Human Brain 3D Model File (.GLB)
+    // Load 3D Human Brain & Embedded Internal Organs
     loadHumanBrainGLBModel(scene);
-
-    // 8. Build Main Translucent Bio-Holographic Outer Brain Shell
     buildMainBrainOuterShell(scene);
-
-    // 9. Build Real Human Brain Geometry with Embedded Internal Organs
     buildEmbeddedHumanBrain(scene);
-
-    // 9. Build Whole-Brain Neural Network (Axon fibers linking embedded parts)
     buildEmbeddedNeuralNetwork(scene);
-
-    // 10. Build 5000+ Catmull-Rom GPU Animated Neural Pathways System
-    const pathwaySystem = new NeuralPathwaySystem({
-      pathCount: 5000,
-      particlesPerPath: 10,
-      speed: timeScale,
-      glowIntensity: 2.5,
-      renderConduits: true,
-    });
-    neuralPathwaySystemRef.current = pathwaySystem;
-    scene.add(pathwaySystem.group);
-
-    // 11. Build Modular Vascular Systems (ArterySystem, VeinSystem, CapillarySystem)
-    const arteries = new VascularSystem('arteries', { flowSpeed: 0.8, pulseFrequency: 1.2 });
-    const veins = new VascularSystem('veins', { flowSpeed: 0.4, pulseFrequency: 0.6 });
-    const capillaries = new VascularSystem('capillaries', { flowSpeed: 0.2, pulseFrequency: 0.3 });
-
-    scene.add(arteries.group);
-    scene.add(veins.group);
-    scene.add(capillaries.group);
-
-    arterySystemRef.current = arteries;
-    veinSystemRef.current = veins;
-    capillarySystemRef.current = capillaries;
+    // buildNanoParticleCloud(scene); // Disabled to remove pixelated squares scattering around
 
     // Interaction Raycaster
     const raycaster = new THREE.Raycaster();
@@ -878,12 +865,15 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
     impGeo.setAttribute('position', new THREE.BufferAttribute(impPos, 3));
     impGeo.setAttribute('color', new THREE.BufferAttribute(impCol, 3));
 
+    const circleTex = createCircleTexture();
     const impMat = new THREE.PointsMaterial({
-      size: 0.7,
+      size: 0.6,
+      map: circleTex,
       vertexColors: true,
       transparent: true,
       opacity: 0.95,
-      blending: THREE.AdditiveBlending
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
     });
 
     const impulseParticles = new THREE.Points(impGeo, impMat);
