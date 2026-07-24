@@ -32,3 +32,7 @@
 - **Analysis**: Analyzed all 131 individual GLB models in `public/models/brain_parts/` and `public/models/brain_parts_manifest.json`.
 - **Implementation**: Created `loadAll131BrainPartModels(scene)` and `getStructureIdFromFilename()` to dynamically load, scale, and assemble all 131 brain part GLBs.
 - **HUD Mapping**: Mapped every GLB part mesh (`userData.structureId`) to floating HUD screen labels (`HTMLLabelOverlay.tsx` / `MESH_CENTERS_MAP`), connecting 3D brain lobes (Frontal, Parietal, Temporal, Occipital, Cerebellum, Brain Stem, Thalamus, etc.) directly to floating labels.
+
+### 8. Undo Action Executed
+- Reverted the 3D mesh interaction redesign commit back to `f5cddbe` as requested.
+- Restored `HTMLLabelOverlay.tsx` and original canvas state.
