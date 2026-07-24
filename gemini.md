@@ -27,6 +27,8 @@
 - **File**: `components/brain/BrainCanvas.tsx`
 - **Changes**: Disabled 3D brain model loading and procedural mesh generation functions (`loadHumanBrainGLBModel`, `buildMainBrainOuterShell`, `buildEmbeddedHumanBrain`, `buildEmbeddedNeuralNetwork`).
 
-### 6. Git Synchronization
-- Configured git author as **`sahasanchayan44-tech <sahasanchayan44@gmail.com>`**.
-- Pushed commits to GitHub remote repository: **https://github.com/sahasanchayan44-tech/neuroverse.git**.
+### 7. 131-Mesh 3D Brain Model Assembly & Floating HUD Lobe Mapping
+- **File**: `components/brain/BrainCanvas.tsx`
+- **Analysis**: Analyzed all 131 individual GLB models in `public/models/brain_parts/` and `public/models/brain_parts_manifest.json`.
+- **Implementation**: Created `loadAll131BrainPartModels(scene)` and `getStructureIdFromFilename()` to dynamically load, scale, and assemble all 131 brain part GLBs.
+- **HUD Mapping**: Mapped every GLB part mesh (`userData.structureId`) to floating HUD screen labels (`HTMLLabelOverlay.tsx` / `MESH_CENTERS_MAP`), connecting 3D brain lobes (Frontal, Parietal, Temporal, Occipital, Cerebellum, Brain Stem, Thalamus, etc.) directly to floating labels.

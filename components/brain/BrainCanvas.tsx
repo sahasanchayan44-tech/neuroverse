@@ -259,12 +259,9 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
     cyanLight2.position.set(-20, -15, -20);
     scene.add(cyanLight2);
 
-    // All 3D models removed as requested
-    // loadHumanBrainGLBModel(scene);
-    // buildMainBrainOuterShell(scene);
-    // buildEmbeddedHumanBrain(scene);
-    // buildEmbeddedNeuralNetwork(scene);
-    // buildNanoParticleCloud(scene);
+    // Load & Present 3D Brain Model Assembly mapped to floating HUD lobe names
+    loadAll131BrainPartModels(scene);
+    buildEmbeddedHumanBrain(scene);
 
     // Interaction Raycaster
     const raycaster = new THREE.Raycaster();
@@ -588,6 +585,93 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
       }
     };
   }, [structures]);
+
+  function getStructureIdFromFilename(filename: string): string {
+    if (filename.startsWith('1.1.1') || filename.startsWith('1.1.2')) return 'frontal_lobe';
+    if (filename.startsWith('1.1.3') || filename.startsWith('1.1.4')) return 'parietal_lobe';
+    if (filename.startsWith('1.1.5') || filename.startsWith('1.1.6')) return 'temporal_lobe';
+    if (filename.startsWith('1.1.7') || filename.startsWith('1.1.8') || filename.startsWith('1.1.9') || filename.startsWith('1.1.10')) return 'occipital_lobe';
+    if (filename.startsWith('2.')) return 'cerebellum';
+    if (filename.startsWith('3.1') || filename.startsWith('3.2')) return 'brain_stem';
+    if (filename.startsWith('3.3')) return 'pons';
+    if (filename.startsWith('3.4')) return 'medulla';
+    if (filename.startsWith('4.1') || filename.startsWith('4.2')) return 'thalamus';
+    if (filename.startsWith('4.3') || filename.startsWith('4.5')) return 'hypothalamus';
+    if (filename.startsWith('4.6')) return 'pituitary_gland';
+    if (filename.startsWith('4.7') || filename.startsWith('4.8')) return 'pineal_gland';
+    if (filename.startsWith('5.1') || filename.startsWith('5.2')) return 'hippocampus';
+    if (filename.startsWith('5.3') || filename.startsWith('5.4') || filename.startsWith('5.5')) return 'amygdala';
+    if (filename.startsWith('6.')) return 'basal_ganglia';
+    if (filename.startsWith('7.')) return 'ventricles';
+    if (filename.startsWith('9.')) return 'corpus_callosum';
+    return 'frontal_lobe';
+  }
+
+  // Load & Present Assembly of all 131 3D Brain Part GLB Models mapped to floating HUD lobe names
+  function loadAll131BrainPartModels(scene: THREE.Scene) {
+    const gltfLoader = new GLTFLoader();
+    const partsGroup = new THREE.Group();
+    partsGroup.name = 'all_131_brain_parts_assembly_group';
+
+    fetch('/models/brain_parts_manifest.json')
+      .then((res) => res.json())
+      .then((manifest: Array<{ filename: string; url: string; vertexCount: number; faceCount: number }>) => {
+        let loadedCount = 0;
+        manifest.forEach((item) => {
+          gltfLoader.load(
+            item.url,
+            (gltf) => {
+              const partScene = gltf.scene;
+              partScene.name = item.filename;
+              const structId = getStructureIdFromFilename(item.filename);
+
+              partScene.traverse((child) => {
+                if (child instanceof THREE.Mesh) {
+                  child.userData.structureId = structId;
+                  child.material = new THREE.MeshStandardMaterial({
+                    color: 0x00f0ff,
+                    emissive: 0x0066ff,
+                    emissiveIntensity: 0.35,
+                    roughness: 0.15,
+                    metalness: 0.85,
+                    transparent: true,
+                    opacity: transparency * 0.35,
+                    side: THREE.DoubleSide,
+                    blending: THREE.NormalBlending
+                  });
+                  if (!partMeshesRef.current[structId]) {
+                    partMeshesRef.current[structId] = child;
+                  }
+                }
+              });
+              partsGroup.add(partScene);
+              loadedCount++;
+
+              if (loadedCount === manifest.length) {
+                const box = new THREE.Box3().setFromObject(partsGroup);
+                const center = box.getCenter(new THREE.Vector3());
+                const size = box.getSize(new THREE.Vector3());
+                const maxDim = Math.max(size.x, size.y, size.z);
+                const scaleFactor = 15.0 / (maxDim || 1);
+
+                partsGroup.position.sub(center.clone().multiplyScalar(scaleFactor));
+                partsGroup.position.y += 0.5;
+                partsGroup.scale.setScalar(scaleFactor);
+
+                loadedBrainGroupRef.current = partsGroup;
+                scene.add(partsGroup);
+                console.log(`🧠 [BrainCanvas] Successfully loaded and presented all ${manifest.length} individual 3D brain part models mapped to anatomical lobes!`);
+              }
+            },
+            undefined,
+            () => {}
+          );
+        });
+      })
+      .catch((err) => {
+        console.warn('Notice: Brain parts manifest load notice:', err);
+      });
+  }
 
   // Load Real 3D Human Brain GLB Model Asset
   function loadHumanBrainGLBModel(scene: THREE.Scene) {
