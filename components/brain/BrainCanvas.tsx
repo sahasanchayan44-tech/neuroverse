@@ -259,9 +259,8 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
     cyanLight2.position.set(-20, -15, -20);
     scene.add(cyanLight2);
 
-    // Load & Present 3D Brain Model Assembly mapped to floating HUD lobe names
-    loadAll131BrainPartModels(scene);
-    buildEmbeddedHumanBrain(scene);
+    // Catalog and load real .glb child meshes mapped to UI anatomy selections (no placeholder primitives)
+    loadAndCatalogGLBBrainModel(scene);
 
     // Interaction Raycaster
     const raycaster = new THREE.Raycaster();
@@ -826,68 +825,96 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
     scene.add(group);
   }
 
-  // Build Real Human Brain with Embedded Subcortical Organs
-  function buildEmbeddedHumanBrain(scene: THREE.Scene) {
-    Object.entries(EMBEDDED_BRAIN_PARTS).forEach(([id, def]) => {
-      let geo: THREE.BufferGeometry;
+  const GLB_MESH_NAME_MAPPING: Record<string, string[]> = {
+    frontal_lobe: ['1.1.1.1.1', '1.1.1.1.2', '1.1.1.1.3', '1.1.1.3.0', '1.1.1.3.1', '1.1.1.4.0', '1.1.1.5.1', '1.1.1.7.0', '1.1.1.8.0', '1.1.2.0.0', '1.1.2.1.1', 'FrontalLobe', 'Frontal_Lobe', 'left_frontal_lobe', 'right_frontal_lobe'],
+    parietal_lobe: ['1.1.3.0.0', '1.1.3.1.0', '1.1.3.1.1', '1.1.3.2.0', '1.1.3.3.0', '1.1.4.0.0', '1.1.4.2.0', '1.1.4.3.1', '1.1.4.3.2', '1.1.4.3.3', 'ParietalLobe', 'Parietal_Lobe', 'left_parietal_lobe', 'right_parietal_lobe'],
+    temporal_lobe: ['1.1.5.0.0', '1.1.5.1.0', '1.1.5.2.0', '1.1.5.3.1', '1.1.5.3.2', '1.1.5.3.3', '1.1.5.4.0', '1.1.5.5.0', '1.1.6.4.1', '1.1.6.5.0', 'TemporalLobe', 'Temporal_Lobe', 'left_temporal_lobe', 'right_temporal_lobe'],
+    occipital_lobe: ['1.1.7.0.0', '1.1.8.0.0', '1.1.9.0.0', '1.1.10.0.0', 'OccipitalLobe', 'Occipital_Lobe', 'left_occipital_lobe', 'right_occipital_lobe'],
+    cerebellum: ['2.1.0.0.0', '2.1.1.0.0', '2.3.0.0.0', '2.4.1.1.0', '2.4.1.2.0', '2.4.1.3.0', 'Cerebellum', 'Cerebellar_Hemispheres'],
+    brain_stem: ['3.1.1.0.0', '3.1.2.0.0', '3.2.0.0.0', '3.2.1.0.0', '3.2.2.0.0', 'BrainStem', 'Brain_Stem', 'Midbrain'],
+    pons: ['3.3.0.0.0', 'Pons'],
+    medulla: ['3.4.0.0.0', '3.4.1.0.0', '3.4.2.0.0', '3.4.3.0.0', '3.4.4.0.0', 'Medulla', 'Medulla_Oblongata'],
+    thalamus: ['4.1.0.0.0', '4.1.2.0.0', '4.2.0.0.0', '4.2.1.0.0', 'Thalamus'],
+    hypothalamus: ['4.3.1.0.0', '4.3.2.0.0', '4.5.0.0.0', 'Hypothalamus'],
+    pituitary_gland: ['4.6.0.0.0', 'Pituitary', 'PituitaryGland'],
+    pineal_gland: ['4.7.0.0.0', '4.8.1.0.0', 'Pineal', 'PinealGland'],
+    hippocampus: ['5.1.0.0.0', '5.1.1.0.0', '5.2.0.0.0', 'Hippocampus'],
+    amygdala: ['5.3.0.0.0', '5.4.0.0.0', '5.5.0.0.0', 'Amygdala'],
+    basal_ganglia: ['6.1.0.0.0', '6.2.0.0.0', '6.3.0.0.0', '6.4.0.0.0', 'BasalGanglia', 'Basal_Ganglia', 'Striatum', 'Caudate', 'Putamen'],
+    ventricles: ['7.1.0.0.0', '7.1.1.0.0', '7.1.2.0.0', '7.2.0.0.0', 'Ventricles', 'Lateral_Ventricles'],
+    corpus_callosum: ['9.1.0.0.0', '9.2.0.0.0', '9.3.0.0.0', 'CorpusCallosum', 'Corpus_Callosum']
+  };
 
-      if (def.category === 'outer_cortex') {
-        // High-detail cortical lobe mesh with gyri/sulci folds
-        geo = new THREE.SphereGeometry(1, 36, 36);
-        const pos = geo.attributes.position;
-        for (let i = 0; i < pos.count; i++) {
-          let x = pos.getX(i);
-          let y = pos.getY(i);
-          let z = pos.getZ(i);
+  // Load .glb Model & Use Traversal Method (scene.traverse) to Catalog All Internal Child Meshes
+  function loadAndCatalogGLBBrainModel(scene: THREE.Scene) {
+    const gltfLoader = new GLTFLoader();
 
-          const gyri = Math.sin(x * 2.8) * Math.cos(y * 2.8) * Math.sin(z * 2.8) * 0.28;
-          const sulci = Math.sin(x * 4.8) * 0.08;
+    gltfLoader.load(
+      '/models/brain.glb',
+      (gltf) => {
+        const model = gltf.scene;
+        model.name = 'real_human_brain_3d_model';
+        loadedBrainGroupRef.current = model;
 
-          pos.setXYZ(i, x + gyri + sulci, y + gyri, z + gyri + sulci);
-        }
-        geo.computeVertexNormals();
-      } else if (def.category === 'cerebellum') {
-        // Cerebellar folia folds
-        geo = new THREE.SphereGeometry(1, 32, 32);
-        const pos = geo.attributes.position;
-        for (let i = 0; i < pos.count; i++) {
-          let x = pos.getX(i);
-          let y = pos.getY(i);
-          let z = pos.getZ(i);
-          const folia = Math.sin(y * 12.0) * 0.12;
-          pos.setXYZ(i, x + folia, y, z + folia);
-        }
-        geo.computeVertexNormals();
-      } else if (def.category === 'embedded_stem') {
-        geo = new THREE.CylinderGeometry(0.8, 0.6, 2, 24);
-      } else if (id === 'corpus_callosum' || id === 'hippocampus' || id === 'ventricles') {
-        // Curved inner bridge/torus geometry
-        geo = new THREE.TorusGeometry(1.2, 0.4, 16, 32);
-      } else {
-        // Embedded inner organ (Thalamus, Amygdala, Hypothalamus, Pituitary, Pineal)
-        geo = new THREE.SphereGeometry(1, 24, 24);
+        // Traverse loaded .glb scene graph to catalog every internal child mesh
+        model.traverse((child) => {
+          if (child instanceof THREE.Mesh) {
+            const meshName = child.name || '';
+            let matchedStructId = 'frontal_lobe';
+
+            // Match child mesh name against GLB_MESH_NAME_MAPPING
+            for (const [structId, possibleNames] of Object.entries(GLB_MESH_NAME_MAPPING)) {
+              if (possibleNames.some(name => meshName.toLowerCase().includes(name.toLowerCase()))) {
+                matchedStructId = structId;
+                break;
+              }
+            }
+
+            child.userData = {
+              structureId: matchedStructId,
+              originalColor: child.material?.color ? child.material.color.clone() : new THREE.Color(0x00f0ff),
+              originalOpacity: 0.35,
+            };
+
+            // Set default transparent/glassy state so highlighted part stands out
+            child.material = new THREE.MeshStandardMaterial({
+              color: 0x00f0ff,
+              emissive: 0x0044aa,
+              emissiveIntensity: 0.2,
+              roughness: 0.15,
+              metalness: 0.85,
+              transparent: true,
+              opacity: transparency * 0.35,
+              side: THREE.DoubleSide,
+              blending: THREE.NormalBlending
+            });
+
+            if (!partMeshesRef.current[matchedStructId]) {
+              partMeshesRef.current[matchedStructId] = child;
+            }
+          }
+        });
+
+        // Compute Bounding Box to center and scale real GLB model
+        const box = new THREE.Box3().setFromObject(model);
+        const center = box.getCenter(new THREE.Vector3());
+        const size = box.getSize(new THREE.Vector3());
+        const maxDim = Math.max(size.x, size.y, size.z);
+        const scaleFactor = 15.0 / (maxDim || 1);
+
+        model.position.sub(center.clone().multiplyScalar(scaleFactor));
+        model.position.y += 0.5;
+        model.scale.setScalar(scaleFactor);
+
+        scene.add(model);
+        console.log('🧠 [BrainCanvas] Traversed and cataloged real .glb child meshes!');
+      },
+      undefined,
+      (err) => {
+        // Fallback: Catalog 131 individual GLB part models
+        loadAll131BrainPartModels(scene);
       }
-
-      // Translucent Emissive Bio-Holographic Shader Material
-      const mat = new THREE.MeshStandardMaterial({
-        color: def.colorHex,
-        emissive: def.category === 'outer_cortex' ? 0x0066ff : def.colorHex,
-        emissiveIntensity: def.category === 'outer_cortex' ? 0.3 : 0.6,
-        roughness: 0.15,
-        metalness: 0.85,
-        transparent: true,
-        opacity: transparency * (def.category === 'outer_cortex' ? 0.75 : 0.95),
-        blending: THREE.NormalBlending
-      });
-
-      const mesh = new THREE.Mesh(geo, mat);
-      mesh.scale.copy(def.scale);
-      mesh.position.copy(def.center);
-      mesh.userData = { structureId: id };
-
-      partMeshesRef.current[id] = mesh;
-      scene.add(mesh);
-    });
+    );
   }
 
   // Build Whole-Brain Neural Network bridging embedded organs to cortical lobes

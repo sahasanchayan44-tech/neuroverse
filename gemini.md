@@ -56,3 +56,10 @@
 - **File**: `app/page.tsx`, `components/brain/BrainMeshLabelOverlay.tsx`
 - **Changes**: Removed `<BrainPartModal>` full-screen backdrop blur modal so the 3D brain model stays 100% sharp and unblurred.
 - **Result**: Set `pointer-events-none` on spatial label tags so OrbitControls rotation is 100% fluid in every direction while anatomical details display clearly in the right side long panel (`InfoPanel.tsx`).
+
+### 13. Remove Placeholder Primitives & Map UI Selections Directly to GLB Child Meshes
+- **File**: `components/brain/BrainCanvas.tsx`
+- **Removed**: Completely removed `buildEmbeddedHumanBrain` and all procedural primitive geometries (`SphereGeometry`, `CylinderGeometry`, `TorusGeometry`).
+- **GLB Traversal**: Implemented `loadAndCatalogGLBBrainModel(scene)` using `scene.traverse()` to catalog every internal child mesh inside the loaded `.glb` file.
+- **UI Mapping**: Created `GLB_MESH_NAME_MAPPING` linking UI sidebar/anatomy selections to exact GLB child mesh names.
+- **Material Highlighting**: Updated material properties (`color`, `emissive`, `emissiveIntensity`, `opacity`) directly on the actual `.glb` child meshes, preserving unselected parts in a default transparent/glassy holographic state (`opacity: 0.35`).
