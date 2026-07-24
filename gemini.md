@@ -68,3 +68,7 @@
 - **Diagnostic Logging**: Added `console.log("Mesh found:", child.name)` inside scene graph traversal loop to output exact internal mesh string names to the browser console.
 - **Multi-Directional Lighting**: Added key (`0x00f0ff, 3.2`), rim (`0x0066ff, 2.6`), and fill (`0xff00d0, 1.8`) directional lights, plus vibrant ambient light (`0x0099ff, 2.0`) and subtle emissive base glow (`emissiveIntensity: 0.45`).
 - **Dynamic Neon Highlight**: Active UI selection dynamically overrides the selected GLB mesh with bright neon cyan (`0x00f0ff`) at high emissive intensity (`2.2`), while unselected meshes drop back to a lower opacity (`0.25`) and lower emissive state (`0.15`) for high visual contrast.
+
+### 15. Undo Action Executed
+- Reverted the latest changes (`a5a8421` & `b5fd170`) back to `356050c` as requested.
+- Force-pushed updated branch state to origin main (`https://github.com/sahasanchayan44-tech/neuroverse.git`).
