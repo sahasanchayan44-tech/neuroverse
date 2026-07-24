@@ -172,6 +172,7 @@ export const HTMLLabelOverlay: React.FC<HTMLLabelOverlayProps> = ({
     >
       {labelPositions.map((label) => {
         if (label.isBehind) return null;
+        if (!label.isHovered && !label.isSelected && !label.isSearchMatch) return null;
 
         const struct = structures.find((s) => s.id === label.id);
         if (!struct) return null;

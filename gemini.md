@@ -36,3 +36,8 @@
 ### 8. Undo Action Executed
 - Reverted the 3D mesh interaction redesign commit back to `f5cddbe` as requested.
 - Restored `HTMLLabelOverlay.tsx` and original canvas state.
+
+### 9. Hide Floating Mid-Air Objects & Relocate 3D Brain Model Parts
+- **File**: `components/brain/HTMLLabelOverlay.tsx`
+- **Changes**: Updated label rendering condition (`!label.isHovered && !label.isSelected && !label.isSearchMatch`) to hide all floating mid-air badges and line objects by default.
+- **Relocation**: Aligned and centered all 131 GLB brain part meshes directly into the unified 3D human brain assembly in `BrainCanvas.tsx`.
