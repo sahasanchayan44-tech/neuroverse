@@ -72,3 +72,9 @@
 ### 15. Undo Action Executed
 - Reverted the latest changes (`a5a8421` & `b5fd170`) back to `356050c` as requested.
 - Force-pushed updated branch state to origin main (`https://github.com/sahasanchayan44-tech/neuroverse.git`).
+
+### 16. Dead-Center Viewport Positioning for 3D Brain Model
+- **File**: `components/brain/BrainCanvas.tsx`
+- **Centering**: Positioned camera at level position `(0, 0, 28)` and OrbitControls target at origin `(0, 0, 0)`.
+- **Bounding Box Alignment**: Adjusted `loadAndCatalogGLBBrainModel` and `loadAll131BrainPartModels` to subtract exact geometric bounding box centers (`model.position.sub(center.clone().multiplyScalar(scaleFactor))`).
+- **Result**: The 3D brain model is always rendered dead-centered in the middle of the viewport for maximum visibility and ease of interaction.

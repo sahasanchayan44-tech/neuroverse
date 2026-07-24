@@ -248,9 +248,9 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
     scene.background = new THREE.Color(0x000208);
     scene.fog = new THREE.FogExp2(0x000511, 0.012);
 
-    // 2. Camera setup
+    // 2. Camera setup - Positioned perfectly level at center
     const camera = new THREE.PerspectiveCamera(45, mountRef.current.clientWidth / mountRef.current.clientHeight, 0.1, 1000);
-    camera.position.set(0, 6, 32);
+    camera.position.set(0, 0, 28);
     cameraRef.current = camera;
 
     // 3. Renderer setup
@@ -263,8 +263,9 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
 
     mountRef.current.appendChild(renderer.domElement);
 
-    // 4. OrbitControls
+    // 4. OrbitControls centered at 0 0 0
     const controls = new OrbitControls(camera, renderer.domElement);
+    controls.target.set(0, 0, 0);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
     controls.maxDistance = 65;
@@ -275,7 +276,7 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
 
     // Initialize CinematicCameraController
     camControllerRef.current = new CinematicCameraController(camera, controls, {
-      defaultPosition: new THREE.Vector3(0, 6, 32),
+      defaultPosition: new THREE.Vector3(0, 0, 28),
       defaultTarget: new THREE.Vector3(0, 0, 0),
     });
 
@@ -690,8 +691,8 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
                 const maxDim = Math.max(size.x, size.y, size.z);
                 const scaleFactor = 15.0 / (maxDim || 1);
 
+                // Position assembly group perfectly dead-centered at (0, 0, 0)
                 partsGroup.position.sub(center.clone().multiplyScalar(scaleFactor));
-                partsGroup.position.y += 0.5;
                 partsGroup.scale.setScalar(scaleFactor);
 
                 loadedBrainGroupRef.current = partsGroup;
@@ -943,8 +944,8 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
         const maxDim = Math.max(size.x, size.y, size.z);
         const scaleFactor = 15.0 / (maxDim || 1);
 
+        // Position model perfectly dead-centered at (0, 0, 0)
         model.position.sub(center.clone().multiplyScalar(scaleFactor));
-        model.position.y += 0.5;
         model.scale.setScalar(scaleFactor);
 
         scene.add(model);
