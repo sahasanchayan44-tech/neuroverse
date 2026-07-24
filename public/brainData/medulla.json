@@ -1,0 +1,29 @@
+{
+  "id": "medulla",
+  "name": "Medulla Oblongata",
+  "latinName": "Medulla Oblongata",
+  "category": "Brainstem",
+  "location": "Lowest segment of brainstem extending from pons down to the foramen magnum.",
+  "description": "Contains vital autonomic centers controlling cardiac rate, blood pressure, and respiratory rhythm, along with reflex centers for swallowing, coughing, and vomiting.",
+  "functions": [
+    "Cardiac center regulation & blood pressure control",
+    "Respiratory automaticity complex (Pre-Bötzinger)",
+    "Vital reflexes (coughing, vomiting, swallowing)"
+  ],
+  "bloodSupply": "Anterior Spinal Artery and PICA",
+  "neurotransmitters": [
+    "Acetylcholine",
+    "Norepinephrine",
+    "Serotonin"
+  ],
+  "diseases": [
+    "Wallenberg Syndrome (Lateral Medullary Stroke)",
+    "Brain Herniation Respiratory Arrest",
+    "Central Alveolar Hypoventilation"
+  ],
+  "clinicalImportance": "Contains the Pyramidal Decussation where 90% of motor nerve fibers cross to the opposite side of the body.",
+  "researchNotes": "Pre-Bötzinger complex in the medulla generates the rhythm of respiration.",
+  "interestingFacts": [
+    "Explains why the left hemisphere of the brain controls motor movement on the right side of the body."
+  ]
+}

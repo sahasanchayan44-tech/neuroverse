@@ -1,0 +1,30 @@
+{
+  "id": "pineal_gland",
+  "name": "Pineal Gland",
+  "latinName": "Epiphysis Cerebri",
+  "category": "Epithalamus",
+  "location": "Postero-ventral to the thalamus in the epithalamus between the two cerebral hemispheres.",
+  "description": "A small pinecone-shaped endocrine structure that synthesizes melatonin from serotonin in response to darkness, regulating sleep-wake cycles and circadian body rhythms.",
+  "functions": [
+    "Melatonin synthesis & nocturnal secretion",
+    "Circadian sleep-wake phase regulation",
+    "Seasonal reproductive cycle modulation"
+  ],
+  "bloodSupply": "Posterior Choroidal Artery",
+  "neurotransmitters": [
+    "Melatonin",
+    "Serotonin",
+    "Norepinephrine"
+  ],
+  "diseases": [
+    "Pinealoma / Pineoblastoma",
+    "Pineal Cyst",
+    "Circadian Phase Delayed Sleep Disorder",
+    "Pathological Calcification"
+  ],
+  "clinicalImportance": "Pineal calcification ('brain sand') serves as an anatomical midline radiological landmark on skull X-rays and CT scans.",
+  "researchNotes": "René Descartes historically declared the pineal gland to be the 'principal seat of the soul' where mind and body interact.",
+  "interestingFacts": [
+    "Contains photoreceptive evolutionary heritage, often dubbed the 'Third Eye'."
+  ]
+}

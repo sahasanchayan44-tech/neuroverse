@@ -1,0 +1,31 @@
+{
+  "id": "pons",
+  "name": "Pons",
+  "latinName": "Pons ('Bridge')",
+  "category": "Hindbrain",
+  "location": "Middle section of brainstem anterior to cerebellum and superior to medulla.",
+  "description": "Bulging brainstem structure containing transverse pontine fibers connecting cerebrum to cerebellum. Houses nuclei for cranial nerves V, VI, VII, and VIII, and REM sleep generators.",
+  "functions": [
+    "Motor pathway relay to Cerebellum",
+    "REM sleep & dream generation",
+    "Facial sensation & movement (CN V/VII)",
+    "Auditory-vestibular processing"
+  ],
+  "bloodSupply": "Pontine branches of the Basilar Artery",
+  "neurotransmitters": [
+    "Norepinephrine",
+    "Acetylcholine",
+    "GABA"
+  ],
+  "diseases": [
+    "Pontine Stroke",
+    "Central Pontine Myelinolysis",
+    "REM Sleep Behavior Disorder",
+    "Trigeminal Neuralgia"
+  ],
+  "clinicalImportance": "Inhibits spinal motor output during REM sleep so dreams are not physically enacted.",
+  "researchNotes": "Locus coeruleus in the dorsal pons is the principal site of norepinephrine synthesis in the central nervous system.",
+  "interestingFacts": [
+    "The word Pons means 'Bridge' in Latin."
+  ]
+}

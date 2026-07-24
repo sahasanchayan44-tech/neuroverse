@@ -1,0 +1,32 @@
+{
+  "id": "pituitary_gland",
+  "name": "Pituitary Gland",
+  "latinName": "Hypophysis Cerebri",
+  "category": "Endocrine Gland",
+  "location": "Seated in the sella turcica of the sphenoid bone at the base of the brain.",
+  "description": "The 'Master Gland' of the endocrine system, secreting hormones that regulate growth, blood pressure, reproduction, metabolism, and stress response under hypothalamic control.",
+  "functions": [
+    "Growth hormone (GH) secretion for tissue repair",
+    "Adrenocorticotropic hormone (ACTH) stress response",
+    "Thyroid-stimulating hormone (TSH) metabolic control",
+    "Gonadotropin (FSH/LH) reproductive regulation"
+  ],
+  "bloodSupply": "Superior and Inferior Hypophyseal Arteries",
+  "neurotransmitters": [
+    "Dopamine (Prolactin Inhibiting Factor)",
+    "Oxytocin",
+    "Vasopressin"
+  ],
+  "diseases": [
+    "Pituitary Adenoma",
+    "Acromegaly / Gigantism",
+    "Cushing's Disease",
+    "Hypopituitarism",
+    "Prolactinoma"
+  ],
+  "clinicalImportance": "Compression of the optic chiasm by a growing pituitary macroadenoma causes classic bitemporal hemianopsia (tunnel vision).",
+  "researchNotes": "Transsphenoidal endonasal endoscopic surgery allows minimally invasive resection of pituitary tumors through the nasal cavity.",
+  "interestingFacts": [
+    "Only the size of a pea (approx 0.5g), yet controls almost all bodily endocrine glands."
+  ]
+}

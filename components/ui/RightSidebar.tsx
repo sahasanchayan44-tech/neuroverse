@@ -62,7 +62,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
   onSelectDisease,
   onReset
 }) => {
-  const [activeTab, setActiveTab] = useState<'cognition' | 'pathology' | 'timeline' | 'spectrum'>('cognition');
+  const [activeTab, setActiveTab] = useState<'cognition' | 'pathology' | 'timeline'>('cognition');
   const [internalIsCollapsed, setInternalIsCollapsed] = useState(false);
   const [diseaseSearch, setDiseaseSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
@@ -149,15 +149,6 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
             }`}
           >
             <Clock className="w-3 h-3" /> TIME ({EVOLUTIONARY_EPOCHS_DATABASE.length})
-          </button>
-
-          <button
-            onClick={() => setActiveTab('spectrum')}
-            className={`flex-1 py-1 rounded-lg border transition-all flex items-center justify-center gap-1 font-bold ${
-              activeTab === 'spectrum' ? 'bg-neuro-green/20 border-neuro-green text-white shadow-green-glow' : 'bg-white/5 border-white/10 text-neuro-muted'
-            }`}
-          >
-            <Radio className="w-3 h-3" /> SPEC
           </button>
         </div>
 
@@ -617,55 +608,6 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
             </div>
           )}
 
-        </div>
-      )}
-
-      {/* Tab 4: EEG Power Spectrum Telemetry */}
-      {activeTab === 'spectrum' && (
-        <div className="flex flex-col gap-3 flex-1 min-h-0 overflow-y-auto pr-1 font-mono text-xs">
-          <span className="text-[10px] text-neuro-green font-bold tracking-wider flex-shrink-0">
-            EEG POWER SPECTRAL DENSITY
-          </span>
-
-          <div className="p-3 bg-black/60 border border-white/10 rounded-xl flex flex-col gap-2">
-            <div className="flex justify-between">
-              <span className="text-neuro-pink font-bold">Gamma Band (30-100Hz)</span>
-              <span className="font-bold text-white">42 μV²</span>
-            </div>
-            <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
-              <div className="bg-neuro-pink h-full w-[78%]" />
-            </div>
-          </div>
-
-          <div className="p-3 bg-black/60 border border-white/10 rounded-xl flex flex-col gap-2">
-            <div className="flex justify-between">
-              <span className="text-neuro-cyan font-bold">Beta Band (13-30Hz)</span>
-              <span className="font-bold text-white">28 μV²</span>
-            </div>
-            <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
-              <div className="bg-neuro-cyan h-full w-[62%]" />
-            </div>
-          </div>
-
-          <div className="p-3 bg-black/60 border border-white/10 rounded-xl flex flex-col gap-2">
-            <div className="flex justify-between">
-              <span className="text-neuro-green font-bold">Alpha Band (8-12Hz)</span>
-              <span className="font-bold text-white">18 μV²</span>
-            </div>
-            <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
-              <div className="bg-neuro-green h-full w-[45%]" />
-            </div>
-          </div>
-
-          <div className="p-3 bg-black/60 border border-white/10 rounded-xl flex flex-col gap-2">
-            <div className="flex justify-between">
-              <span className="text-neuro-yellow font-bold">Theta / Delta Band (&lt;8Hz)</span>
-              <span className="font-bold text-white">12 μV²</span>
-            </div>
-            <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
-              <div className="bg-neuro-yellow h-full w-[30%]" />
-            </div>
-          </div>
         </div>
       )}
 

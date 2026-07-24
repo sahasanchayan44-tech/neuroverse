@@ -1,0 +1,33 @@
+{
+  "id": "basal_ganglia",
+  "name": "Basal Ganglia",
+  "latinName": "Nuclei Basales",
+  "category": "Subcortical Nuclei",
+  "location": "Deep subcortical grey matter masses surrounding the thalamus.",
+  "description": "Subcortical nuclei cluster (Striatum, Globus Pallidus, Subthalamic Nucleus, Substantia Nigra) selecting, initiating, and refining voluntary motor programs and habits.",
+  "functions": [
+    "Voluntary motor action selection & execution",
+    "Inhibition of unwanted competing movements",
+    "Procedural motor habit formation",
+    "Reward-based reinforcement learning"
+  ],
+  "bloodSupply": "Lenticulostriate Arteries (branches of MCA)",
+  "neurotransmitters": [
+    "Dopamine",
+    "GABA",
+    "Glutamate",
+    "Acetylcholine"
+  ],
+  "diseases": [
+    "Parkinson's Disease",
+    "Huntington's Disease",
+    "Tourette Syndrome",
+    "Dystonia",
+    "Hemiballismus"
+  ],
+  "clinicalImportance": "Degeneration of dopaminergic cells in Substantia Nigra causes Parkinsonian tremors and bradykinesia.",
+  "researchNotes": "Operates via parallel Direct ('GO') D1-receptor pathway and Indirect ('STOP') D2-receptor pathway.",
+  "interestingFacts": [
+    "Acts as a neural filter selecting 1 intended motor movement out of thousands of candidate actions."
+  ]
+}

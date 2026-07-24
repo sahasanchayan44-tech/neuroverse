@@ -35,15 +35,15 @@ export function useBrainState() {
   const [layers, setLayers] = useState<LayerState>({
     greyMatter: true,
     whiteMatter: true,
-    bloodVessels: true,
-    arteries: true,
-    veins: true,
-    capillaries: true,
-    neurons: true,
-    nerves: true,
-    axons: true,
-    dendrites: true,
-    synapses: true
+    bloodVessels: false,
+    arteries: false,
+    veins: false,
+    capillaries: false,
+    neurons: false,
+    nerves: false,
+    axons: false,
+    dendrites: false,
+    synapses: false
   });
 
   const [searchQuery, setSearchQuery] = useState('');

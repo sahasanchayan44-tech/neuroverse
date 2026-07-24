@@ -1,0 +1,29 @@
+{
+  "id": "ventricles",
+  "name": "Ventricles",
+  "latinName": "Ventriculi Cerebri",
+  "category": "Ventricular System",
+  "location": "Central fluid-filled cavities within the brain (Lateral, Third, and Fourth Ventricles).",
+  "description": "A set of communicating cavities filled with Cerebrospinal Fluid (CSF), produced by the choroid plexus, providing mechanical cushioning, waste clearance, and chemical homeostasis.",
+  "functions": [
+    "Production and circulation of Cerebrospinal Fluid (CSF)",
+    "Mechanical shock absorption & brain buoyancy",
+    "Metabolic waste clearance (Glymphatic system)"
+  ],
+  "bloodSupply": "Choroidal Arteries (Anterior and Posterior)",
+  "neurotransmitters": [
+    "Peptides",
+    "Electrolytes"
+  ],
+  "diseases": [
+    "Hydrocephalus (Communicating & Obstructive)",
+    "Normal Pressure Hydrocephalus (NPH)",
+    "Ependymoma",
+    "Intraventricular Hemorrhage"
+  ],
+  "clinicalImportance": "Obstruction of CSF flow through the cerebral aqueduct causes rapidly progressive intracranial pressure elevation and hydrocephalus.",
+  "researchNotes": "The glymphatic system drives CSF influx through periarterial space during deep slow-wave sleep to clear beta-amyloid toxins.",
+  "interestingFacts": [
+    "The brain produces approximately 500 mL of CSF daily, completely recycling its volume 3 to 4 times a day."
+  ]
+}

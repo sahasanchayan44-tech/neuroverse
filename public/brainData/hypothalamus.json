@@ -1,0 +1,36 @@
+{
+  "id": "hypothalamus",
+  "name": "Hypothalamus",
+  "latinName": "Hypothalamus",
+  "category": "Diencephalon",
+  "location": "Ventral to the thalamus, forming the floor and lower lateral walls of the third ventricle.",
+  "description": "The master homeostatic command center regulating body temperature, thirst, hunger, circadian rhythms, emotional behavior, and neuroendocrine control via the pituitary gland.",
+  "functions": [
+    "Autonomic nervous system regulation",
+    "Neuroendocrine control via pituitary gland",
+    "Thermoregulation & metabolic energy balance",
+    "Circadian rhythm control via suprachiasmatic nucleus (SCN)"
+  ],
+  "bloodSupply": "Circle of Willis (Anterior Communicating & Internal Carotid)",
+  "neurotransmitters": [
+    "Oxytocin",
+    "Vasopressin",
+    "CRH",
+    "TRH",
+    "GnRH",
+    "Dopamine",
+    "Orexin"
+  ],
+  "diseases": [
+    "Diabetes Insipidus",
+    "Hypothalamic Obesity",
+    "Kallmann Syndrome",
+    "Narcolepsy",
+    "Circadian Rhythm Sleep Disorders"
+  ],
+  "clinicalImportance": "Essential for bodily survival; tiny lesions cause severe metabolic, endocrine, or autonomic failure.",
+  "researchNotes": "Suprachiasmatic nucleus (SCN) inside the hypothalamus operates as the master molecular circadian clock driven by CLOCK/BMAL1 genes.",
+  "interestingFacts": [
+    "Weighs only 4 grams (0.3% of brain weight) but governs all basic survival drives."
+  ]
+}

@@ -76,13 +76,7 @@ export const HeaderHUD: React.FC<HeaderHUDProps> = ({
     return (
       <header className="absolute top-3 left-4 right-4 z-30 flex items-center justify-between px-4 py-2 bg-neuro-panel/90 backdrop-blur-xl border border-neuro-cyan/40 rounded-xl shadow-hologram font-mono text-xs transition-all">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-neuro-cyan/30 via-neuro-purple/40 to-neuro-pink/30 border border-neuro-cyan flex items-center justify-center text-neuro-cyan shadow-cyan-glow">
-            <Brain className="w-4 h-4 animate-pulse text-white" />
-          </div>
-          <span className="font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-white via-neuro-cyan to-neuro-purple text-sm sm:text-base">
-            NEUROVERSE 3D
-          </span>
-          <span className="px-2 py-0.5 text-[9px] text-neuro-cyan bg-neuro-cyan/20 border border-neuro-cyan/40 rounded hidden md:inline">
+          <span className="px-2 py-0.5 text-[9px] text-neuro-cyan bg-neuro-cyan/20 border border-neuro-cyan/40 rounded">
             HUD MINIMIZED
           </span>
         </div>
@@ -117,21 +111,13 @@ export const HeaderHUD: React.FC<HeaderHUDProps> = ({
   return (
     <header className="absolute top-3 left-4 right-4 z-30 flex flex-col gap-3 p-3.5 bg-neuro-panel backdrop-blur-xl border border-neuro-cyan/40 rounded-2xl shadow-hologram transition-all">
       
-      {/* Top Row: Brand, Search, Controls */}
+      {/* Top Row: Brand, Search & Controls */}
       <div className="flex items-center justify-between gap-4">
         
         {/* Brand Title */}
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-neuro-cyan/30 via-neuro-purple/40 to-neuro-pink/30 border border-neuro-cyan flex items-center justify-center text-neuro-cyan shadow-cyan-glow">
-            <Brain className="w-6 h-6 animate-pulse text-white" />
-          </div>
-          <div>
-            <h1 className="text-lg font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-white via-neuro-cyan to-neuro-purple flex items-center gap-2">
-              NEUROVERSE <span className="px-1.5 py-0.5 text-[10px] font-mono text-neuro-cyan bg-neuro-cyan/20 border border-neuro-cyan rounded">HOLOGRAM 3D</span>
-            </h1>
-            <span className="text-[10px] font-mono text-neuro-cyan/70 tracking-wider">ULTRALIGHT MEDICAL NEUROSCIENCE ENGINE</span>
-          </div>
-        </div>
+        <span className="font-extrabold text-xl tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-white via-neuro-cyan to-neuro-purple font-mono uppercase whitespace-nowrap">
+          NEUROVERSE
+        </span>
 
         {/* Global Fuzzy Search Bar */}
         <div className="relative flex-1 max-w-md">
@@ -213,14 +199,6 @@ export const HeaderHUD: React.FC<HeaderHUDProps> = ({
           </button>
 
           <button
-            onClick={onOpenMetricsModal}
-            className="px-2.5 py-2 rounded-xl bg-neuro-cyan/20 border border-neuro-cyan text-neuro-cyan hover:bg-neuro-cyan/30 text-xs font-mono font-bold transition-all flex items-center gap-1.5"
-            title="Server Telemetry Metrics"
-          >
-            <ShieldCheck className="w-3.5 h-3.5" /> Server HUD
-          </button>
-
-          <button
             onClick={onToggleAudio}
             className={`p-2 rounded-xl border transition-all ${
               isAudioActive ? 'bg-neuro-cyan/20 border-neuro-cyan text-neuro-cyan shadow-cyan-glow' : 'bg-white/5 border-white/10 text-gray-400'
@@ -250,30 +228,6 @@ export const HeaderHUD: React.FC<HeaderHUDProps> = ({
         </div>
 
       </div>
-
-      {/* Bottom Row: Functional Simulation Mode Buttons */}
-      <div className="flex items-center gap-1.5 overflow-x-auto pt-1 border-t border-white/10">
-        <span className="text-[10px] font-mono text-neuro-cyan font-bold whitespace-nowrap flex items-center gap-1 mr-1">
-          <Zap className="w-3.5 h-3.5 text-yellow-400 animate-pulse" /> FUNCTIONAL SIMULATIONS:
-        </span>
-        {SIMULATION_BUTTONS.map(sim => {
-          const isActive = activeSimulation === sim;
-          return (
-            <button
-              key={sim}
-              onClick={() => onSelectSimulation(sim)}
-              className={`px-3 py-1 text-xs font-mono rounded-lg border transition-all whitespace-nowrap ${
-                isActive
-                  ? 'bg-gradient-to-r from-neuro-cyan to-neuro-purple border-neuro-cyan text-white shadow-cyan-glow font-bold'
-                  : 'bg-white/5 border-white/10 text-gray-300 hover:bg-white/15 hover:text-white'
-              }`}
-            >
-              {sim}
-            </button>
-          );
-        })}
-      </div>
-
     </header>
   );
 };

@@ -1,0 +1,29 @@
+{
+  "id": "corpus_callosum",
+  "name": "Corpus Callosum",
+  "latinName": "Corpus Callosum",
+  "category": "White Matter Tract",
+  "location": "Deep central longitudinal fissure linking the left and right cerebral hemispheres.",
+  "description": "A massive arching white matter tract containing over 200 million myelinated nerve fibers connecting homologous regions of the left and right cerebral hemispheres.",
+  "functions": [
+    "Interhemispheric communication & signal synchronization",
+    "Bilateral sensory & motor coordination",
+    "Transfer of learned cognitive skills between hemispheres"
+  ],
+  "bloodSupply": "Anterior Communicating Artery and ACA pericallosal branch",
+  "neurotransmitters": [
+    "Glutamate"
+  ],
+  "diseases": [
+    "Split-Brain Syndrome",
+    "Agenesis of Corpus Callosum",
+    "Alien Hand Syndrome",
+    "Multiple Sclerosis Lesions"
+  ],
+  "clinicalImportance": "Surgical transection (corpus callosotomy) is performed in severe intractable epilepsy to prevent seizure generalization across hemispheres.",
+  "researchNotes": "Sperry's landmark split-brain experiments proved functional lateralization between language-dominant left and spatial right hemispheres.",
+  "interestingFacts": [
+    "Contains over 200 million individual myelinated axon fibers.",
+    "Thicker in musicians who trained early in childhood."
+  ]
+}
