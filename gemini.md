@@ -63,3 +63,8 @@
 - **GLB Traversal**: Implemented `loadAndCatalogGLBBrainModel(scene)` using `scene.traverse()` to catalog every internal child mesh inside the loaded `.glb` file.
 - **UI Mapping**: Created `GLB_MESH_NAME_MAPPING` linking UI sidebar/anatomy selections to exact GLB child mesh names.
 - **Material Highlighting**: Updated material properties (`color`, `emissive`, `emissiveIntensity`, `opacity`) directly on the actual `.glb` child meshes, preserving unselected parts in a default transparent/glassy holographic state (`opacity: 0.35`).
+
+### 14. Add Traversal Console Logging, Multi-Directional Lighting & Dynamic Neon Highlight
+- **Diagnostic Logging**: Added `console.log("Mesh found:", child.name)` inside scene graph traversal loop to output exact internal mesh string names to the browser console.
+- **Multi-Directional Lighting**: Added key (`0x00f0ff, 3.2`), rim (`0x0066ff, 2.6`), and fill (`0xff00d0, 1.8`) directional lights, plus vibrant ambient light (`0x0099ff, 2.0`) and subtle emissive base glow (`emissiveIntensity: 0.45`).
+- **Dynamic Neon Highlight**: Active UI selection dynamically overrides the selected GLB mesh with bright neon cyan (`0x00f0ff`) at high emissive intensity (`2.2`), while unselected meshes drop back to a lower opacity (`0.25`) and lower emissive state (`0.15`) for high visual contrast.

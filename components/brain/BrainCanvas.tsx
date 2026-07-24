@@ -171,17 +171,49 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
     };
   }, []);
 
-  // Synchronize active mesh selection with MeshHighlightManager & CinematicCameraController
+  // Synchronize active mesh selection with dynamic material updates & CinematicCameraController
   useEffect(() => {
+    const selectedId = selectedStructure?.id || null;
+    const meshes = Object.entries(partMeshesRef.current);
+
+    meshes.forEach(([structId, mesh]) => {
+      if (!(mesh instanceof THREE.Mesh)) return;
+      const isSelected = selectedId === structId;
+      const mat = mesh.material as THREE.MeshStandardMaterial;
+
+      if (mat) {
+        if (isSelected) {
+          // Selected mesh: bright neon cyan color with high emissive intensity
+          mat.color.setHex(0x00f0ff);
+          mat.emissive.setHex(0x00f0ff);
+          mat.emissiveIntensity = 2.2;
+          mat.opacity = 0.98;
+          mat.transparent = true;
+        } else if (selectedId) {
+          // Unselected meshes when one structure is selected: drop back to lower opacity & lower emissive state
+          mat.color.setHex(0x0066aa);
+          mat.emissive.setHex(0x002255);
+          mat.emissiveIntensity = 0.15;
+          mat.opacity = transparency * 0.25;
+          mat.transparent = true;
+        } else {
+          // Default unselected state when no structure is selected
+          mat.color.setHex(0x00aaff);
+          mat.emissive.setHex(0x0044bb);
+          mat.emissiveIntensity = 0.45;
+          mat.opacity = transparency * 0.40;
+          mat.transparent = true;
+        }
+      }
+    });
+
     if (highlightManagerRef.current) {
-      if (selectedStructure && partMeshesRef.current[selectedStructure.id]) {
-        const mesh = partMeshesRef.current[selectedStructure.id];
-        const def = EMBEDDED_BRAIN_PARTS[selectedStructure.id];
-        const highlightHex = def ? def.colorHex : 0x00f0ff;
+      if (selectedId && partMeshesRef.current[selectedId]) {
+        const mesh = partMeshesRef.current[selectedId];
         highlightManagerRef.current.selectMesh(mesh, {
-          color: highlightHex,
-          emissiveColor: highlightHex,
-          emissiveIntensity: 1.8,
+          color: 0x00f0ff,
+          emissiveColor: 0x00f0ff,
+          emissiveIntensity: 2.2,
           pulse: true,
           enableOutline: true,
         });
@@ -191,21 +223,21 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
     }
 
     if (camControllerRef.current) {
-      if (selectedStructure && partMeshesRef.current[selectedStructure.id]) {
-        const mesh = partMeshesRef.current[selectedStructure.id];
+      if (selectedId && partMeshesRef.current[selectedId]) {
+        const mesh = partMeshesRef.current[selectedId];
         camControllerRef.current.focusOnMesh(mesh, {
-          duration: 1.5,
+          duration: 1.2,
           ease: 'power2.inOut',
           marginFactor: 2.0,
         });
       } else {
         camControllerRef.current.reset({
-          duration: 1.5,
+          duration: 1.2,
           ease: 'power2.inOut',
         });
       }
     }
-  }, [selectedStructure]);
+  }, [selectedStructure, transparency]);
 
   useEffect(() => {
     if (!mountRef.current) return;
@@ -247,17 +279,21 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
       defaultTarget: new THREE.Vector3(0, 0, 0),
     });
 
-    // 5. Lighting
-    const ambientLight = new THREE.AmbientLight(0x004466, 1.2);
+    // 5. Improved Multi-Directional Futuristic Lighting
+    const ambientLight = new THREE.AmbientLight(0x0099ff, 2.0);
     scene.add(ambientLight);
 
-    const cyanLight1 = new THREE.DirectionalLight(0x00f0ff, 2.2);
-    cyanLight1.position.set(20, 25, 20);
-    scene.add(cyanLight1);
+    const keyLight = new THREE.DirectionalLight(0x00f0ff, 3.2);
+    keyLight.position.set(25, 30, 25);
+    scene.add(keyLight);
 
-    const cyanLight2 = new THREE.DirectionalLight(0x0066ff, 1.8);
-    cyanLight2.position.set(-20, -15, -20);
-    scene.add(cyanLight2);
+    const rimLight = new THREE.DirectionalLight(0x0066ff, 2.6);
+    rimLight.position.set(-25, -20, -25);
+    scene.add(rimLight);
+
+    const fillLight = new THREE.DirectionalLight(0xff00d0, 1.8);
+    fillLight.position.set(0, -20, 20);
+    scene.add(fillLight);
 
     // Catalog and load real .glb child meshes mapped to UI anatomy selections (no placeholder primitives)
     loadAndCatalogGLBBrainModel(scene);
@@ -626,15 +662,16 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
 
               partScene.traverse((child) => {
                 if (child instanceof THREE.Mesh) {
+                  console.log("Mesh found:", child.name || item.filename);
                   child.userData.structureId = structId;
                   child.material = new THREE.MeshStandardMaterial({
-                    color: 0x00f0ff,
-                    emissive: 0x0066ff,
-                    emissiveIntensity: 0.35,
-                    roughness: 0.15,
+                    color: 0x00aaff,
+                    emissive: 0x0044bb,
+                    emissiveIntensity: 0.45,
+                    roughness: 0.1,
                     metalness: 0.85,
                     transparent: true,
-                    opacity: transparency * 0.35,
+                    opacity: transparency * 0.40,
                     side: THREE.DoubleSide,
                     blending: THREE.NormalBlending
                   });
@@ -856,9 +893,13 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
         model.name = 'real_human_brain_3d_model';
         loadedBrainGroupRef.current = model;
 
+        let meshCount = 0;
+
         // Traverse loaded .glb scene graph to catalog every internal child mesh
         model.traverse((child) => {
           if (child instanceof THREE.Mesh) {
+            meshCount++;
+            console.log("Mesh found:", child.name || `unnamed_mesh_${meshCount}`);
             const meshName = child.name || '';
             let matchedStructId = 'frontal_lobe';
 
@@ -872,19 +913,19 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
 
             child.userData = {
               structureId: matchedStructId,
-              originalColor: child.material?.color ? child.material.color.clone() : new THREE.Color(0x00f0ff),
-              originalOpacity: 0.35,
+              originalColor: child.material?.color ? child.material.color.clone() : new THREE.Color(0x00aaff),
+              originalOpacity: 0.40,
             };
 
-            // Set default transparent/glassy state so highlighted part stands out
+            // Base holographic material: bright vibrant cyan/blue emissive glow
             child.material = new THREE.MeshStandardMaterial({
-              color: 0x00f0ff,
-              emissive: 0x0044aa,
-              emissiveIntensity: 0.2,
-              roughness: 0.15,
+              color: 0x00aaff,
+              emissive: 0x0044bb,
+              emissiveIntensity: 0.45,
+              roughness: 0.1,
               metalness: 0.85,
               transparent: true,
-              opacity: transparency * 0.35,
+              opacity: transparency * 0.40,
               side: THREE.DoubleSide,
               blending: THREE.NormalBlending
             });
@@ -907,7 +948,7 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
         model.scale.setScalar(scaleFactor);
 
         scene.add(model);
-        console.log('🧠 [BrainCanvas] Traversed and cataloged real .glb child meshes!');
+        console.log(`🧠 [BrainCanvas] Traversed and cataloged ${meshCount} real .glb child meshes!`);
       },
       undefined,
       (err) => {
