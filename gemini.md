@@ -46,3 +46,8 @@
 - **Deleted**: `components/brain/HTMLLabelOverlay.tsx` (purged all floating mid-air HTML badges, line pointers, and billboard overlays).
 - **File**: `app/page.tsx`, `components/brain/BrainCanvas.tsx`
 - **Result**: Removed all floating target tooltips and HTML overlays. Only the 3D GLB brain model assembly renders in 3D WebGL space.
+
+### 11. Relocate Lobe Names & Anatomical Data Directly onto 3D GLB Brain Part Meshes
+- **New File**: `components/brain/BrainMeshLabelOverlay.tsx`
+- **Implementation**: Created `BrainMeshLabelOverlay` component that computes the exact 3D world position (`partMeshes[struct.id].getWorldPosition()`) for every 3D GLB brain part mesh.
+- **Result**: Lobe names (Frontal Lobe, Parietal Lobe, Temporal Lobe, Occipital Lobe, Cerebellum, Brain Stem, Thalamus, etc.) and their anatomical data cards are anchored directly onto the specific 3D GLB brain parts upon hover/selection.
