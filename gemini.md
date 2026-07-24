@@ -51,3 +51,8 @@
 - **New File**: `components/brain/BrainMeshLabelOverlay.tsx`
 - **Implementation**: Created `BrainMeshLabelOverlay` component that computes the exact 3D world position (`partMeshes[struct.id].getWorldPosition()`) for every 3D GLB brain part mesh.
 - **Result**: Lobe names (Frontal Lobe, Parietal Lobe, Temporal Lobe, Occipital Lobe, Cerebellum, Brain Stem, Thalamus, etc.) and their anatomical data cards are anchored directly onto the specific 3D GLB brain parts upon hover/selection.
+
+### 12. Remove Blur Pop-up Overlay & Enable 360-Degree Free 3D Orbit Navigation
+- **File**: `app/page.tsx`, `components/brain/BrainMeshLabelOverlay.tsx`
+- **Changes**: Removed `<BrainPartModal>` full-screen backdrop blur modal so the 3D brain model stays 100% sharp and unblurred.
+- **Result**: Set `pointer-events-none` on spatial label tags so OrbitControls rotation is 100% fluid in every direction while anatomical details display clearly in the right side long panel (`InfoPanel.tsx`).

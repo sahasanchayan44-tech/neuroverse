@@ -124,55 +124,29 @@ export const BrainMeshLabelOverlay: React.FC<BrainMeshLabelOverlayProps> = ({
             style={{
               transform: `translate3d(${label.screenX}px, ${label.screenY}px, 0px)`,
             }}
-            className="pointer-events-auto absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2 animate-fade-in"
+            className="pointer-events-none absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2 animate-fade-in"
           >
             {/* Lobe Name Tag Anchored Directly onto 3D GLB Brain Part */}
-            <div className="flex flex-col items-center gap-1.5">
-              <button
-                onClick={() => onSelectStructure(struct)}
-                onMouseEnter={() => onHoverStructure(label.id)}
-                onMouseLeave={() => onHoverStructure(null)}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-2xl border text-xs font-bold backdrop-blur-xl transition-all duration-300 shadow-hologram ${
+            <div className="flex flex-col items-center gap-1 pointer-events-none">
+              <div
+                className={`flex items-center gap-2 px-3 py-1 rounded-xl border text-[11px] font-bold backdrop-blur-md transition-all duration-300 shadow-hologram pointer-events-none ${
                   label.isSelected
-                    ? 'bg-neuro-cyan/30 border-neuro-cyan text-white shadow-cyan-glow ring-2 ring-neuro-cyan/60 scale-110'
-                    : 'bg-black/80 border-neuro-cyan/80 text-cyan-200 hover:bg-neuro-cyan/20 hover:text-white'
+                    ? 'bg-neuro-cyan/40 border-neuro-cyan text-white shadow-cyan-glow scale-110 ring-2 ring-neuro-cyan/60'
+                    : 'bg-black/80 border-neuro-cyan/80 text-cyan-200'
                 }`}
               >
-                <Brain className="w-4 h-4 text-neuro-cyan animate-pulse" />
+                <Brain className="w-3.5 h-3.5 text-neuro-cyan animate-pulse" />
                 <span>{label.name.toUpperCase()}</span>
                 {label.latinName && (
                   <span className="text-[9px] text-neuro-cyan/70 font-mono uppercase">
                     ({label.latinName})
                   </span>
                 )}
-              </button>
-
-              {/* Data Card Pop-up Anchored to 3D Mesh */}
-              <div className="w-72 p-3.5 bg-neuro-panel/95 backdrop-blur-2xl border border-neuro-cyan/60 rounded-2xl shadow-hologram text-white text-xs flex flex-col gap-2 animate-fade-in pointer-events-auto">
-                <div className="flex items-center justify-between border-b border-neuro-cyan/30 pb-2">
-                  <span className="font-bold text-neuro-cyan text-xs flex items-center gap-1.5">
-                    <Sparkles className="w-3.5 h-3.5 text-neuro-yellow" /> ANATOMICAL DATA
-                  </span>
-                  <span className="text-[9px] font-mono text-neuro-muted">
-                    3D GLB MESH ID: {label.id}
-                  </span>
-                </div>
-
-                <p className="text-[11px] text-gray-200 leading-relaxed font-sans line-clamp-3">
-                  {label.description}
-                </p>
-
-                {label.functions.length > 0 && (
-                  <div className="p-2 bg-neuro-cyan/10 border border-neuro-cyan/30 rounded-xl text-[10px] text-neuro-cyan flex items-center gap-1.5 font-mono">
-                    <Activity className="w-3.5 h-3.5 text-neuro-green animate-pulse" />
-                    <span className="truncate">{label.functions[0]}</span>
-                  </div>
-                )}
               </div>
 
-              {/* Pointer Connector Line Anchoring Card to 3D Part */}
-              <div className="w-0.5 h-6 bg-gradient-to-b from-neuro-cyan to-transparent animate-pulse" />
-              <div className="w-2.5 h-2.5 rounded-full border border-neuro-cyan bg-neuro-cyan/50 shadow-cyan-glow animate-ping" />
+              {/* Connector Pin */}
+              <div className="w-0.5 h-4 bg-gradient-to-b from-neuro-cyan to-transparent animate-pulse" />
+              <div className="w-2 h-2 rounded-full border border-neuro-cyan bg-neuro-cyan/60 shadow-cyan-glow animate-ping" />
             </div>
           </div>
         );

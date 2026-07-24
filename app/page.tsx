@@ -222,16 +222,6 @@ export default function Home() {
         onClose={() => setIsMetricsModalOpen(false)}
       />
 
-      {/* Brain Part Data & Neural Network Pop-up Modal Screen */}
-      <BrainPartModal
-        node={selectedHierarchyNode}
-        structure={selectedStructure}
-        onClose={() => {
-          setSelectedHierarchyNode(null);
-          setSelectedStructure(null);
-        }}
-      />
-
     </main>
   );
 }
