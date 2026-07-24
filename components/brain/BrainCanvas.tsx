@@ -222,20 +222,9 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
       }
     }
 
-    if (camControllerRef.current) {
-      if (selectedId && partMeshesRef.current[selectedId]) {
-        const mesh = partMeshesRef.current[selectedId];
-        camControllerRef.current.focusOnMesh(mesh, {
-          duration: 1.2,
-          ease: 'power2.inOut',
-          marginFactor: 2.0,
-        });
-      } else {
-        camControllerRef.current.reset({
-          duration: 1.2,
-          ease: 'power2.inOut',
-        });
-      }
+    // Always keep OrbitControls target locked at (0, 0, 0) so the brain model stays dead-centered
+    if (controlsRef.current) {
+      controlsRef.current.target.set(0, 0, 0);
     }
   }, [selectedStructure, transparency]);
 
@@ -689,7 +678,7 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
                 const center = box.getCenter(new THREE.Vector3());
                 const size = box.getSize(new THREE.Vector3());
                 const maxDim = Math.max(size.x, size.y, size.z);
-                const scaleFactor = 15.0 / (maxDim || 1);
+                const scaleFactor = 13.5 / (maxDim || 1);
 
                 // Position assembly group perfectly dead-centered at (0, 0, 0)
                 partsGroup.position.sub(center.clone().multiplyScalar(scaleFactor));
@@ -942,7 +931,7 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
         const center = box.getCenter(new THREE.Vector3());
         const size = box.getSize(new THREE.Vector3());
         const maxDim = Math.max(size.x, size.y, size.z);
-        const scaleFactor = 15.0 / (maxDim || 1);
+        const scaleFactor = 13.5 / (maxDim || 1);
 
         // Position model perfectly dead-centered at (0, 0, 0)
         model.position.sub(center.clone().multiplyScalar(scaleFactor));

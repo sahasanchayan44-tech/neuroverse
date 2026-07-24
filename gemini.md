@@ -78,3 +78,8 @@
 - **Centering**: Positioned camera at level position `(0, 0, 28)` and OrbitControls target at origin `(0, 0, 0)`.
 - **Bounding Box Alignment**: Adjusted `loadAndCatalogGLBBrainModel` and `loadAll131BrainPartModels` to subtract exact geometric bounding box centers (`model.position.sub(center.clone().multiplyScalar(scaleFactor))`).
 - **Result**: The 3D brain model is always rendered dead-centered in the middle of the viewport for maximum visibility and ease of interaction.
+
+### 17. Locked Center Target & Optimal Viewport Scaling
+- **File**: `components/brain/BrainCanvas.tsx`
+- **Target Lock**: Locked OrbitControls target to `(0, 0, 0)` upon structure selection so the main 3D brain model never shifts off-center.
+- **Optimal Scaling**: Updated model `scaleFactor` to `13.5` to ensure all 131 brain part meshes (outer cortex lobes, cerebellum, brain stem) fit 100% inside the viewport boundaries at all times.
