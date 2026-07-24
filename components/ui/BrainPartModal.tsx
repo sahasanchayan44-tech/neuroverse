@@ -50,11 +50,11 @@ export const BrainPartModal: React.FC<BrainPartModalProps> = ({
   return (
     <div
       onClick={onClose}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-fade-in font-sans cursor-pointer"
+      className="fixed inset-0 z-50 flex items-center justify-end p-4 md:pr-8 bg-black/40 backdrop-blur-sm animate-fade-in font-sans cursor-pointer pointer-events-auto"
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-2xl bg-neuro-panel backdrop-blur-2xl border border-neuro-cyan/50 rounded-3xl shadow-hologram overflow-hidden text-white flex flex-col max-h-[85vh] cursor-default"
+        className="relative w-full max-w-lg md:max-w-xl bg-neuro-panel/95 backdrop-blur-2xl border border-neuro-cyan/50 rounded-3xl shadow-hologram overflow-hidden text-white flex flex-col max-h-[85vh] cursor-default my-auto"
       >
         
         {/* Top Header Bar */}
