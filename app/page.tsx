@@ -13,6 +13,8 @@ import { BrainSignalsPanel } from '@/components/ui/BrainSignalsPanel';
 import { ParametersPanel } from '@/components/ui/ParametersPanel';
 import { NeuronModal } from '@/components/ui/NeuronModal';
 import { ServerMetricsModal } from '@/components/ui/ServerMetricsModal';
+import { BrainPartModal } from '@/components/ui/BrainPartModal';
+import { BrainHierarchyNode } from '@/data/brainHierarchy';
 
 // Dynamically import 3D Three.js WebGL Canvas to disable SSR for WebGL context
 const BrainCanvas = dynamic(
@@ -43,6 +45,7 @@ export default function Home() {
   } = useBrainState();
 
   const [selectedDisease, setSelectedDisease] = useState<string | null>(null);
+  const [selectedHierarchyNode, setSelectedHierarchyNode] = useState<BrainHierarchyNode | null>(null);
   const [hoveredName, setHoveredName] = useState<string | null>(null);
   const [isNeuronModalOpen, setIsNeuronModalOpen] = useState(false);
   const [isMetricsModalOpen, setIsMetricsModalOpen] = useState(false);
@@ -52,7 +55,7 @@ export default function Home() {
 
   const audioCtxRef = useRef<AudioContext | null>(null);
 
-  const topOffset = isHeaderCollapsed ? 'top-14' : 'top-36';
+  const topOffset = isHeaderCollapsed ? 'top-14' : 'top-20';
 
   const handleToggleAudio = () => {
     if (!audioCtxRef.current) {
@@ -129,6 +132,7 @@ export default function Home() {
         timeScale={timeScale}
         topOffset={topOffset}
         onSelectStructure={setSelectedStructure}
+        onSelectNode={(node) => setSelectedHierarchyNode(node)}
         onToggleLayer={toggleLayer}
         onChangeTransparency={setTransparency}
         onChangeTimeScale={setTimeScale}
@@ -221,6 +225,16 @@ export default function Home() {
       <ServerMetricsModal
         isOpen={isMetricsModalOpen}
         onClose={() => setIsMetricsModalOpen(false)}
+      />
+
+      {/* Brain Part Data & Neural Network Pop-up Modal Screen */}
+      <BrainPartModal
+        node={selectedHierarchyNode}
+        structure={selectedStructure}
+        onClose={() => {
+          setSelectedHierarchyNode(null);
+          setSelectedStructure(null);
+        }}
       />
 
     </main>
