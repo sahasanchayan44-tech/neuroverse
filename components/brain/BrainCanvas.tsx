@@ -259,12 +259,12 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
     cyanLight2.position.set(-20, -15, -20);
     scene.add(cyanLight2);
 
-    // Load 3D Human Brain & Embedded Internal Organs
-    loadHumanBrainGLBModel(scene);
-    buildMainBrainOuterShell(scene);
-    buildEmbeddedHumanBrain(scene);
-    buildEmbeddedNeuralNetwork(scene);
-    // buildNanoParticleCloud(scene); // Disabled to remove pixelated squares scattering around
+    // All 3D models removed as requested
+    // loadHumanBrainGLBModel(scene);
+    // buildMainBrainOuterShell(scene);
+    // buildEmbeddedHumanBrain(scene);
+    // buildEmbeddedNeuralNetwork(scene);
+    // buildNanoParticleCloud(scene);
 
     // Interaction Raycaster
     const raycaster = new THREE.Raycaster();
