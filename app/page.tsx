@@ -208,12 +208,7 @@ export default function Home() {
 
       </div>
 
-      {/* Hover Tooltip Bar */}
-      {hoveredName && (
-        <div className={`absolute ${topOffset} left-1/2 -translate-x-1/2 z-30 pointer-events-none px-4 py-1.5 bg-neuro-dark/90 backdrop-blur-md border border-neuro-cyan rounded-full shadow-hologram text-xs font-mono text-neuro-cyan tracking-wider transition-all`}>
-          TARGET: {hoveredName.toUpperCase()}
-        </div>
-      )}
+
 
       {/* Microscopic Single Neuron Viewer Modal */}
       <NeuronModal

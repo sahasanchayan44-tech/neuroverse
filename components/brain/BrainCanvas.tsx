@@ -10,7 +10,6 @@ import { MeshHighlightManager } from './MeshHighlightManager';
 import { CinematicCameraController } from './CinematicCameraController';
 import { NeuralPathwaySystem } from './NeuralPathway';
 import { VascularSystem } from './VascularSystem';
-import { HTMLLabelOverlay } from './HTMLLabelOverlay';
 
 interface BrainCanvasProps {
   structures: BrainStructureDetail[];
@@ -1005,16 +1004,6 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
   return (
     <div className="relative w-full h-full">
       <div ref={mountRef} className="w-full h-full" />
-      <HTMLLabelOverlay
-        structures={structures}
-        selectedStructure={selectedStructure}
-        hoveredStructureId={hoveredStructureName || null}
-        searchQuery={searchQuery || ''}
-        camera={cameraRef.current}
-        domElement={mountRef.current}
-        onSelectStructure={onSelectStructure}
-        onHoverStructure={onHoverStructure}
-      />
     </div>
   );
 };

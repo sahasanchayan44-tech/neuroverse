@@ -41,3 +41,8 @@
 - **File**: `components/brain/HTMLLabelOverlay.tsx`
 - **Changes**: Updated label rendering condition (`!label.isHovered && !label.isSelected && !label.isSearchMatch`) to hide all floating mid-air badges and line objects by default.
 - **Relocation**: Aligned and centered all 131 GLB brain part meshes directly into the unified 3D human brain assembly in `BrainCanvas.tsx`.
+
+### 10. Complete Removal of Floating Overlay Objects
+- **Deleted**: `components/brain/HTMLLabelOverlay.tsx` (purged all floating mid-air HTML badges, line pointers, and billboard overlays).
+- **File**: `app/page.tsx`, `components/brain/BrainCanvas.tsx`
+- **Result**: Removed all floating target tooltips and HTML overlays. Only the 3D GLB brain model assembly renders in 3D WebGL space.
