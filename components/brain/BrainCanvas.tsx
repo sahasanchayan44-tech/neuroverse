@@ -231,11 +231,11 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
   useEffect(() => {
     if (!mountRef.current) return;
 
-    // 1. Scene setup
+    // 1. Matrix Sci-Fi Scene setup
     const scene = new THREE.Scene();
     sceneRef.current = scene;
-    scene.background = new THREE.Color(0x000208);
-    scene.fog = new THREE.FogExp2(0x000511, 0.012);
+    scene.background = new THREE.Color(0x000508);
+    scene.fog = new THREE.FogExp2(0x000a0d, 0.012);
 
     // 2. Camera setup - Positioned perfectly level at center
     const camera = new THREE.PerspectiveCamera(45, mountRef.current.clientWidth / mountRef.current.clientHeight, 0.1, 1000);
@@ -269,19 +269,19 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
       defaultTarget: new THREE.Vector3(0, 0, 0),
     });
 
-    // 5. Improved Multi-Directional Futuristic Lighting
-    const ambientLight = new THREE.AmbientLight(0x0099ff, 2.0);
+    // 5. Matrix Sci-Fi Phosphor Multi-Directional Lighting
+    const ambientLight = new THREE.AmbientLight(0x004422, 2.2);
     scene.add(ambientLight);
 
-    const keyLight = new THREE.DirectionalLight(0x00f0ff, 3.2);
+    const keyLight = new THREE.DirectionalLight(0x00ff66, 3.2);
     keyLight.position.set(25, 30, 25);
     scene.add(keyLight);
 
-    const rimLight = new THREE.DirectionalLight(0x0066ff, 2.6);
+    const rimLight = new THREE.DirectionalLight(0x00e5ff, 2.6);
     rimLight.position.set(-25, -20, -25);
     scene.add(rimLight);
 
-    const fillLight = new THREE.DirectionalLight(0xff00d0, 1.8);
+    const fillLight = new THREE.DirectionalLight(0x00ffaa, 1.8);
     fillLight.position.set(0, -20, 20);
     scene.add(fillLight);
 

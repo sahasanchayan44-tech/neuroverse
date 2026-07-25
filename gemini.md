@@ -103,3 +103,9 @@
 - **Files**: `components/ui/RightSidebar.tsx`, `components/ui/DiseaseDetailModal.tsx`, `app/page.tsx`
 - **Deduplication**: Implemented Map-based deduplication (`uniqueDiseasesMap`) in `RightSidebar.tsx` to strictly guarantee zero duplicate diseases listed in the Pathology ("PATH") tab.
 - **Extended Pop-up Screen**: Created `DiseaseDetailModal.tsx` pop-up screen triggered on clicking any disease in the Pathology tab, featuring comprehensive clinical data (Pathophysiology, Risk Badges, FDA Medicines, Target Brain Regions, 2026 Trial Pipeline Cures, and Survival Statistics).
+
+### 22. Subtle Sci-Fi Film Matrix Aesthetic Redesign
+- **Files**: `tailwind.config.ts`, `app/globals.css`, `components/brain/BrainCanvas.tsx`
+- **Color Tokens**: Transformed theme to deep void obsidian Matrix green-black (`#000508`), phosphor green accent (`#00ff66`), and cyber cyan rim highlights (`#00e5ff`).
+- **Scanline Effects**: Added subtle CRT scanline linear overlay (`body::before`) and green phosphor scrollbars.
+- **3D WebGL Matrix Lighting**: Updated Three.js scene background (`0x000508`), fog (`0x000a0d`), and key directional lighting (`0x00ff66`) for a subtle, futuristic Matrix cybernetic aesthetic.

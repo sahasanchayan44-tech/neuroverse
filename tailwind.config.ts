@@ -9,18 +9,18 @@ const config: Config = {
     extend: {
       colors: {
         neuro: {
-          dark: '#000000',
-          panel: 'rgba(5, 12, 28, 0.85)',
-          card: 'rgba(10, 22, 48, 0.7)',
-          border: 'rgba(0, 240, 255, 0.25)',
-          cyan: '#00f0ff',
-          blue: '#0066ff',
-          purple: '#8a2be2',
-          pink: '#ff007f',
+          dark: '#000508',
+          panel: 'rgba(0, 14, 10, 0.88)',
+          card: 'rgba(0, 24, 18, 0.75)',
+          border: 'rgba(0, 255, 102, 0.25)',
+          cyan: '#00ff66',
+          blue: '#00e5ff',
+          purple: '#00cc66',
+          pink: '#00ffaa',
           green: '#00ff88',
-          gold: '#ffaa00',
-          red: '#ff3366',
-          white: '#ffffff'
+          gold: '#00ffaa',
+          red: '#ff0055',
+          white: '#e0ffe8'
         }
       },
       fontFamily: {
@@ -28,9 +28,10 @@ const config: Config = {
         mono: ['JetBrains Mono', 'monospace']
       },
       boxShadow: {
-        'hologram': '0 0 30px rgba(0, 240, 255, 0.35), inset 0 0 20px rgba(0, 240, 255, 0.15)',
-        'cyan-glow': '0 0 25px rgba(0, 240, 255, 0.6)',
-        'purple-glow': '0 0 25px rgba(138, 43, 226, 0.6)'
+        'hologram': '0 0 25px rgba(0, 255, 102, 0.25), inset 0 0 15px rgba(0, 255, 102, 0.10)',
+        'cyan-glow': '0 0 20px rgba(0, 255, 102, 0.55)',
+        'purple-glow': '0 0 20px rgba(0, 229, 255, 0.55)',
+        'red-glow': '0 0 20px rgba(255, 0, 85, 0.55)'
       },
       animation: {
         'pulse-glow': 'pulseGlow 2.5s infinite ease-in-out',
