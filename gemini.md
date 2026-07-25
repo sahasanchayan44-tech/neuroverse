@@ -133,3 +133,12 @@
 - **Animated Floating Pill Search**: Redesigned global search bar into a pill shape (`rounded-full`) with Framer Motion autocomplete dropdown and soft glowing search icon illumination on focus.
 - **Framer Motion Docks & Modals**: Migrated all floating sidebars (`LayerPanel`, `RightSidebar`), header HUD (`HeaderHUD`), structure cards (`InfoPanel`), and dialogs (`DiseaseDetailModal`) to `framer-motion` (`motion.aside`, `motion.div`, `AnimatePresence`, spring transitions, circular glass close button).
 - **Interactive Glass Tabs**: Applied animated active tab scaling (`1.03`), cyan glow, and 250ms smooth transition states across all navigation tabs.
+
+### 27. Tailscale Network & Temporary Public HTTPS Tunnels
+- **Tailscale Network Links**:
+  - Tailscale Direct IP: **http://100.123.208.0:8080**
+  - Tailscale MagicDNS Domain: **http://debian.tail852693.ts.net:8080**
+  - Tailscale Local Hostname: **http://debian:8080**
+- **Temporary Public HTTPS Links**:
+  - Serveo Temporary Tunnel: **https://e0e0c460bef79d67-103-56-237-204.serveousercontent.com**
+  - Localtunnel Temporary Link: **https://silver-areas-smile.loca.lt**
