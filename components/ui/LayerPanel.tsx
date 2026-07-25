@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Layers, Sliders, Eye, ChevronLeft, ChevronRight, ChevronDown, Cpu, Zap, Activity, Folder, FolderOpen } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Layers, Sliders, Eye, ChevronLeft, ChevronRight, ChevronDown, Cpu, Zap, Activity } from 'lucide-react';
 import { BrainStructureDetail } from '@/data/brainData';
 import { LayerState } from '@/hooks/useBrainState';
 import { COMPLETE_BRAIN_HIERARCHY, BrainHierarchyNode } from '@/data/brainHierarchy';
@@ -45,51 +46,60 @@ const TreeNode: React.FC<{
 
   return (
     <div className="flex flex-col select-none">
-      <button
+      <motion.button
+        whileHover={{ x: 2 }}
         onClick={handleClick}
         style={{ paddingLeft: `${Math.min(depth * 10 + 6, 40)}px` }}
-        className={`py-1.5 pr-2 rounded-lg border text-left transition-all flex items-center justify-between text-xs font-sans group ${
+        className={`py-1.5 pr-2 rounded-xl border text-left transition-all duration-200 flex items-center justify-between text-xs font-sans group ${
           isSelected
-            ? 'bg-neuro-cyan/30 border-neuro-cyan text-white shadow-cyan-glow font-bold'
+            ? 'bg-[#00E5FF]/25 border-[#00E5FF] text-[#F8FAFC] shadow-[0_0_15px_rgba(0,229,255,0.25)] font-bold'
             : hasChildren
-            ? 'bg-white/5 border-white/10 text-gray-200 hover:bg-white/10 hover:text-white font-semibold'
-            : 'bg-transparent border-transparent text-gray-400 hover:bg-white/5 hover:text-gray-200'
+            ? 'bg-black/30 border-[rgba(0,229,255,0.12)] text-[#F8FAFC] hover:bg-[#00E5FF]/15 hover:border-[#00E5FF]/30 font-semibold'
+            : 'bg-transparent border-transparent text-[#94A3B8] hover:bg-[#00E5FF]/10 hover:text-[#F8FAFC]'
         }`}
       >
         <div className="flex items-center gap-1.5 overflow-hidden">
           {hasChildren ? (
-            <span className="p-0.5 rounded text-neuro-cyan flex-shrink-0">
+            <span className="p-0.5 rounded text-[#00E5FF] flex-shrink-0">
               {isExpanded ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
             </span>
           ) : (
             <span className="w-3.5 h-3.5 flex items-center justify-center flex-shrink-0">
-              <div className={`w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-neuro-cyan animate-ping' : 'bg-white/30'}`} />
+              <div className={`w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-[#00E5FF] animate-ping' : 'bg-[#64748B]'}`} />
             </span>
           )}
-          <span className="truncate text-[11px]">{node.name}</span>
+          <span className="truncate text-[11px] font-sans">{node.name}</span>
         </div>
 
         {mappedStructure && (
-          <Eye className={`w-3 h-3 flex-shrink-0 ${isSelected ? 'text-neuro-cyan' : 'text-gray-600 group-hover:text-gray-400'}`} />
+          <Eye className={`w-3 h-3 flex-shrink-0 ${isSelected ? 'text-[#00E5FF]' : 'text-[#64748B] group-hover:text-[#94A3B8]'}`} />
         )}
-      </button>
+      </motion.button>
 
-      {hasChildren && isExpanded && (
-        <div className="flex flex-col gap-0.5 mt-0.5 border-l border-neuro-cyan/20 ml-2.5">
-          {node.children!.map((child) => (
-            <TreeNode
-              key={child.id}
-              node={child}
-              depth={depth + 1}
-              structures={structures}
-              selectedNodeId={selectedNodeId}
-              expandedNodes={expandedNodes}
-              onToggleNode={onToggleNode}
-              onSelectNode={onSelectNode}
-            />
-          ))}
-        </div>
-      )}
+      <AnimatePresence initial={false}>
+        {hasChildren && isExpanded && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.2, ease: 'easeInOut' }}
+            className="flex flex-col gap-0.5 mt-0.5 border-l border-[#00E5FF]/20 ml-2.5 overflow-hidden"
+          >
+            {node.children!.map((child) => (
+              <TreeNode
+                key={child.id}
+                node={child}
+                depth={depth + 1}
+                structures={structures}
+                selectedNodeId={selectedNodeId}
+                expandedNodes={expandedNodes}
+                onToggleNode={onToggleNode}
+                onSelectNode={onSelectNode}
+              />
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
@@ -100,7 +110,7 @@ export const LayerPanel: React.FC<LayerPanelProps> = ({
   layers,
   transparency,
   timeScale,
-  topOffset = 'top-36',
+  topOffset = 'top-20',
   onSelectStructure,
   onSelectNode: parentOnSelectNode,
   onToggleLayer,
@@ -133,47 +143,62 @@ export const LayerPanel: React.FC<LayerPanelProps> = ({
 
   if (isCollapsed) {
     return (
-      <button
+      <motion.button
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
         onClick={() => setIsCollapsed(false)}
-        className={`absolute ${topOffset} left-4 z-30 px-4 py-3 glass-panel text-neuro-cyan hover:text-white hover:border-neuro-cyan transition-all duration-300 flex items-center gap-2 font-mono text-xs`}
+        className={`absolute ${topOffset} left-4 z-30 px-4 py-3 glass-panel text-[#00E5FF] hover:text-[#F8FAFC] hover:border-[#00E5FF] transition-all duration-300 flex items-center gap-2 font-mono text-xs`}
         title="Expand Anatomical Layers Panel"
       >
-        <Layers className="w-4 h-4 text-neuro-cyan animate-pulse" />
+        <Layers className="w-4 h-4 text-[#00E5FF] animate-pulse" />
         <span className="font-heading font-bold text-xs">ANATOMY TREE</span>
-        <ChevronRight className="w-4 h-4 text-neuro-cyan" />
-      </button>
+        <ChevronRight className="w-4 h-4 text-[#00E5FF]" />
+      </motion.button>
     );
   }
 
   return (
-    <aside className={`absolute ${topOffset} left-4 bottom-16 z-20 w-84 max-h-[calc(100vh-10rem)] glass-panel p-4 flex flex-col gap-3 overflow-hidden text-slate-100 transition-all duration-300`}>
+    <motion.aside
+      initial={{ opacity: 0, x: -30 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+      className={`absolute ${topOffset} left-4 bottom-16 z-20 w-84 max-h-[calc(100vh-10rem)] glass-panel p-4 flex flex-col gap-3 overflow-hidden text-[#F8FAFC] transition-all duration-300`}
+    >
       
-      {/* Header with Minimize Button & Sci-Fi Tabs */}
-      <div className="flex items-center justify-between border-b border-neuro-border pb-3 flex-shrink-0">
+      {/* Header with Minimize Button & Glass Tabs */}
+      <div className="flex items-center justify-between border-b border-[rgba(0,229,255,0.12)] pb-3 flex-shrink-0">
         <div className="flex gap-1.5 text-xs flex-1">
-          <button
+          <motion.button
+            whileHover={{ y: -2 }}
+            whileTap={{ scale: 0.97 }}
             onClick={() => setActiveTab('anatomy')}
-            className={`flex-1 py-1.5 rounded-xl border transition-all duration-200 flex items-center justify-center gap-1.5 font-heading font-semibold text-xs ${
-              activeTab === 'anatomy' ? 'bg-neuro-cyan/20 border-neuro-cyan text-white shadow-cyan-glow' : 'bg-neuro-card/60 border-neuro-border text-slate-400 hover:text-slate-200'
+            className={`relative flex-1 py-1.5 rounded-xl border transition-all duration-200 flex items-center justify-center gap-1.5 font-heading font-semibold text-xs ${
+              activeTab === 'anatomy'
+                ? 'bg-[#00E5FF]/20 border-[#00E5FF] text-[#F8FAFC] shadow-[0_0_15px_rgba(0,229,255,0.3)] scale-[1.03]'
+                : 'bg-[rgba(12,18,30,0.45)] border-[rgba(0,229,255,0.12)] text-[#94A3B8] hover:border-[rgba(0,229,255,0.35)] hover:text-[#F8FAFC]'
             }`}
           >
             <Activity className="w-3.5 h-3.5" /> ANATOMY TREE
-          </button>
+          </motion.button>
 
-          <button
+          <motion.button
+            whileHover={{ y: -2 }}
+            whileTap={{ scale: 0.97 }}
             onClick={() => setActiveTab('layers')}
-            className={`flex-1 py-1 rounded-lg border transition-all flex items-center justify-center gap-1 font-bold ${
-              activeTab === 'layers' ? 'bg-neuro-purple/20 border-neuro-purple text-white shadow-purple-glow' : 'bg-white/5 border-white/10 text-neuro-muted'
+            className={`relative flex-1 py-1.5 rounded-xl border transition-all duration-200 flex items-center justify-center gap-1.5 font-heading font-semibold text-xs ${
+              activeTab === 'layers'
+                ? 'bg-[#A855F7]/20 border-[#A855F7] text-[#F8FAFC] shadow-[0_0_15px_rgba(168,85,247,0.3)] scale-[1.03]'
+                : 'bg-[rgba(12,18,30,0.45)] border-[rgba(0,229,255,0.12)] text-[#94A3B8] hover:border-[#A855F7]/40 hover:text-[#F8FAFC]'
             }`}
           >
             <Layers className="w-3.5 h-3.5" /> LAYERS
-          </button>
+          </motion.button>
         </div>
 
         <button
           onClick={() => setIsCollapsed(true)}
-          className="ml-2 p-1 rounded-lg bg-white/5 hover:bg-white/15 text-gray-400 hover:text-white transition-all"
-          title="Minimize Left Panel for Full Brain View"
+          className="ml-2 p-1.5 rounded-xl bg-black/30 border border-[rgba(0,229,255,0.12)] hover:bg-[#00E5FF]/20 text-[#94A3B8] hover:text-[#F8FAFC] transition-all duration-200"
+          title="Minimize Left Panel"
         >
           <ChevronLeft className="w-4 h-4" />
         </button>
@@ -182,7 +207,7 @@ export const LayerPanel: React.FC<LayerPanelProps> = ({
       {/* Tab 1: 10-Tier Anatomical Tree Hierarchy */}
       {activeTab === 'anatomy' && (
         <div className="flex flex-col gap-2 flex-1 min-h-0 overflow-y-auto pr-1">
-          <span className="text-[10px] font-mono text-neuro-cyan font-bold tracking-wider flex-shrink-0">
+          <span className="text-[10px] font-mono text-[#00E5FF] font-semibold tracking-wider flex-shrink-0 uppercase">
             COMPREHENSIVE BRAIN ANATOMY HIERARCHY
           </span>
 
@@ -378,6 +403,6 @@ export const LayerPanel: React.FC<LayerPanelProps> = ({
         </div>
       )}
 
-    </aside>
+    </motion.aside>
   );
 };

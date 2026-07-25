@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Search, Brain, Volume2, VolumeX, Camera, Zap, ShieldCheck, ChevronDown, ChevronUp } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Search, Brain, Volume2, VolumeX, Camera, Zap, ChevronDown, ChevronUp } from 'lucide-react';
 import { BrainStructureDetail } from '@/data/brainData';
 import { ViewMode } from '@/hooks/useBrainState';
 import { fuzzySearchStructures } from '@/utils/fuzzySearch';
@@ -23,10 +24,6 @@ interface HeaderHUDProps {
   onOpenNeuronModal: () => void;
   onOpenMetricsModal: () => void;
 }
-
-const SIMULATION_BUTTONS = [
-  'Thinking', 'Memory', 'Speech', 'Vision', 'Touch', 'Emotion', 'Fear', 'Walking', 'Learning', 'Hearing', 'Motor Control'
-];
 
 export const HeaderHUD: React.FC<HeaderHUDProps> = ({
   structures,
@@ -72,72 +69,44 @@ export const HeaderHUD: React.FC<HeaderHUDProps> = ({
     }
   };
 
-  if (isHeaderCollapsed) {
-    return (
-      <header className="absolute top-3 left-4 right-4 z-30 flex items-center justify-between px-4 py-2 bg-neuro-panel/90 backdrop-blur-xl border border-neuro-cyan/40 rounded-xl shadow-hologram font-mono text-xs transition-all">
-        <div className="flex items-center gap-3">
-          <span className="px-2 py-0.5 text-[9px] text-neuro-cyan bg-neuro-cyan/20 border border-neuro-cyan/40 rounded">
-            HUD MINIMIZED
-          </span>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <select
-            value={viewMode}
-            onChange={(e) => onChangeViewMode(e.target.value as ViewMode)}
-            className="px-2 py-1 bg-black/60 border border-neuro-border rounded-lg text-xs font-mono text-white outline-none cursor-pointer focus:border-neuro-cyan"
-          >
-            <option value="default">Default Hologram 3D</option>
-            <option value="exploded">Exploded Anatomy View</option>
-            <option value="cross_section">Cross-Section Clip</option>
-            <option value="xray">X-Ray Mode</option>
-            <option value="wireframe">Wireframe Mode</option>
-          </select>
-
-          {onToggleHeaderCollapse && (
-            <button
-              onClick={onToggleHeaderCollapse}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-neuro-cyan/20 border border-neuro-cyan/50 text-neuro-cyan hover:text-white hover:bg-neuro-cyan/30 transition-all font-bold text-xs"
-              title="Expand Header HUD & Controls"
-            >
-              <ChevronDown className="w-4 h-4" /> EXPAND HUD
-            </button>
-          )}
-        </div>
-      </header>
-    );
-  }
-
   return (
-    <header className="absolute top-4 left-4 right-4 z-30 flex items-center justify-between px-5 py-3 glass-panel transition-all duration-300">
+    <motion.header
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, ease: 'easeOut' }}
+      className="absolute top-4 left-4 right-4 z-30 flex items-center justify-between px-5 py-3 glass-panel transition-all duration-300"
+    >
       
       {/* Brand & System Status */}
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl bg-neuro-cyan/15 border border-neuro-cyan/40 flex items-center justify-center text-neuro-cyan shadow-cyan-glow">
+          <motion.div
+            whileHover={{ scale: 1.05, rotate: 5 }}
+            className="w-9 h-9 rounded-2xl bg-[#00E5FF]/15 border border-[#00E5FF]/30 flex items-center justify-center text-[#00E5FF] shadow-[0_0_15px_rgba(0,229,255,0.25)]"
+          >
             <Brain className="w-5 h-5 animate-pulse" />
-          </div>
+          </motion.div>
           <div className="flex flex-col">
-            <span className="font-heading font-bold text-lg tracking-wider text-white uppercase leading-none">
-              NEURO<span className="text-neuro-cyan">VERSE</span>
+            <span className="font-heading font-bold text-lg tracking-wider text-[#F8FAFC] uppercase leading-none">
+              NEURO<span className="text-[#00E5FF]">VERSE</span>
             </span>
-            <span className="text-[10px] font-mono text-neuro-textMuted tracking-widest uppercase mt-0.5">
+            <span className="text-[10px] font-mono text-[#94A3B8] tracking-widest uppercase mt-0.5">
               NEUROSCIENCE OS v3.2
             </span>
           </div>
         </div>
 
         {/* System Online Badge */}
-        <div className="hidden md:flex items-center gap-2 px-3 py-1 rounded-full bg-neuro-green/10 border border-neuro-green/30 text-neuro-green text-[10px] font-mono font-semibold">
-          <div className="w-1.5 h-1.5 rounded-full bg-neuro-green animate-ping" />
+        <div className="hidden md:flex items-center gap-2 px-3 py-1 rounded-full bg-[#00FF9C]/10 border border-[#00FF9C]/30 text-[#00FF9C] text-[10px] font-mono font-semibold">
+          <div className="w-1.5 h-1.5 rounded-full bg-[#00FF9C] animate-ping" />
           SYSTEM ONLINE // REAL-TIME CONNECTOME
         </div>
       </div>
 
-      {/* Global Fuzzy Search Bar */}
+      {/* Floating Glass Pill Search Bar */}
       <div className="relative flex-1 max-w-md mx-4">
         <div className="relative flex items-center">
-          <Search className="absolute left-3.5 w-4 h-4 text-neuro-cyan" />
+          <Search className={`absolute left-4 w-4 h-4 transition-all duration-300 ${isSearching ? 'text-[#00E5FF] filter drop-shadow-[0_0_8px_rgba(0,229,255,0.8)]' : 'text-[#94A3B8]'}`} />
           <input
             type="text"
             value={query}
@@ -146,35 +115,43 @@ export const HeaderHUD: React.FC<HeaderHUDProps> = ({
             onFocus={() => setIsSearching(true)}
             onBlur={() => setTimeout(() => setIsSearching(false), 200)}
             placeholder="Search anatomy, neural pathways, or diseases..."
-            className="w-full pl-10 pr-4 py-2 bg-neuro-card/80 border border-neuro-border rounded-xl text-xs font-sans text-slate-100 placeholder:text-slate-500 outline-none focus:border-neuro-cyan focus:ring-1 focus:ring-neuro-cyan/50 transition-all duration-200"
+            className="w-full pl-11 pr-5 py-2.5 bg-[rgba(12,18,30,0.45)] backdrop-blur-[22px] border border-[rgba(0,229,255,0.12)] rounded-full text-xs font-sans text-[#F8FAFC] placeholder:text-[#64748B] outline-none focus:border-[#00E5FF] focus:shadow-[0_0_20px_rgba(0,229,255,0.35)] transition-all duration-300"
           />
         </div>
 
         {/* Autocomplete Dropdown */}
-        {isSearching && fuzzyResults.length > 0 && (
-          <div className="absolute top-12 left-0 right-0 max-h-64 overflow-y-auto glass-panel p-2 flex flex-col gap-1 text-xs z-50">
-            {fuzzyResults.map(({ item: s, score, matchType }) => (
-              <button
-                key={s.id}
-                onMouseDown={(e) => {
-                  e.preventDefault();
-                  handleSelect(s);
-                }}
-                className="flex items-center justify-between p-2 rounded-xl hover:bg-neuro-cyan/15 text-left transition-all duration-200 group"
-              >
-                <div className="flex flex-col">
-                  <span className="font-semibold text-slate-100 group-hover:text-neuro-cyan transition-colors">{s.name}</span>
-                  {s.latinName && (
-                    <span className="text-[10px] font-mono text-slate-400">{s.latinName}</span>
-                  )}
-                </div>
-                <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-neuro-cyan/15 border border-neuro-cyan/30 text-neuro-cyan font-semibold uppercase">
-                  {matchType}
-                </span>
-              </button>
-            ))}
-          </div>
-        )}
+        <AnimatePresence>
+          {isSearching && fuzzyResults.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 8, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 8, scale: 0.98 }}
+              transition={{ duration: 0.2 }}
+              className="absolute top-12 left-0 right-0 max-h-64 overflow-y-auto glass-panel p-2 flex flex-col gap-1 text-xs z-50"
+            >
+              {fuzzyResults.map(({ item: s, score, matchType }) => (
+                <button
+                  key={s.id}
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    handleSelect(s);
+                  }}
+                  className="flex items-center justify-between p-2.5 rounded-xl hover:bg-[#00E5FF]/15 text-left transition-all duration-200 group"
+                >
+                  <div className="flex flex-col">
+                    <span className="font-semibold text-[#F8FAFC] group-hover:text-[#00E5FF] transition-colors">{s.name}</span>
+                    {s.latinName && (
+                      <span className="text-[10px] font-mono text-[#94A3B8]">{s.latinName}</span>
+                    )}
+                  </div>
+                  <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-[#00E5FF]/15 border border-[#00E5FF]/30 text-[#00E5FF] font-semibold uppercase">
+                    {matchType}
+                  </span>
+                </button>
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* View Mode & Tools */}
@@ -182,7 +159,7 @@ export const HeaderHUD: React.FC<HeaderHUDProps> = ({
         <select
           value={viewMode}
           onChange={(e) => onChangeViewMode(e.target.value as ViewMode)}
-          className="px-3.5 py-2 bg-neuro-card/90 border border-neuro-border rounded-xl text-xs font-mono text-slate-200 outline-none cursor-pointer focus:border-neuro-cyan transition-all duration-200"
+          className="px-3.5 py-2 bg-[rgba(12,18,30,0.65)] border border-[rgba(0,229,255,0.18)] rounded-xl text-xs font-mono text-[#F8FAFC] outline-none cursor-pointer focus:border-[#00E5FF] transition-all duration-200"
           title="Switch 3D Brain Render Mode"
         >
           <option value="default">🌐 Holographic 3D View</option>
@@ -197,34 +174,40 @@ export const HeaderHUD: React.FC<HeaderHUDProps> = ({
           <option value="eeg_density">📊 EEG Density Mode</option>
         </select>
 
-        <button
+        <motion.button
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.97 }}
           onClick={onOpenNeuronModal}
-          className="px-3 py-2 rounded-xl bg-neuro-purple/15 border border-neuro-purple/30 text-neuro-purple hover:bg-neuro-purple/25 text-xs font-mono font-semibold transition-all duration-200 flex items-center gap-1.5"
+          className="px-3.5 py-2 rounded-xl bg-[#A855F7]/15 border border-[#A855F7]/30 text-[#A855F7] hover:bg-[#A855F7]/25 text-xs font-mono font-medium transition-all duration-200 flex items-center gap-1.5"
           title="Single Neuron & Synapse Micro Viewer"
         >
-          <Zap className="w-3.5 h-3.5" /> Micro Neuron
-        </button>
+          <Zap className="w-3.5 h-3.5 text-[#A855F7]" /> Micro Neuron
+        </motion.button>
 
-        <button
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
           onClick={onToggleAudio}
-          className={`p-2 rounded-xl border transition-all duration-200 ${
-            isAudioActive ? 'bg-neuro-cyan/20 border-neuro-cyan text-neuro-cyan shadow-cyan-glow' : 'bg-neuro-card/80 border-neuro-border text-slate-400 hover:text-slate-200'
+          className={`p-2.5 rounded-xl border transition-all duration-200 ${
+            isAudioActive ? 'bg-[#00E5FF]/20 border-[#00E5FF] text-[#00E5FF] shadow-[0_0_15px_rgba(0,229,255,0.3)]' : 'bg-black/30 border-[rgba(0,229,255,0.12)] text-[#94A3B8] hover:text-[#F8FAFC]'
           }`}
           title="Toggle Neural Sound Synth"
         >
           {isAudioActive ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
-        </button>
+        </motion.button>
 
-        <button
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
           onClick={onExportScreenshot}
-          className="p-2 rounded-xl bg-neuro-card/80 border border-neuro-border text-slate-200 hover:bg-neuro-cyan/20 hover:border-neuro-cyan/50 transition-all duration-200"
+          className="p-2.5 rounded-xl bg-black/30 border border-[rgba(0,229,255,0.12)] text-[#F8FAFC] hover:bg-[#00E5FF]/20 hover:border-[#00E5FF]/40 transition-all duration-200"
           title="Export Screen Snapshot"
         >
           <Camera className="w-4 h-4" />
-        </button>
+        </motion.button>
       </div>
 
-    </header>
+    </motion.header>
   );
 };
 

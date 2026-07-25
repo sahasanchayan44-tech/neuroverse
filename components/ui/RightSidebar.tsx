@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { 
   Zap, Stethoscope, Clock, Activity, Flame, ChevronRight, ChevronLeft, RefreshCw, Radio,
   Search, Pill, AlertTriangle, CheckCircle2, ArrowLeft, Crosshair, ShieldAlert, Sparkles, Info,
@@ -117,56 +118,75 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
 
   if (collapsed) {
     return (
-      <button
+      <motion.button
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
         onClick={toggleCollapse}
-        className={`absolute ${topOffset} right-4 z-30 px-4 py-3 glass-panel text-neuro-cyan hover:text-white hover:border-neuro-cyan transition-all duration-300 flex items-center gap-2 font-mono text-xs`}
+        className={`absolute ${topOffset} right-4 z-30 px-4 py-3 glass-panel text-[#00E5FF] hover:text-[#F8FAFC] hover:border-[#00E5FF] transition-all duration-300 flex items-center gap-2 font-mono text-xs`}
         title="Expand Cognition & Pathology Sidebar"
       >
-        <ChevronLeft className="w-4 h-4 text-neuro-cyan" />
-        <Zap className="w-4 h-4 text-neuro-cyan animate-pulse" />
+        <ChevronLeft className="w-4 h-4 text-[#00E5FF]" />
+        <Zap className="w-4 h-4 text-[#00E5FF] animate-pulse" />
         <span className="font-heading font-bold text-xs">MODES & CLINICAL</span>
-      </button>
+      </motion.button>
     );
   }
 
   return (
-    <aside className={`absolute ${topOffset} right-4 bottom-16 z-20 w-88 md:w-96 max-h-[calc(100vh-10rem)] glass-panel p-4 flex flex-col gap-3 overflow-hidden text-slate-100 transition-all duration-300`}>
+    <motion.aside
+      initial={{ opacity: 0, x: 30 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+      className={`absolute ${topOffset} right-4 bottom-16 z-20 w-88 md:w-96 max-h-[calc(100vh-10rem)] glass-panel p-4 flex flex-col gap-3 overflow-hidden text-[#F8FAFC] transition-all duration-300`}
+    >
       
       {/* Sci-Fi HUD Tabs Header */}
-      <div className="flex items-center justify-between border-b border-neuro-border pb-3 flex-shrink-0">
+      <div className="flex items-center justify-between border-b border-[rgba(0,229,255,0.12)] pb-3 flex-shrink-0">
         <div className="flex gap-1.5 text-xs flex-1">
-          <button
+          <motion.button
+            whileHover={{ y: -2 }}
+            whileTap={{ scale: 0.97 }}
             onClick={() => setActiveTab('cognition')}
-            className={`flex-1 py-1.5 rounded-xl border transition-all duration-200 flex items-center justify-center gap-1 font-heading font-semibold text-xs ${
-              activeTab === 'cognition' ? 'bg-neuro-purple/20 border-neuro-purple text-white shadow-purple-glow' : 'bg-neuro-card/60 border-neuro-border text-slate-400 hover:text-slate-200'
+            className={`relative flex-1 py-1.5 rounded-xl border transition-all duration-200 flex items-center justify-center gap-1 font-heading font-semibold text-xs ${
+              activeTab === 'cognition'
+                ? 'bg-[#A855F7]/20 border-[#A855F7] text-[#F8FAFC] shadow-[0_0_15px_rgba(168,85,247,0.3)] scale-[1.03]'
+                : 'bg-[rgba(12,18,30,0.45)] border-[rgba(0,229,255,0.12)] text-[#94A3B8] hover:border-[#A855F7]/40 hover:text-[#F8FAFC]'
             }`}
           >
-            <Zap className="w-3.5 h-3.5 text-neuro-purple" /> COGNITION
-          </button>
+            <Zap className="w-3.5 h-3.5 text-[#A855F7]" /> COGNITION
+          </motion.button>
 
-          <button
+          <motion.button
+            whileHover={{ y: -2 }}
+            whileTap={{ scale: 0.97 }}
             onClick={() => setActiveTab('pathology')}
-            className={`flex-1 py-1.5 rounded-xl border transition-all duration-200 flex items-center justify-center gap-1 font-heading font-semibold text-xs ${
-              activeTab === 'pathology' ? 'bg-neuro-red/20 border-neuro-red text-white shadow-red-glow' : 'bg-neuro-card/60 border-neuro-border text-slate-400 hover:text-slate-200'
+            className={`relative flex-1 py-1.5 rounded-xl border transition-all duration-200 flex items-center justify-center gap-1 font-heading font-semibold text-xs ${
+              activeTab === 'pathology'
+                ? 'bg-[#FF4D6D]/20 border-[#FF4D6D] text-[#F8FAFC] shadow-[0_0_15px_rgba(255,77,109,0.3)] scale-[1.03]'
+                : 'bg-[rgba(12,18,30,0.45)] border-[rgba(0,229,255,0.12)] text-[#94A3B8] hover:border-[#FF4D6D]/40 hover:text-[#F8FAFC]'
             }`}
           >
-            <Stethoscope className="w-3.5 h-3.5 text-neuro-red" /> CLINICAL ({uniqueDiseasesList.length})
-          </button>
+            <Stethoscope className="w-3.5 h-3.5 text-[#FF4D6D]" /> CLINICAL ({uniqueDiseasesList.length})
+          </motion.button>
 
-          <button
+          <motion.button
+            whileHover={{ y: -2 }}
+            whileTap={{ scale: 0.97 }}
             onClick={() => setActiveTab('timeline')}
-            className={`flex-1 py-1.5 rounded-xl border transition-all duration-200 flex items-center justify-center gap-1 font-heading font-semibold text-xs ${
-              activeTab === 'timeline' ? 'bg-neuro-green/20 border-neuro-green text-white shadow-green-glow' : 'bg-neuro-card/60 border-neuro-border text-slate-400 hover:text-slate-200'
+            className={`relative flex-1 py-1.5 rounded-xl border transition-all duration-200 flex items-center justify-center gap-1 font-heading font-semibold text-xs ${
+              activeTab === 'timeline'
+                ? 'bg-[#00FF9C]/20 border-[#00FF9C] text-[#F8FAFC] shadow-[0_0_15px_rgba(0,255,156,0.3)] scale-[1.03]'
+                : 'bg-[rgba(12,18,30,0.45)] border-[rgba(0,229,255,0.12)] text-[#94A3B8] hover:border-[#00FF9C]/40 hover:text-[#F8FAFC]'
             }`}
           >
-            <Clock className="w-3.5 h-3.5 text-neuro-green" /> TIMELINE ({EVOLUTIONARY_EPOCHS_DATABASE.length})
-          </button>
+            <Clock className="w-3.5 h-3.5 text-[#00FF9C]" /> TIMELINE ({EVOLUTIONARY_EPOCHS_DATABASE.length})
+          </motion.button>
         </div>
 
         <button
           onClick={toggleCollapse}
-          className="ml-2 p-1 rounded-lg bg-white/5 hover:bg-white/15 text-gray-400 hover:text-white transition-all"
-          title="Minimize Right Sidebar for Full Brain View"
+          className="ml-2 p-1.5 rounded-xl bg-black/30 border border-[rgba(0,229,255,0.12)] hover:bg-[#00E5FF]/20 text-[#94A3B8] hover:text-[#F8FAFC] transition-all duration-200"
+          title="Minimize Right Sidebar"
         >
           <ChevronRight className="w-4 h-4" />
         </button>
@@ -622,7 +642,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
         </div>
       )}
 
-    </aside>
+    </motion.aside>
   );
 };
 

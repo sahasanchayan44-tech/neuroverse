@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { X, Brain, Activity, Stethoscope, Sparkles, BookOpen, Database, RefreshCw, CheckCircle2, ChevronLeft, ChevronRight, Cpu } from 'lucide-react';
 import { BrainStructureDetail } from '@/data/brainData';
 import { useMeshMetadata } from '@/hooks/useMeshMetadata';
@@ -27,20 +28,28 @@ export const InfoPanel: React.FC<InfoPanelProps> = ({
 
   if (isCollapsed) {
     return (
-      <button
+      <motion.button
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
         onClick={() => setIsCollapsed(false)}
-        className={`fixed ${topOffset} ${isRightSidebarOpen ? 'right-4 xl:right-[340px]' : 'right-4'} z-40 px-4 py-3 glass-panel text-neuro-cyan hover:text-white transition-all duration-300 flex items-center gap-2 font-mono text-xs`}
+        className={`fixed ${topOffset} ${isRightSidebarOpen ? 'right-4 xl:right-[340px]' : 'right-4'} z-40 px-4 py-3 glass-panel text-[#00E5FF] hover:text-[#F8FAFC] transition-all duration-300 flex items-center gap-2 font-mono text-xs`}
         title="Expand Structure Info Panel"
       >
-        <Brain className="w-4 h-4 text-neuro-cyan animate-pulse" />
-        <span className="font-heading font-bold text-white max-w-[130px] truncate">{activeData.name}</span>
-        <ChevronLeft className="w-4 h-4 text-neuro-cyan" />
-      </button>
+        <Brain className="w-4 h-4 text-[#00E5FF] animate-pulse" />
+        <span className="font-heading font-bold text-[#F8FAFC] max-w-[130px] truncate">{activeData.name}</span>
+        <ChevronLeft className="w-4 h-4 text-[#00E5FF]" />
+      </motion.button>
     );
   }
 
   return (
-    <div className={`fixed ${topOffset} ${isRightSidebarOpen ? 'right-4 xl:right-[340px]' : 'right-4'} z-40 w-96 max-h-[calc(100vh-10rem)] overflow-y-auto glass-panel p-5 flex flex-col gap-4 text-slate-100 transition-all duration-300`}>
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95, y: -10 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.95, y: -10 }}
+      transition={{ duration: 0.25, ease: 'easeOut' }}
+      className={`fixed ${topOffset} ${isRightSidebarOpen ? 'right-4 xl:right-[340px]' : 'right-4'} z-40 w-96 max-h-[calc(100vh-10rem)] overflow-y-auto glass-panel p-5 flex flex-col gap-4 text-[#F8FAFC] transition-all duration-300`}
+    >
       
       {/* Header */}
       <div className="flex items-center justify-between border-b border-neuro-border pb-3">
@@ -254,7 +263,7 @@ export const InfoPanel: React.FC<InfoPanelProps> = ({
         </div>
       )}
 
-    </div>
+    </motion.div>
   );
 };
 

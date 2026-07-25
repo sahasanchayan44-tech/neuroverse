@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { X, Flame, Stethoscope, Sparkles, Pill, Crosshair, ShieldAlert, Info, Activity, Database, CheckCircle2, Award, HeartPulse } from 'lucide-react';
 import { BrainDiseaseDetail } from '@/data/diseaseData';
 
@@ -19,50 +20,56 @@ export const DiseaseDetailModal: React.FC<DiseaseDetailModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-[22px]"
       onClick={onClose}
     >
-      <div
-        className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto glass-panel border-neuro-red/40 rounded-3xl p-6 text-slate-100 font-sans flex flex-col gap-5 select-text"
+      <motion.div
+        initial={{ opacity: 0, scale: 0.90, y: 15 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.90, y: 15 }}
+        transition={{ type: 'spring', stiffness: 350, damping: 28 }}
+        className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto glass-panel border-[#FF4D6D]/40 rounded-[24px] p-6 text-[#F8FAFC] font-sans flex flex-col gap-5 select-text shadow-[0_10px_40px_rgba(0,0,0,0.5),0_0_30px_rgba(255,77,109,0.15)]"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Top Header & Close Button */}
-        <div className="flex items-start justify-between border-b border-neuro-red/30 pb-4">
-          <div className="flex items-center gap-3.5">
-            <div className="w-12 h-12 rounded-2xl bg-neuro-red/15 border border-neuro-red/40 flex items-center justify-center text-neuro-red shadow-red-glow">
-              <Flame className="w-7 h-7 animate-pulse text-neuro-red" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2.5">
-                <h2 className="text-xl font-heading font-bold text-white">{disease.name}</h2>
-                <span
-                  className={`text-[9px] font-mono font-bold px-2.5 py-0.5 rounded-full border uppercase tracking-wider ${
-                    disease.riskLevel === 'Critical / Fatal'
-                      ? 'bg-red-950 text-red-400 border-red-500 animate-pulse'
-                      : disease.riskLevel === 'High'
-                      ? 'bg-red-900/60 text-red-300 border-red-500'
-                      : disease.riskLevel === 'Moderate'
-                      ? 'bg-yellow-900/60 text-yellow-300 border-yellow-500'
-                      : 'bg-green-900/60 text-green-300 border-green-500'
-                  }`}
-                >
-                  {disease.riskLevel} RISK
-                </span>
+          {/* Top Header & Circular Glass Close Button */}
+          <div className="flex items-start justify-between border-b border-[#FF4D6D]/30 pb-4">
+            <div className="flex items-center gap-3.5">
+              <div className="w-12 h-12 rounded-2xl bg-[#FF4D6D]/15 border border-[#FF4D6D]/40 flex items-center justify-center text-[#FF4D6D] shadow-[0_0_20px_rgba(255,77,109,0.3)]">
+                <Flame className="w-7 h-7 animate-pulse text-[#FF4D6D]" />
               </div>
-              {disease.latinName && (
-                <span className="text-xs font-mono text-red-300 italic">{disease.latinName}</span>
-              )}
+              <div>
+                <div className="flex items-center gap-2.5">
+                  <h2 className="text-xl font-heading font-bold text-[#F8FAFC]">{disease.name}</h2>
+                  <span
+                    className={`text-[9px] font-mono font-bold px-2.5 py-0.5 rounded-full border uppercase tracking-wider ${
+                      disease.riskLevel === 'Critical / Fatal'
+                        ? 'bg-red-950/80 text-red-400 border-red-500 animate-pulse'
+                        : disease.riskLevel === 'High'
+                        ? 'bg-red-900/60 text-red-300 border-red-500'
+                        : disease.riskLevel === 'Moderate'
+                        ? 'bg-yellow-900/60 text-yellow-300 border-yellow-500'
+                        : 'bg-emerald-900/60 text-emerald-300 border-emerald-500'
+                    }`}
+                  >
+                    {disease.riskLevel} RISK
+                  </span>
+                </div>
+                {disease.latinName && (
+                  <span className="text-xs font-mono text-red-300 italic">{disease.latinName}</span>
+                )}
+              </div>
             </div>
-          </div>
 
-          <button
-            onClick={onClose}
-            className="p-2 rounded-xl bg-white/10 border border-white/20 hover:bg-neuro-red/30 hover:border-neuro-red text-gray-300 hover:text-white transition-all"
-            title="Close Pop-up Screen"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
+            <motion.button
+              whileHover={{ scale: 1.1, rotate: 90 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={onClose}
+              className="w-9 h-9 rounded-full bg-[rgba(12,18,30,0.6)] backdrop-blur-[16px] border border-[#FF4D6D]/40 text-[#F8FAFC] hover:bg-[#FF4D6D]/30 shadow-[0_0_15px_rgba(255,77,109,0.3)] flex items-center justify-center transition-colors duration-200"
+              title="Close Holographic Window"
+            >
+              <X className="w-5 h-5 text-[#F8FAFC]" />
+            </motion.button>
+          </div>
 
         {/* Category & Cure Status Header Banner */}
         <div className="grid grid-cols-2 gap-3 font-mono text-xs">
@@ -191,12 +198,12 @@ export const DiseaseDetailModal: React.FC<DiseaseDetailModalProps> = ({
         <div className="flex justify-end pt-2">
           <button
             onClick={onClose}
-            className="px-5 py-2.5 rounded-xl bg-neuro-cyan/20 border border-neuro-cyan text-white hover:bg-neuro-cyan/30 transition-all font-mono text-xs font-bold shadow-cyan-glow"
+            className="px-5 py-2.5 rounded-xl bg-[#00E5FF]/20 border border-[#00E5FF] text-[#F8FAFC] hover:bg-[#00E5FF]/30 transition-all font-mono text-xs font-bold shadow-[0_0_15px_rgba(0,229,255,0.25)]"
           >
             Close Extended Details
           </button>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };
