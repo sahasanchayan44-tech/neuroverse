@@ -19,22 +19,22 @@ export const DiseaseDetailModal: React.FC<DiseaseDetailModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in"
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto bg-neuro-panel/95 backdrop-blur-2xl border border-neuro-red/50 rounded-3xl shadow-hologram p-6 text-white font-sans flex flex-col gap-5 select-text"
+        className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto glass-panel border-neuro-red/40 rounded-3xl p-6 text-slate-100 font-sans flex flex-col gap-5 select-text"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Top Header & Close Button */}
         <div className="flex items-start justify-between border-b border-neuro-red/30 pb-4">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-neuro-red/20 border border-neuro-red flex items-center justify-center text-neuro-red shadow-red-glow">
+          <div className="flex items-center gap-3.5">
+            <div className="w-12 h-12 rounded-2xl bg-neuro-red/15 border border-neuro-red/40 flex items-center justify-center text-neuro-red shadow-red-glow">
               <Flame className="w-7 h-7 animate-pulse text-neuro-red" />
             </div>
             <div>
-              <div className="flex items-center gap-2">
-                <h2 className="text-xl font-bold text-white font-sans">{disease.name}</h2>
+              <div className="flex items-center gap-2.5">
+                <h2 className="text-xl font-heading font-bold text-white">{disease.name}</h2>
                 <span
                   className={`text-[9px] font-mono font-bold px-2.5 py-0.5 rounded-full border uppercase tracking-wider ${
                     disease.riskLevel === 'Critical / Fatal'

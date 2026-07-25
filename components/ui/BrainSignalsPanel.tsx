@@ -43,43 +43,43 @@ export const BrainSignalsPanel: React.FC = () => {
   }, []);
 
   return (
-    <div className="p-3 bg-neuro-panel backdrop-blur-xl border border-neuro-cyan/40 rounded-2xl shadow-hologram flex flex-col gap-2.5 text-white font-mono text-xs">
+    <div className="p-4 glass-panel flex flex-col gap-3 text-slate-100 font-sans text-xs">
       
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-neuro-border pb-2">
-        <span className="font-bold text-neuro-cyan flex items-center gap-1.5">
-          <Radio className="w-4 h-4 text-neuro-pink animate-pulse" /> 10-20 EEG ELECTRODE BRAIN SIGNAL CHANNELS
+      <div className="flex items-center justify-between border-b border-neuro-border pb-2.5">
+        <span className="font-heading font-bold text-slate-100 flex items-center gap-2">
+          <Radio className="w-4 h-4 text-neuro-green animate-pulse" /> 10-20 EEG ELECTRODE BRAIN SIGNAL CHANNELS
         </span>
-        <span className="px-2 py-0.5 bg-neuro-green/20 text-neuro-green border border-neuro-green/30 rounded text-[10px]">
-          ● 6 CHANNELS ONLINE
+        <span className="px-2.5 py-1 bg-neuro-green/15 text-neuro-green border border-neuro-green/30 rounded-full text-[10px] font-mono font-semibold flex items-center gap-1.5">
+          <div className="w-1.5 h-1.5 rounded-full bg-neuro-green animate-ping" /> 6 CHANNELS ONLINE
         </span>
       </div>
 
       {/* 6 Multi-Channel Signal Monitor Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
         {channels.map(ch => {
           const isSpiking = ch.status === 'SPIKING';
           return (
             <div
               key={ch.id}
-              className={`p-2.5 rounded-xl border flex flex-col gap-1 transition-all ${
+              className={`p-3 rounded-2xl glass-card flex flex-col gap-1.5 ${
                 isSpiking
-                  ? 'bg-neuro-pink/20 border-neuro-pink shadow-pink-glow'
-                  : 'bg-white/5 border-white/10'
+                  ? 'border-neuro-red/60 shadow-red-glow'
+                  : 'hover:border-neuro-cyan/40'
               }`}
             >
               <div className="flex items-center justify-between">
-                <span className="font-bold text-white text-[11px]">{ch.id}</span>
-                <span className={`text-[9px] px-1.5 py-0.2 rounded font-bold ${
-                  isSpiking ? 'bg-neuro-pink text-white' : 'bg-neuro-cyan/20 text-neuro-cyan'
+                <span className="font-mono font-bold text-white text-[11px]">{ch.id}</span>
+                <span className={`text-[9px] font-mono px-2 py-0.5 rounded-full font-bold uppercase ${
+                  isSpiking ? 'bg-neuro-red/20 text-neuro-red border border-neuro-red/40' : 'bg-neuro-green/15 text-neuro-green border border-neuro-green/30'
                 }`}>
                   {ch.status}
                 </span>
               </div>
 
-              <span className="text-[10px] text-gray-400 truncate">{ch.name}</span>
+              <span className="text-[10px] text-slate-400 truncate font-sans">{ch.name}</span>
 
-              <div className="flex items-center justify-between text-[10px] pt-1 border-t border-white/10">
+              <div className="flex items-center justify-between text-[11px] font-mono pt-1.5 border-t border-slate-700/40">
                 <span className="text-neuro-cyan">{ch.freqHz} Hz</span>
                 <span className="font-bold text-neuro-green">{ch.microvolts} μV</span>
               </div>

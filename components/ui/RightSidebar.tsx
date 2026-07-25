@@ -119,47 +119,47 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
     return (
       <button
         onClick={toggleCollapse}
-        className={`absolute ${topOffset} right-4 z-30 p-3 bg-neuro-panel backdrop-blur-xl border border-neuro-cyan/40 rounded-2xl shadow-hologram text-neuro-cyan hover:text-white hover:bg-neuro-cyan/20 transition-all flex items-center gap-2 font-mono text-xs`}
+        className={`absolute ${topOffset} right-4 z-30 px-4 py-3 glass-panel text-neuro-cyan hover:text-white hover:border-neuro-cyan transition-all duration-300 flex items-center gap-2 font-mono text-xs`}
         title="Expand Cognition & Pathology Sidebar"
       >
         <ChevronLeft className="w-4 h-4 text-neuro-cyan" />
         <Zap className="w-4 h-4 text-neuro-cyan animate-pulse" />
-        <span className="font-bold">MODES</span>
+        <span className="font-heading font-bold text-xs">MODES & CLINICAL</span>
       </button>
     );
   }
 
   return (
-    <aside className={`absolute ${topOffset} right-4 bottom-16 z-20 w-88 md:w-96 max-h-[calc(100vh-10rem)] bg-neuro-panel backdrop-blur-xl border border-neuro-cyan/30 rounded-2xl shadow-hologram p-4 flex flex-col gap-3 overflow-hidden text-white transition-all font-mono`}>
+    <aside className={`absolute ${topOffset} right-4 bottom-16 z-20 w-88 md:w-96 max-h-[calc(100vh-10rem)] glass-panel p-4 flex flex-col gap-3 overflow-hidden text-slate-100 transition-all duration-300`}>
       
       {/* Sci-Fi HUD Tabs Header */}
-      <div className="flex items-center justify-between border-b border-neuro-border pb-2 flex-shrink-0">
-        <div className="flex gap-1 text-[11px] flex-1">
+      <div className="flex items-center justify-between border-b border-neuro-border pb-3 flex-shrink-0">
+        <div className="flex gap-1.5 text-xs flex-1">
           <button
             onClick={() => setActiveTab('cognition')}
-            className={`flex-1 py-1 rounded-lg border transition-all flex items-center justify-center gap-1 font-bold ${
-              activeTab === 'cognition' ? 'bg-neuro-cyan/20 border-neuro-cyan text-white shadow-cyan-glow' : 'bg-white/5 border-white/10 text-neuro-muted'
+            className={`flex-1 py-1.5 rounded-xl border transition-all duration-200 flex items-center justify-center gap-1 font-heading font-semibold text-xs ${
+              activeTab === 'cognition' ? 'bg-neuro-purple/20 border-neuro-purple text-white shadow-purple-glow' : 'bg-neuro-card/60 border-neuro-border text-slate-400 hover:text-slate-200'
             }`}
           >
-            <Zap className="w-3 h-3" /> COG
+            <Zap className="w-3.5 h-3.5 text-neuro-purple" /> COGNITION
           </button>
 
           <button
             onClick={() => setActiveTab('pathology')}
-            className={`flex-1 py-1 rounded-lg border transition-all flex items-center justify-center gap-1 font-bold ${
-              activeTab === 'pathology' ? 'bg-neuro-red/20 border-neuro-red text-white shadow-red-glow' : 'bg-white/5 border-white/10 text-neuro-muted'
+            className={`flex-1 py-1.5 rounded-xl border transition-all duration-200 flex items-center justify-center gap-1 font-heading font-semibold text-xs ${
+              activeTab === 'pathology' ? 'bg-neuro-red/20 border-neuro-red text-white shadow-red-glow' : 'bg-neuro-card/60 border-neuro-border text-slate-400 hover:text-slate-200'
             }`}
           >
-            <Stethoscope className="w-3 h-3" /> PATH ({uniqueDiseasesList.length})
+            <Stethoscope className="w-3.5 h-3.5 text-neuro-red" /> CLINICAL ({uniqueDiseasesList.length})
           </button>
 
           <button
             onClick={() => setActiveTab('timeline')}
-            className={`flex-1 py-1 rounded-lg border transition-all flex items-center justify-center gap-1 font-bold ${
-              activeTab === 'timeline' ? 'bg-neuro-purple/20 border-neuro-purple text-white shadow-purple-glow' : 'bg-white/5 border-white/10 text-neuro-muted'
+            className={`flex-1 py-1.5 rounded-xl border transition-all duration-200 flex items-center justify-center gap-1 font-heading font-semibold text-xs ${
+              activeTab === 'timeline' ? 'bg-neuro-green/20 border-neuro-green text-white shadow-green-glow' : 'bg-neuro-card/60 border-neuro-border text-slate-400 hover:text-slate-200'
             }`}
           >
-            <Clock className="w-3 h-3" /> TIME ({EVOLUTIONARY_EPOCHS_DATABASE.length})
+            <Clock className="w-3.5 h-3.5 text-neuro-green" /> TIMELINE ({EVOLUTIONARY_EPOCHS_DATABASE.length})
           </button>
         </div>
 

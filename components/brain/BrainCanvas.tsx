@@ -231,15 +231,15 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
   useEffect(() => {
     if (!mountRef.current) return;
 
-    // 1. Matrix Sci-Fi Scene setup
+    // 1. Futuristic Neuroscience OS Scene setup
     const scene = new THREE.Scene();
     sceneRef.current = scene;
-    scene.background = new THREE.Color(0x000508);
-    scene.fog = new THREE.FogExp2(0x000a0d, 0.012);
+    scene.background = new THREE.Color(0x05070b);
+    scene.fog = new THREE.FogExp2(0x0a1220, 0.010);
 
     // 2. Camera setup - Positioned perfectly level at center
     const camera = new THREE.PerspectiveCamera(45, mountRef.current.clientWidth / mountRef.current.clientHeight, 0.1, 1000);
-    camera.position.set(0, 0, 28);
+    camera.position.set(0, 0, 32);
     cameraRef.current = camera;
 
     // 3. Renderer setup
@@ -247,7 +247,7 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
     renderer.setSize(mountRef.current.clientWidth, mountRef.current.clientHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.4;
+    renderer.toneMappingExposure = 1.35;
     rendererRef.current = renderer;
 
     mountRef.current.appendChild(renderer.domElement);
@@ -257,32 +257,32 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
     controls.target.set(0, 0, 0);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
-    controls.maxDistance = 65;
+    controls.maxDistance = 75;
     controls.minDistance = 4;
     controls.autoRotate = true;
-    controls.autoRotateSpeed = 0.6;
+    controls.autoRotateSpeed = 0.5;
     controlsRef.current = controls;
 
     // Initialize CinematicCameraController
     camControllerRef.current = new CinematicCameraController(camera, controls, {
-      defaultPosition: new THREE.Vector3(0, 0, 28),
+      defaultPosition: new THREE.Vector3(0, 0, 32),
       defaultTarget: new THREE.Vector3(0, 0, 0),
     });
 
-    // 5. Monochromatic Cyber Blue Multi-Directional Lighting
-    const ambientLight = new THREE.AmbientLight(0x002244, 2.2);
+    // 5. Refined Volumetric Soft Lighting (Apple Vision Pro / JARVIS Holographic)
+    const ambientLight = new THREE.AmbientLight(0x0f1d36, 2.4);
     scene.add(ambientLight);
 
-    const keyLight = new THREE.DirectionalLight(0x00f0ff, 3.2);
-    keyLight.position.set(25, 30, 25);
+    const keyLight = new THREE.DirectionalLight(0x00e5ff, 3.4);
+    keyLight.position.set(30, 35, 30);
     scene.add(keyLight);
 
-    const rimLight = new THREE.DirectionalLight(0x00a8ff, 2.6);
-    rimLight.position.set(-25, -20, -25);
+    const rimLight = new THREE.DirectionalLight(0x3b82f6, 2.8);
+    rimLight.position.set(-30, -25, -30);
     scene.add(rimLight);
 
-    const fillLight = new THREE.DirectionalLight(0x00d5ff, 1.8);
-    fillLight.position.set(0, -20, 20);
+    const fillLight = new THREE.DirectionalLight(0xa855f7, 2.0);
+    fillLight.position.set(0, -25, 25);
     scene.add(fillLight);
 
     // Catalog and load real .glb child meshes mapped to UI anatomy selections (no placeholder primitives)
@@ -633,23 +633,23 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
   }
 
   const ANATOMICAL_COLOR_PROFILE: Record<string, { colorHex: number; emissiveHex: number; baseOpacity: number; emissiveIntensity: number; isInner: boolean }> = {
-    frontal_lobe: { colorHex: 0x00f0ff, emissiveHex: 0x0066ff, baseOpacity: 0.52, emissiveIntensity: 0.45, isInner: false },
-    parietal_lobe: { colorHex: 0x00d8ff, emissiveHex: 0x0044ee, baseOpacity: 0.52, emissiveIntensity: 0.45, isInner: false },
-    temporal_lobe: { colorHex: 0x33b5ff, emissiveHex: 0x0033cc, baseOpacity: 0.52, emissiveIntensity: 0.45, isInner: false },
-    occipital_lobe: { colorHex: 0x00e5ff, emissiveHex: 0x0055dd, baseOpacity: 0.52, emissiveIntensity: 0.45, isInner: false },
-    cerebellum: { colorHex: 0x00ffcc, emissiveHex: 0x00aa88, baseOpacity: 0.78, emissiveIntensity: 0.65, isInner: false },
-    brain_stem: { colorHex: 0x00d5ff, emissiveHex: 0x0066cc, baseOpacity: 0.90, emissiveIntensity: 0.75, isInner: true },
-    pons: { colorHex: 0x00bfff, emissiveHex: 0x0055bb, baseOpacity: 0.90, emissiveIntensity: 0.75, isInner: true },
-    medulla: { colorHex: 0x00a8ff, emissiveHex: 0x0044aa, baseOpacity: 0.90, emissiveIntensity: 0.75, isInner: true },
-    thalamus: { colorHex: 0x00f0ff, emissiveHex: 0x0088ff, baseOpacity: 0.95, emissiveIntensity: 0.85, isInner: true },
-    hypothalamus: { colorHex: 0x00e5ff, emissiveHex: 0x0077ee, baseOpacity: 0.95, emissiveIntensity: 0.85, isInner: true },
-    pituitary_gland: { colorHex: 0x33f3ff, emissiveHex: 0x0099ff, baseOpacity: 0.95, emissiveIntensity: 0.85, isInner: true },
-    pineal_gland: { colorHex: 0x00ffff, emissiveHex: 0x00aaff, baseOpacity: 0.95, emissiveIntensity: 0.85, isInner: true },
-    hippocampus: { colorHex: 0x00f0ff, emissiveHex: 0x0077ff, baseOpacity: 0.90, emissiveIntensity: 0.80, isInner: true },
-    amygdala: { colorHex: 0x00d5ff, emissiveHex: 0x0066ee, baseOpacity: 0.95, emissiveIntensity: 0.85, isInner: true },
-    basal_ganglia: { colorHex: 0x00bfff, emissiveHex: 0x0055dd, baseOpacity: 0.90, emissiveIntensity: 0.80, isInner: true },
-    ventricles: { colorHex: 0x00ffff, emissiveHex: 0x0099dd, baseOpacity: 0.85, emissiveIntensity: 0.75, isInner: true },
-    corpus_callosum: { colorHex: 0xe6f9ff, emissiveHex: 0x00aaff, baseOpacity: 0.85, emissiveIntensity: 0.70, isInner: true }
+    frontal_lobe: { colorHex: 0x00e5ff, emissiveHex: 0x0088cc, baseOpacity: 0.52, emissiveIntensity: 0.45, isInner: false },
+    parietal_lobe: { colorHex: 0x38bdf8, emissiveHex: 0x0284c7, baseOpacity: 0.52, emissiveIntensity: 0.45, isInner: false },
+    temporal_lobe: { colorHex: 0x818cf8, emissiveHex: 0x4f46e5, baseOpacity: 0.52, emissiveIntensity: 0.45, isInner: false },
+    occipital_lobe: { colorHex: 0xffc857, emissiveHex: 0xd97706, baseOpacity: 0.52, emissiveIntensity: 0.45, isInner: false },
+    cerebellum: { colorHex: 0x00ff9c, emissiveHex: 0x059669, baseOpacity: 0.78, emissiveIntensity: 0.65, isInner: false },
+    brain_stem: { colorHex: 0x3b82f6, emissiveHex: 0x1d4ed8, baseOpacity: 0.90, emissiveIntensity: 0.75, isInner: true },
+    pons: { colorHex: 0x60a5fa, emissiveHex: 0x2563eb, baseOpacity: 0.90, emissiveIntensity: 0.75, isInner: true },
+    medulla: { colorHex: 0x2563eb, emissiveHex: 0x1e40af, baseOpacity: 0.90, emissiveIntensity: 0.75, isInner: true },
+    thalamus: { colorHex: 0xa855f7, emissiveHex: 0x7e22ce, baseOpacity: 0.95, emissiveIntensity: 0.85, isInner: true },
+    hypothalamus: { colorHex: 0xc084fc, emissiveHex: 0x9333ea, baseOpacity: 0.95, emissiveIntensity: 0.85, isInner: true },
+    pituitary_gland: { colorHex: 0xfacc15, emissiveHex: 0xca8a04, baseOpacity: 0.95, emissiveIntensity: 0.85, isInner: true },
+    pineal_gland: { colorHex: 0xffc857, emissiveHex: 0xb45309, baseOpacity: 0.95, emissiveIntensity: 0.85, isInner: true },
+    hippocampus: { colorHex: 0x00ff9c, emissiveHex: 0x047857, baseOpacity: 0.90, emissiveIntensity: 0.80, isInner: true },
+    amygdala: { colorHex: 0xff4d6d, emissiveHex: 0xbe123c, baseOpacity: 0.95, emissiveIntensity: 0.85, isInner: true },
+    basal_ganglia: { colorHex: 0xa855f7, emissiveHex: 0x6b21a8, baseOpacity: 0.90, emissiveIntensity: 0.80, isInner: true },
+    ventricles: { colorHex: 0x38bdf8, emissiveHex: 0x0369a1, baseOpacity: 0.85, emissiveIntensity: 0.75, isInner: true },
+    corpus_callosum: { colorHex: 0xf8fafc, emissiveHex: 0x38bdf8, baseOpacity: 0.85, emissiveIntensity: 0.70, isInner: true }
   };
 
   // Load & Present Assembly of all 131 3D Brain Part GLB Models mapped to floating HUD lobe names
@@ -971,7 +971,7 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
         const center = box.getCenter(new THREE.Vector3());
         const size = box.getSize(new THREE.Vector3());
         const maxDim = Math.max(size.x, size.y, size.z);
-        const scaleFactor = 13.5 / (maxDim || 1);
+        const scaleFactor = 32.0 / (maxDim || 1);
 
         // Position model perfectly dead-centered at (0, 0, 0)
         model.position.sub(center.clone().multiplyScalar(scaleFactor));

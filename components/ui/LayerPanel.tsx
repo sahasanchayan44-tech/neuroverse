@@ -135,29 +135,29 @@ export const LayerPanel: React.FC<LayerPanelProps> = ({
     return (
       <button
         onClick={() => setIsCollapsed(false)}
-        className={`absolute ${topOffset} left-4 z-30 p-3 bg-neuro-panel backdrop-blur-xl border border-neuro-cyan/40 rounded-2xl shadow-hologram text-neuro-cyan hover:text-white hover:bg-neuro-cyan/20 transition-all flex items-center gap-2 font-mono text-xs`}
+        className={`absolute ${topOffset} left-4 z-30 px-4 py-3 glass-panel text-neuro-cyan hover:text-white hover:border-neuro-cyan transition-all duration-300 flex items-center gap-2 font-mono text-xs`}
         title="Expand Anatomical Layers Panel"
       >
         <Layers className="w-4 h-4 text-neuro-cyan animate-pulse" />
-        <span className="font-bold">LAYERS</span>
+        <span className="font-heading font-bold text-xs">ANATOMY TREE</span>
         <ChevronRight className="w-4 h-4 text-neuro-cyan" />
       </button>
     );
   }
 
   return (
-    <aside className={`absolute ${topOffset} left-4 bottom-16 z-20 w-80 max-h-[calc(100vh-10rem)] bg-neuro-panel backdrop-blur-xl border border-neuro-cyan/30 rounded-2xl shadow-hologram p-4 flex flex-col gap-3 overflow-hidden text-white transition-all font-mono`}>
+    <aside className={`absolute ${topOffset} left-4 bottom-16 z-20 w-84 max-h-[calc(100vh-10rem)] glass-panel p-4 flex flex-col gap-3 overflow-hidden text-slate-100 transition-all duration-300`}>
       
       {/* Header with Minimize Button & Sci-Fi Tabs */}
-      <div className="flex items-center justify-between border-b border-neuro-border pb-2 flex-shrink-0">
-        <div className="flex gap-1 text-xs flex-1">
+      <div className="flex items-center justify-between border-b border-neuro-border pb-3 flex-shrink-0">
+        <div className="flex gap-1.5 text-xs flex-1">
           <button
             onClick={() => setActiveTab('anatomy')}
-            className={`flex-1 py-1 rounded-lg border transition-all flex items-center justify-center gap-1 font-bold ${
-              activeTab === 'anatomy' ? 'bg-neuro-cyan/20 border-neuro-cyan text-white shadow-cyan-glow' : 'bg-white/5 border-white/10 text-neuro-muted'
+            className={`flex-1 py-1.5 rounded-xl border transition-all duration-200 flex items-center justify-center gap-1.5 font-heading font-semibold text-xs ${
+              activeTab === 'anatomy' ? 'bg-neuro-cyan/20 border-neuro-cyan text-white shadow-cyan-glow' : 'bg-neuro-card/60 border-neuro-border text-slate-400 hover:text-slate-200'
             }`}
           >
-            <Activity className="w-3.5 h-3.5" /> ANATOMY
+            <Activity className="w-3.5 h-3.5" /> ANATOMY TREE
           </button>
 
           <button

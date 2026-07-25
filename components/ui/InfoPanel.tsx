@@ -29,27 +29,27 @@ export const InfoPanel: React.FC<InfoPanelProps> = ({
     return (
       <button
         onClick={() => setIsCollapsed(false)}
-        className={`fixed ${topOffset} ${isRightSidebarOpen ? 'right-4 xl:right-[340px]' : 'right-4'} z-40 p-3 bg-neuro-panel backdrop-blur-xl border border-neuro-cyan/40 rounded-2xl shadow-hologram text-neuro-cyan hover:text-white hover:bg-neuro-cyan/20 transition-all flex items-center gap-2 font-mono text-xs`}
+        className={`fixed ${topOffset} ${isRightSidebarOpen ? 'right-4 xl:right-[340px]' : 'right-4'} z-40 px-4 py-3 glass-panel text-neuro-cyan hover:text-white transition-all duration-300 flex items-center gap-2 font-mono text-xs`}
         title="Expand Structure Info Panel"
       >
         <Brain className="w-4 h-4 text-neuro-cyan animate-pulse" />
-        <span className="font-bold text-white max-w-[130px] truncate">{activeData.name}</span>
+        <span className="font-heading font-bold text-white max-w-[130px] truncate">{activeData.name}</span>
         <ChevronLeft className="w-4 h-4 text-neuro-cyan" />
       </button>
     );
   }
 
   return (
-    <div className={`fixed ${topOffset} ${isRightSidebarOpen ? 'right-4 xl:right-[340px]' : 'right-4'} z-40 w-96 max-h-[calc(100vh-10rem)] overflow-y-auto bg-neuro-panel backdrop-blur-xl border border-neuro-cyan/40 rounded-2xl shadow-hologram p-5 flex flex-col gap-4 text-white pr-2 font-sans transition-all`}>
+    <div className={`fixed ${topOffset} ${isRightSidebarOpen ? 'right-4 xl:right-[340px]' : 'right-4'} z-40 w-96 max-h-[calc(100vh-10rem)] overflow-y-auto glass-panel p-5 flex flex-col gap-4 text-slate-100 transition-all duration-300`}>
       
       {/* Header */}
       <div className="flex items-center justify-between border-b border-neuro-border pb-3">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-neuro-cyan/20 border border-neuro-cyan flex items-center justify-center text-neuro-cyan shadow-cyan-glow">
+          <div className="w-10 h-10 rounded-2xl bg-neuro-cyan/15 border border-neuro-cyan/40 flex items-center justify-center text-neuro-cyan shadow-cyan-glow">
             <Brain className="w-6 h-6 animate-pulse" />
           </div>
           <div>
-            <h3 className="text-lg font-bold tracking-wide text-white">{activeData.name}</h3>
+            <h3 className="text-lg font-heading font-bold tracking-wide text-white">{activeData.name}</h3>
             {activeData.latinName && (
               <span className="text-[10px] font-mono text-neuro-cyan uppercase">{activeData.latinName}</span>
             )}
@@ -58,14 +58,14 @@ export const InfoPanel: React.FC<InfoPanelProps> = ({
         <div className="flex items-center gap-1.5">
           <button
             onClick={() => setIsCollapsed(true)}
-            className="p-1.5 rounded-lg bg-white/5 border border-white/10 hover:bg-white/20 text-gray-400 hover:text-white transition-all"
+            className="p-2 rounded-xl bg-neuro-card/80 border border-neuro-border hover:bg-neuro-cyan/20 text-slate-400 hover:text-white transition-all duration-200"
             title="Minimize Info Panel"
           >
             <ChevronRight className="w-4 h-4" />
           </button>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg bg-white/5 border border-white/10 hover:bg-white/20 text-white transition-all"
+            className="p-2 rounded-xl bg-neuro-card/80 border border-neuro-border hover:bg-neuro-cyan/20 text-white transition-all duration-200"
             title="Close Info Panel"
           >
             <X className="w-4 h-4" />
