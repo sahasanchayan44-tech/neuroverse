@@ -176,3 +176,7 @@
 - **File**: `components/brain/BrainCanvas.tsx`
 - **Center Geometry & Group Alignment**: Centered child part meshes relative to model assembly origin (`child.position.sub(center)`).
 - **Explicit Position Assignment**: Set `model.position.set(0, 0, 0)` and `partsGroup.position.set(0, 0, 0)` upon initial load when opening the web server.
+
+### 34. Resolve three-mesh-bvh Deprecation Warning
+- **File**: `package.json`
+- **Fix**: Added `"three-mesh-bvh": "^0.8.0"` to `dependencies` and `"overrides": { "three-mesh-bvh": "^0.8.0" }` to force npm & Vercel to resolve `three-mesh-bvh` to `v0.8.0` instead of the deprecated `v0.7.8`.
