@@ -163,3 +163,11 @@
 - **Camera Distance & Target**: Set camera position to `(0, 0, 24)` and locked OrbitControls target to `(0, 0, 0)`.
 - **Model Scale Factor**: Adjusted GLB `scaleFactor` to `13.5 / maxDim` in `loadAndCatalogGLBBrainModel` (matching `loadAll131BrainPartModels`).
 - **Result**: Upon opening the web server, the 3D brain model is rendered 100% dead-centered in the middle of the screen, perfectly sized and unclipped, fully visible with 360-degree free orbit navigation framed by floating glass panels.
+
+### 32. Vercel Deployment & ERESOLVE Peer Dependency Fix
+- **Files**: `.npmrc`, `vercel.json`, `package.json`
+- **Root Cause**: Vercel `npm install` threw `ERESOLVE could not resolve` error due to peer dependency version mismatch between `postprocessing@6.39.3` and `three@0.165.0`.
+- **Fix**:
+  1. Created `.npmrc` with `legacy-peer-deps=true`.
+  2. Created `vercel.json` configuring `"installCommand": "npm install --legacy-peer-deps"` and `"buildCommand": "npm run build"`.
+  3. Pinned `"postprocessing": "6.35.6"` in `package.json` to prevent peer mismatch.
