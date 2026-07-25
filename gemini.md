@@ -98,3 +98,8 @@
 - **Prominent Datasets**: Added badges for **Human Connectome Project (HCP-2026)**, **Allen Brain Atlas Transcriptomics**, **BigBrain 20μm Cytology**, and **BodyParts3D / FMA**.
 - **Quantitative Metrics**: Integrated 2x2 biophysical grid displaying Neuron Count ($B$), Synaptic Density ($T$), Axonal Conduction Speed ($m/s$), and Cerebral Blood Flow ($CBF$).
 - **Receptor & Pathology Cards**: Rendered receptor binding density ($B_{max}$) and pathological biomarker indicators ($A\beta_{42}$, Tau, $\alpha$-Synuclein) upon selecting any brain part in the left sidebar anatomy section.
+
+### 21. Pathology Tab Disease Deduplication & Extended Disease Pop-up Screen
+- **Files**: `components/ui/RightSidebar.tsx`, `components/ui/DiseaseDetailModal.tsx`, `app/page.tsx`
+- **Deduplication**: Implemented Map-based deduplication (`uniqueDiseasesMap`) in `RightSidebar.tsx` to strictly guarantee zero duplicate diseases listed in the Pathology ("PATH") tab.
+- **Extended Pop-up Screen**: Created `DiseaseDetailModal.tsx` pop-up screen triggered on clicking any disease in the Pathology tab, featuring comprehensive clinical data (Pathophysiology, Risk Badges, FDA Medicines, Target Brain Regions, 2026 Trial Pipeline Cures, and Survival Statistics).

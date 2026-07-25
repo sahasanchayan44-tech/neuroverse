@@ -14,6 +14,8 @@ import { ParametersPanel } from '@/components/ui/ParametersPanel';
 import { NeuronModal } from '@/components/ui/NeuronModal';
 import { ServerMetricsModal } from '@/components/ui/ServerMetricsModal';
 import { BrainPartModal } from '@/components/ui/BrainPartModal';
+import { DiseaseDetailModal } from '@/components/ui/DiseaseDetailModal';
+import { BRAIN_DISEASES_DATABASE } from '@/data/diseaseData';
 import { BrainHierarchyNode } from '@/data/brainHierarchy';
 
 // Dynamically import 3D Three.js WebGL Canvas to disable SSR for WebGL context
@@ -209,6 +211,18 @@ export default function Home() {
       </div>
 
 
+
+      {/* Extended Disease Details Pop-Up Modal */}
+      {selectedDisease && (
+        <DiseaseDetailModal
+          disease={BRAIN_DISEASES_DATABASE.find((d) => d.id === selectedDisease) || null}
+          onClose={() => setSelectedDisease(null)}
+          onSelectStructureByName={(regionName) => {
+            const struct = structures.find((s) => s.name.toLowerCase().includes(regionName.toLowerCase()));
+            if (struct) setSelectedStructure(struct);
+          }}
+        />
+      )}
 
       {/* Microscopic Single Neuron Viewer Modal */}
       <NeuronModal

@@ -78,7 +78,18 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
   const activeDiseaseDetail = BRAIN_DISEASES_DATABASE.find(d => d.id === selectedDisease);
   const activeEpochDetail = EVOLUTIONARY_EPOCHS_DATABASE.find(e => e.id === selectedEpochId);
 
-  const filteredDiseases = BRAIN_DISEASES_DATABASE.filter(d => {
+  // Strictly deduplicate diseases by lowercase name to ensure zero repeated diseases listed
+  const uniqueDiseasesMap = new Map<string, BrainDiseaseDetail>();
+  BRAIN_DISEASES_DATABASE.forEach(d => {
+    const key = (d.name || d.id).toLowerCase().trim();
+    if (!uniqueDiseasesMap.has(key)) {
+      uniqueDiseasesMap.set(key, d);
+    }
+  });
+
+  const uniqueDiseasesList = Array.from(uniqueDiseasesMap.values());
+
+  const filteredDiseases = uniqueDiseasesList.filter(d => {
     const matchesCategory = selectedCategory === 'All' || 
       d.category.toLowerCase().includes(selectedCategory.toLowerCase()) || 
       selectedCategory.toLowerCase().includes(d.category.toLowerCase());
@@ -139,7 +150,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
               activeTab === 'pathology' ? 'bg-neuro-red/20 border-neuro-red text-white shadow-red-glow' : 'bg-white/5 border-white/10 text-neuro-muted'
             }`}
           >
-            <Stethoscope className="w-3 h-3" /> PATH ({BRAIN_DISEASES_DATABASE.length})
+            <Stethoscope className="w-3 h-3" /> PATH ({uniqueDiseasesList.length})
           </button>
 
           <button
