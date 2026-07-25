@@ -157,3 +157,9 @@
 ### 30. Local Enterprise Server Hosting
 - **Server Startup**: Hosted primary NeuroVerse Sci-Fi Enterprise Server on **http://localhost:8080** (`PORT=8080 NODE_ENV=development node server.js`).
 - **Health Verification**: `/health` status returning `HEALTHY` and 200 OK HTML compilation verified.
+
+### 31. Dead-Center Viewport Scaling & Framing for 3D Brain Model
+- **File**: `components/brain/BrainCanvas.tsx`
+- **Camera Distance & Target**: Set camera position to `(0, 0, 24)` and locked OrbitControls target to `(0, 0, 0)`.
+- **Model Scale Factor**: Adjusted GLB `scaleFactor` to `13.5 / maxDim` in `loadAndCatalogGLBBrainModel` (matching `loadAll131BrainPartModels`).
+- **Result**: Upon opening the web server, the 3D brain model is rendered 100% dead-centered in the middle of the screen, perfectly sized and unclipped, fully visible with 360-degree free orbit navigation framed by floating glass panels.

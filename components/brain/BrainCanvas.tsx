@@ -239,7 +239,7 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
 
     // 2. Camera setup - Positioned perfectly level at center
     const camera = new THREE.PerspectiveCamera(45, mountRef.current.clientWidth / mountRef.current.clientHeight, 0.1, 1000);
-    camera.position.set(0, 0, 32);
+    camera.position.set(0, 0, 24);
     cameraRef.current = camera;
 
     // 3. Renderer setup
@@ -265,7 +265,7 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
 
     // Initialize CinematicCameraController
     camControllerRef.current = new CinematicCameraController(camera, controls, {
-      defaultPosition: new THREE.Vector3(0, 0, 32),
+      defaultPosition: new THREE.Vector3(0, 0, 24),
       defaultTarget: new THREE.Vector3(0, 0, 0),
     });
 
@@ -971,7 +971,7 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
         const center = box.getCenter(new THREE.Vector3());
         const size = box.getSize(new THREE.Vector3());
         const maxDim = Math.max(size.x, size.y, size.z);
-        const scaleFactor = 32.0 / (maxDim || 1);
+        const scaleFactor = 13.5 / (maxDim || 1);
 
         // Position model perfectly dead-centered at (0, 0, 0)
         model.position.sub(center.clone().multiplyScalar(scaleFactor));
