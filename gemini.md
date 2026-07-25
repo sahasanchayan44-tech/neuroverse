@@ -142,3 +142,9 @@
 - **Temporary Public HTTPS Links**:
   - Serveo Temporary Tunnel: **https://e0e0c460bef79d67-103-56-237-204.serveousercontent.com**
   - Localtunnel Temporary Link: **https://silver-areas-smile.loca.lt**
+
+### 28. Server Restart & Public HTTPS Tunnel Re-hosting
+- **Server Restart**: Cleaned lingering port listeners and restarted primary Enterprise Server process on **http://localhost:8080** (`PORT=8080 NODE_ENV=development node server.js`).
+- **Health & HTML Verification**: `/health` status returning `HEALTHY` and 200 OK HTML compilation verified.
+- **Active Public HTTPS Tunnel**: **https://9aa774003b4a8086-103-56-237-204.serveousercontent.com**
+- **Active Tailscale Network URL**: **http://100.123.208.0:8080** or **http://debian.tail852693.ts.net:8080**
