@@ -711,8 +711,13 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
                 const maxDim = Math.max(size.x, size.y, size.z);
                 const scaleFactor = 13.5 / (maxDim || 1);
 
-                // Position assembly group perfectly dead-centered at (0, 0, 0)
-                partsGroup.position.sub(center.clone().multiplyScalar(scaleFactor));
+                // Center child part meshes relative to assembly group origin
+                partsGroup.children.forEach((child) => {
+                  child.position.sub(center);
+                });
+
+                // Position 3D brain assembly group strictly at x=0, y=0, z=0
+                partsGroup.position.set(0, 0, 0);
                 partsGroup.scale.setScalar(scaleFactor);
 
                 loadedBrainGroupRef.current = partsGroup;
@@ -973,8 +978,13 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
         const maxDim = Math.max(size.x, size.y, size.z);
         const scaleFactor = 13.5 / (maxDim || 1);
 
-        // Position model perfectly dead-centered at (0, 0, 0)
-        model.position.sub(center.clone().multiplyScalar(scaleFactor));
+        // Center internal child meshes relative to model origin
+        model.children.forEach((child) => {
+          child.position.sub(center);
+        });
+
+        // Position 3D brain model strictly at x=0, y=0, z=0 initially
+        model.position.set(0, 0, 0);
         model.scale.setScalar(scaleFactor);
 
         scene.add(model);

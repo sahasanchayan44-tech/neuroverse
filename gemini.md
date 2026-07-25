@@ -171,3 +171,8 @@
   1. Created `.npmrc` with `legacy-peer-deps=true`.
   2. Created `vercel.json` configuring `"installCommand": "npm install --legacy-peer-deps"` and `"buildCommand": "npm run build"`.
   3. Pinned `"postprocessing": "6.35.6"` in `package.json` to prevent peer mismatch.
+
+### 33. Strict Initial Brain Position at (x=0, y=0, z=0)
+- **File**: `components/brain/BrainCanvas.tsx`
+- **Center Geometry & Group Alignment**: Centered child part meshes relative to model assembly origin (`child.position.sub(center)`).
+- **Explicit Position Assignment**: Set `model.position.set(0, 0, 0)` and `partsGroup.position.set(0, 0, 0)` upon initial load when opening the web server.
