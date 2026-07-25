@@ -148,3 +148,8 @@
 - **Health & HTML Verification**: `/health` status returning `HEALTHY` and 200 OK HTML compilation verified.
 - **Active Public HTTPS Tunnel**: **https://9aa774003b4a8086-103-56-237-204.serveousercontent.com**
 - **Active Tailscale Network URL**: **http://100.123.208.0:8080** or **http://debian.tail852693.ts.net:8080**
+
+### 29. Complete Termination of Tailnet Servers & Public Tunnels
+- **Task Cancellation**: Cancelled all active background tasks (task-1298, task-1300) via `manage_task`.
+- **Socket & Config Cleanup**: Purged all port listeners (`fuser -k 8080/tcp 3000/tcp 5000/tcp`) and reset Tailscale serve/funnel configurations (`tailscale serve reset`, `tailscale funnel reset`).
+- **Verification**: Verified zero active server/tunnel processes running (`ps aux | grep -E "server.js|serveo|localtunnel"` returned empty).
