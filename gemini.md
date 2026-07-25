@@ -87,3 +87,8 @@
 ### 18. Server Re-hosting & Health Verification
 - **Status**: Started the primary NeuroVerse Sci-Fi Enterprise Server process on **http://localhost:8080** (`PORT=8080 NODE_ENV=development node server.js`).
 - **Health Check**: Verified `/health` endpoint status (`HEALTHY`, version `2.1.0`).
+
+### 19. Anatomical Color Profiles & Subcortical Depth Visibility on GLB Meshes
+- **File**: `components/brain/BrainCanvas.tsx`
+- **Color Profiles**: Added `ANATOMICAL_COLOR_PROFILE` defining distinct color, emissive, and opacity parameters for all 17 anatomical structures across the 131 GLB meshes.
+- **Subcortical Depth**: Applied semi-translucent glass opacity (`0.52`) to outer cortex lobes so internal subcortical structures (Thalamus, Hypothalamus, Hippocampus, Amygdala, Basal Ganglia, Ventricles, Brain Stem, Corpus Callosum) shine through with high emissive contrast (`0.85`), providing intense 3D anatomical detail.

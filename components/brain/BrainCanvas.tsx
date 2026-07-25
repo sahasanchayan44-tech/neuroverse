@@ -632,6 +632,26 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
     return 'frontal_lobe';
   }
 
+  const ANATOMICAL_COLOR_PROFILE: Record<string, { colorHex: number; emissiveHex: number; baseOpacity: number; emissiveIntensity: number; isInner: boolean }> = {
+    frontal_lobe: { colorHex: 0x00f0ff, emissiveHex: 0x0066ff, baseOpacity: 0.52, emissiveIntensity: 0.45, isInner: false },
+    parietal_lobe: { colorHex: 0x00d8ff, emissiveHex: 0x0044ee, baseOpacity: 0.52, emissiveIntensity: 0.45, isInner: false },
+    temporal_lobe: { colorHex: 0x33b5ff, emissiveHex: 0x0033cc, baseOpacity: 0.52, emissiveIntensity: 0.45, isInner: false },
+    occipital_lobe: { colorHex: 0x8833ff, emissiveHex: 0x5500dd, baseOpacity: 0.52, emissiveIntensity: 0.45, isInner: false },
+    cerebellum: { colorHex: 0x00ffaa, emissiveHex: 0x00bb66, baseOpacity: 0.78, emissiveIntensity: 0.65, isInner: false },
+    brain_stem: { colorHex: 0xff9900, emissiveHex: 0xdd5500, baseOpacity: 0.90, emissiveIntensity: 0.75, isInner: true },
+    pons: { colorHex: 0xffaa00, emissiveHex: 0xcc4400, baseOpacity: 0.90, emissiveIntensity: 0.75, isInner: true },
+    medulla: { colorHex: 0xff7700, emissiveHex: 0xbb3300, baseOpacity: 0.90, emissiveIntensity: 0.75, isInner: true },
+    thalamus: { colorHex: 0xff007f, emissiveHex: 0xcc0055, baseOpacity: 0.95, emissiveIntensity: 0.85, isInner: true },
+    hypothalamus: { colorHex: 0xff0055, emissiveHex: 0xaa0033, baseOpacity: 0.95, emissiveIntensity: 0.85, isInner: true },
+    pituitary_gland: { colorHex: 0xffff00, emissiveHex: 0xbbbb00, baseOpacity: 0.95, emissiveIntensity: 0.85, isInner: true },
+    pineal_gland: { colorHex: 0xffd700, emissiveHex: 0xcc9900, baseOpacity: 0.95, emissiveIntensity: 0.85, isInner: true },
+    hippocampus: { colorHex: 0x00ff88, emissiveHex: 0x00aa55, baseOpacity: 0.90, emissiveIntensity: 0.80, isInner: true },
+    amygdala: { colorHex: 0xff3366, emissiveHex: 0xcc1133, baseOpacity: 0.95, emissiveIntensity: 0.85, isInner: true },
+    basal_ganglia: { colorHex: 0x9900ff, emissiveHex: 0x7700cc, baseOpacity: 0.90, emissiveIntensity: 0.80, isInner: true },
+    ventricles: { colorHex: 0x00ffff, emissiveHex: 0x0099dd, baseOpacity: 0.85, emissiveIntensity: 0.75, isInner: true },
+    corpus_callosum: { colorHex: 0xffffff, emissiveHex: 0x88ccff, baseOpacity: 0.85, emissiveIntensity: 0.70, isInner: true }
+  };
+
   // Load & Present Assembly of all 131 3D Brain Part GLB Models mapped to floating HUD lobe names
   function loadAll131BrainPartModels(scene: THREE.Scene) {
     const gltfLoader = new GLTFLoader();
@@ -649,19 +669,30 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
               const partScene = gltf.scene;
               partScene.name = item.filename;
               const structId = getStructureIdFromFilename(item.filename);
+              const profile = ANATOMICAL_COLOR_PROFILE[structId] || {
+                colorHex: 0x00aaff,
+                emissiveHex: 0x0044bb,
+                baseOpacity: 0.50,
+                emissiveIntensity: 0.45,
+                isInner: false
+              };
 
               partScene.traverse((child) => {
                 if (child instanceof THREE.Mesh) {
                   console.log("Mesh found:", child.name || item.filename);
                   child.userData.structureId = structId;
+                  child.userData.originalColorHex = profile.colorHex;
+                  child.userData.originalEmissiveHex = profile.emissiveHex;
+                  child.userData.baseOpacity = profile.baseOpacity;
+
                   child.material = new THREE.MeshStandardMaterial({
-                    color: 0x00aaff,
-                    emissive: 0x0044bb,
-                    emissiveIntensity: 0.45,
-                    roughness: 0.1,
+                    color: profile.colorHex,
+                    emissive: profile.emissiveHex,
+                    emissiveIntensity: profile.emissiveIntensity,
+                    roughness: 0.15,
                     metalness: 0.85,
                     transparent: true,
-                    opacity: transparency * 0.40,
+                    opacity: transparency * profile.baseOpacity,
                     side: THREE.DoubleSide,
                     blending: THREE.NormalBlending
                   });
@@ -901,21 +932,30 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
               }
             }
 
-            child.userData = {
-              structureId: matchedStructId,
-              originalColor: child.material?.color ? child.material.color.clone() : new THREE.Color(0x00aaff),
-              originalOpacity: 0.40,
+            const profile = ANATOMICAL_COLOR_PROFILE[matchedStructId] || {
+              colorHex: 0x00aaff,
+              emissiveHex: 0x0044bb,
+              baseOpacity: 0.50,
+              emissiveIntensity: 0.45,
+              isInner: false
             };
 
-            // Base holographic material: bright vibrant cyan/blue emissive glow
+            child.userData = {
+              structureId: matchedStructId,
+              originalColorHex: profile.colorHex,
+              originalEmissiveHex: profile.emissiveHex,
+              baseOpacity: profile.baseOpacity,
+            };
+
+            // Base holographic material with anatomical color profile
             child.material = new THREE.MeshStandardMaterial({
-              color: 0x00aaff,
-              emissive: 0x0044bb,
-              emissiveIntensity: 0.45,
-              roughness: 0.1,
+              color: profile.colorHex,
+              emissive: profile.emissiveHex,
+              emissiveIntensity: profile.emissiveIntensity,
+              roughness: 0.15,
               metalness: 0.85,
               transparent: true,
-              opacity: transparency * 0.40,
+              opacity: transparency * profile.baseOpacity,
               side: THREE.DoubleSide,
               blending: THREE.NormalBlending
             });
