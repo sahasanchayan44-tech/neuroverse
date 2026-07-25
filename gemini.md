@@ -83,3 +83,7 @@
 - **File**: `components/brain/BrainCanvas.tsx`
 - **Target Lock**: Locked OrbitControls target to `(0, 0, 0)` upon structure selection so the main 3D brain model never shifts off-center.
 - **Optimal Scaling**: Updated model `scaleFactor` to `13.5` to ensure all 131 brain part meshes (outer cortex lobes, cerebellum, brain stem) fit 100% inside the viewport boundaries at all times.
+
+### 18. Server Re-hosting & Health Verification
+- **Status**: Started the primary NeuroVerse Sci-Fi Enterprise Server process on **http://localhost:8080** (`PORT=8080 NODE_ENV=development node server.js`).
+- **Health Check**: Verified `/health` endpoint status (`HEALTHY`, version `2.1.0`).
