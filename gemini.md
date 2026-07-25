@@ -92,3 +92,9 @@
 - **File**: `components/brain/BrainCanvas.tsx`
 - **Color Profiles**: Added `ANATOMICAL_COLOR_PROFILE` defining distinct color, emissive, and opacity parameters for all 17 anatomical structures across the 131 GLB meshes.
 - **Subcortical Depth**: Applied semi-translucent glass opacity (`0.52`) to outer cortex lobes so internal subcortical structures (Thalamus, Hypothalamus, Hippocampus, Amygdala, Basal Ganglia, Ventricles, Brain Stem, Corpus Callosum) shine through with high emissive contrast (`0.85`), providing intense 3D anatomical detail.
+
+### 20. Prominent Latest Datasets & Quantitative Biophysical Grid in InfoPanel
+- **File**: `components/ui/InfoPanel.tsx`
+- **Prominent Datasets**: Added badges for **Human Connectome Project (HCP-2026)**, **Allen Brain Atlas Transcriptomics**, **BigBrain 20μm Cytology**, and **BodyParts3D / FMA**.
+- **Quantitative Metrics**: Integrated 2x2 biophysical grid displaying Neuron Count ($B$), Synaptic Density ($T$), Axonal Conduction Speed ($m/s$), and Cerebral Blood Flow ($CBF$).
+- **Receptor & Pathology Cards**: Rendered receptor binding density ($B_{max}$) and pathological biomarker indicators ($A\beta_{42}$, Tau, $\alpha$-Synuclein) upon selecting any brain part in the left sidebar anatomy section.
