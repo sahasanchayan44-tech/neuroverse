@@ -9,18 +9,18 @@ const config: Config = {
     extend: {
       colors: {
         neuro: {
-          dark: '#000508',
-          panel: 'rgba(0, 14, 10, 0.88)',
-          card: 'rgba(0, 24, 18, 0.75)',
-          border: 'rgba(0, 255, 102, 0.25)',
-          cyan: '#00ff66',
-          blue: '#00e5ff',
-          purple: '#00cc66',
-          pink: '#00ffaa',
-          green: '#00ff88',
-          gold: '#00ffaa',
-          red: '#ff0055',
-          white: '#e0ffe8'
+          dark: '#000614',
+          panel: 'rgba(0, 10, 25, 0.88)',
+          card: 'rgba(0, 16, 36, 0.75)',
+          border: 'rgba(0, 240, 255, 0.25)',
+          cyan: '#00f0ff',
+          blue: '#00f0ff',
+          purple: '#00f0ff',
+          pink: '#00f0ff',
+          green: '#00f0ff',
+          gold: '#00f0ff',
+          red: '#00d5ff',
+          white: '#e6f9ff'
         }
       },
       fontFamily: {
@@ -28,10 +28,10 @@ const config: Config = {
         mono: ['JetBrains Mono', 'monospace']
       },
       boxShadow: {
-        'hologram': '0 0 25px rgba(0, 255, 102, 0.25), inset 0 0 15px rgba(0, 255, 102, 0.10)',
-        'cyan-glow': '0 0 20px rgba(0, 255, 102, 0.55)',
-        'purple-glow': '0 0 20px rgba(0, 229, 255, 0.55)',
-        'red-glow': '0 0 20px rgba(255, 0, 85, 0.55)'
+        'hologram': '0 0 25px rgba(0, 240, 255, 0.30), inset 0 0 15px rgba(0, 240, 255, 0.12)',
+        'cyan-glow': '0 0 20px rgba(0, 240, 255, 0.6)',
+        'purple-glow': '0 0 20px rgba(0, 240, 255, 0.6)',
+        'red-glow': '0 0 20px rgba(0, 213, 255, 0.6)'
       },
       animation: {
         'pulse-glow': 'pulseGlow 2.5s infinite ease-in-out',

@@ -269,19 +269,19 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
       defaultTarget: new THREE.Vector3(0, 0, 0),
     });
 
-    // 5. Matrix Sci-Fi Phosphor Multi-Directional Lighting
-    const ambientLight = new THREE.AmbientLight(0x004422, 2.2);
+    // 5. Monochromatic Cyber Blue Multi-Directional Lighting
+    const ambientLight = new THREE.AmbientLight(0x002244, 2.2);
     scene.add(ambientLight);
 
-    const keyLight = new THREE.DirectionalLight(0x00ff66, 3.2);
+    const keyLight = new THREE.DirectionalLight(0x00f0ff, 3.2);
     keyLight.position.set(25, 30, 25);
     scene.add(keyLight);
 
-    const rimLight = new THREE.DirectionalLight(0x00e5ff, 2.6);
+    const rimLight = new THREE.DirectionalLight(0x00a8ff, 2.6);
     rimLight.position.set(-25, -20, -25);
     scene.add(rimLight);
 
-    const fillLight = new THREE.DirectionalLight(0x00ffaa, 1.8);
+    const fillLight = new THREE.DirectionalLight(0x00d5ff, 1.8);
     fillLight.position.set(0, -20, 20);
     scene.add(fillLight);
 
@@ -636,20 +636,20 @@ export const BrainCanvas: React.FC<BrainCanvasProps> = ({
     frontal_lobe: { colorHex: 0x00f0ff, emissiveHex: 0x0066ff, baseOpacity: 0.52, emissiveIntensity: 0.45, isInner: false },
     parietal_lobe: { colorHex: 0x00d8ff, emissiveHex: 0x0044ee, baseOpacity: 0.52, emissiveIntensity: 0.45, isInner: false },
     temporal_lobe: { colorHex: 0x33b5ff, emissiveHex: 0x0033cc, baseOpacity: 0.52, emissiveIntensity: 0.45, isInner: false },
-    occipital_lobe: { colorHex: 0x8833ff, emissiveHex: 0x5500dd, baseOpacity: 0.52, emissiveIntensity: 0.45, isInner: false },
-    cerebellum: { colorHex: 0x00ffaa, emissiveHex: 0x00bb66, baseOpacity: 0.78, emissiveIntensity: 0.65, isInner: false },
-    brain_stem: { colorHex: 0xff9900, emissiveHex: 0xdd5500, baseOpacity: 0.90, emissiveIntensity: 0.75, isInner: true },
-    pons: { colorHex: 0xffaa00, emissiveHex: 0xcc4400, baseOpacity: 0.90, emissiveIntensity: 0.75, isInner: true },
-    medulla: { colorHex: 0xff7700, emissiveHex: 0xbb3300, baseOpacity: 0.90, emissiveIntensity: 0.75, isInner: true },
-    thalamus: { colorHex: 0xff007f, emissiveHex: 0xcc0055, baseOpacity: 0.95, emissiveIntensity: 0.85, isInner: true },
-    hypothalamus: { colorHex: 0xff0055, emissiveHex: 0xaa0033, baseOpacity: 0.95, emissiveIntensity: 0.85, isInner: true },
-    pituitary_gland: { colorHex: 0xffff00, emissiveHex: 0xbbbb00, baseOpacity: 0.95, emissiveIntensity: 0.85, isInner: true },
-    pineal_gland: { colorHex: 0xffd700, emissiveHex: 0xcc9900, baseOpacity: 0.95, emissiveIntensity: 0.85, isInner: true },
-    hippocampus: { colorHex: 0x00ff88, emissiveHex: 0x00aa55, baseOpacity: 0.90, emissiveIntensity: 0.80, isInner: true },
-    amygdala: { colorHex: 0xff3366, emissiveHex: 0xcc1133, baseOpacity: 0.95, emissiveIntensity: 0.85, isInner: true },
-    basal_ganglia: { colorHex: 0x9900ff, emissiveHex: 0x7700cc, baseOpacity: 0.90, emissiveIntensity: 0.80, isInner: true },
+    occipital_lobe: { colorHex: 0x00e5ff, emissiveHex: 0x0055dd, baseOpacity: 0.52, emissiveIntensity: 0.45, isInner: false },
+    cerebellum: { colorHex: 0x00ffcc, emissiveHex: 0x00aa88, baseOpacity: 0.78, emissiveIntensity: 0.65, isInner: false },
+    brain_stem: { colorHex: 0x00d5ff, emissiveHex: 0x0066cc, baseOpacity: 0.90, emissiveIntensity: 0.75, isInner: true },
+    pons: { colorHex: 0x00bfff, emissiveHex: 0x0055bb, baseOpacity: 0.90, emissiveIntensity: 0.75, isInner: true },
+    medulla: { colorHex: 0x00a8ff, emissiveHex: 0x0044aa, baseOpacity: 0.90, emissiveIntensity: 0.75, isInner: true },
+    thalamus: { colorHex: 0x00f0ff, emissiveHex: 0x0088ff, baseOpacity: 0.95, emissiveIntensity: 0.85, isInner: true },
+    hypothalamus: { colorHex: 0x00e5ff, emissiveHex: 0x0077ee, baseOpacity: 0.95, emissiveIntensity: 0.85, isInner: true },
+    pituitary_gland: { colorHex: 0x33f3ff, emissiveHex: 0x0099ff, baseOpacity: 0.95, emissiveIntensity: 0.85, isInner: true },
+    pineal_gland: { colorHex: 0x00ffff, emissiveHex: 0x00aaff, baseOpacity: 0.95, emissiveIntensity: 0.85, isInner: true },
+    hippocampus: { colorHex: 0x00f0ff, emissiveHex: 0x0077ff, baseOpacity: 0.90, emissiveIntensity: 0.80, isInner: true },
+    amygdala: { colorHex: 0x00d5ff, emissiveHex: 0x0066ee, baseOpacity: 0.95, emissiveIntensity: 0.85, isInner: true },
+    basal_ganglia: { colorHex: 0x00bfff, emissiveHex: 0x0055dd, baseOpacity: 0.90, emissiveIntensity: 0.80, isInner: true },
     ventricles: { colorHex: 0x00ffff, emissiveHex: 0x0099dd, baseOpacity: 0.85, emissiveIntensity: 0.75, isInner: true },
-    corpus_callosum: { colorHex: 0xffffff, emissiveHex: 0x88ccff, baseOpacity: 0.85, emissiveIntensity: 0.70, isInner: true }
+    corpus_callosum: { colorHex: 0xe6f9ff, emissiveHex: 0x00aaff, baseOpacity: 0.85, emissiveIntensity: 0.70, isInner: true }
   };
 
   // Load & Present Assembly of all 131 3D Brain Part GLB Models mapped to floating HUD lobe names
